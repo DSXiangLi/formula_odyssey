@@ -2,8 +2,7 @@ import { motion } from 'framer-motion'
 import { useState, useMemo } from 'react'
 import ChapterCard from './ChapterCard'
 import ChapterDetail from './ChapterDetail'
-import type { Chapter, ChapterProgress, ChapterMapProps } from '../../types/chapter'
-import type { WuxingType } from '../../types/index'
+import type { Chapter, ChapterMapProps } from '../../types/chapter'
 
 // 20章数据（示例，实际应从store获取）
 const defaultChapters: Chapter[] = [

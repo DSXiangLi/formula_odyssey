@@ -1,3 +1,4 @@
 // Skill System Components
-export { default as SkillTree } from './SkillTree'
-export { default as SkillCard } from './SkillCard'
+export { SkillTree } from './SkillTree'
+export { SkillCard } from './SkillCard'
+export { SkillDetail } from './SkillDetail'

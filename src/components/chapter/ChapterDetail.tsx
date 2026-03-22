@@ -20,31 +20,36 @@ const wuxingNames: Record<WuxingType, string> = {
   water: '水',
 }
 
-const wuxingColors: Record<WuxingType, { primary: string; light: string; bg: string }> = {
+const wuxingColors: Record<WuxingType, { primary: string; light: string; bg: string; glow: string }> = {
   wood: {
     primary: '#2E7D32',
     light: '#81C784',
     bg: 'rgba(46, 125, 50, 0.1)',
+    glow: 'rgba(46, 125, 50, 0.5)',
   },
   fire: {
     primary: '#C62828',
     light: '#EF5350',
     bg: 'rgba(198, 40, 40, 0.1)',
+    glow: 'rgba(198, 40, 40, 0.5)',
   },
   earth: {
     primary: '#F9A825',
     light: '#FFD54F',
     bg: 'rgba(249, 168, 37, 0.1)',
+    glow: 'rgba(249, 168, 37, 0.5)',
   },
   metal: {
     primary: '#78909C',
     light: '#B0BEC5',
     bg: 'rgba(120, 144, 156, 0.1)',
+    glow: 'rgba(120, 144, 156, 0.5)',
   },
   water: {
     primary: '#1565C0',
     light: '#42A5F5',
     bg: 'rgba(21, 101, 192, 0.1)',
+    glow: 'rgba(21, 101, 192, 0.5)',
   },
 }
 
