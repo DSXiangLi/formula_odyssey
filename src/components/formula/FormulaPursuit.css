@@ -1,0 +1,784 @@
+/* 方剂追缉令样式 */
+
+/* 遮罩层 */
+.formula-pursuit-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+/* 主面板 */
+.formula-pursuit-panel {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+/* 标题栏 */
+.pursuit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+  position: relative;
+}
+
+.pursuit-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.title-icon {
+  font-size: 28px;
+}
+
+.pursuit-title h2 {
+  color: #1a1a2e;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.pursuit-subtitle {
+  color: rgba(26, 26, 46, 0.7);
+  font-size: 14px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(26, 26, 46, 0.2);
+  color: #1a1a2e;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  background: rgba(26, 26, 46, 0.4);
+  transform: rotate(90deg);
+}
+
+/* 追缉令列表 */
+.pursuit-list {
+  padding: 20px 24px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+/* 空状态 */
+.empty-pursuits {
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-pursuits p {
+  font-size: 18px;
+  margin: 0;
+}
+
+.empty-hint {
+  font-size: 14px;
+  margin-top: 8px;
+  opacity: 0.7;
+}
+
+/* 追缉令卡片 */
+.pursuit-card {
+  display: flex;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+  position: relative;
+}
+
+.pursuit-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.pursuit-card.completed {
+  opacity: 0.6;
+  border-color: #4CAF50;
+}
+
+.pursuit-card.ready {
+  border-color: #FFD700;
+  animation: pulse-gold 2s infinite;
+}
+
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
+  50% { box-shadow: 0 0 20px 5px rgba(255, 215, 0, 0.2); }
+}
+
+/* 难度标识 */
+.difficulty-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  margin-right: 16px;
+  color: white;
+}
+
+.difficulty-icon {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.difficulty-label {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* 方剂信息 */
+.pursuit-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.formula-name {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  font-size: 20px;
+  margin: 0 0 12px 0;
+}
+
+.formula-category {
+  font-size: 12px;
+  padding: 4px 8px;
+  background: rgba(255, 215, 0, 0.2);
+  color: #FFD700;
+  border-radius: 4px;
+}
+
+/* 组成进度 */
+.composition-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.progress-text {
+  color: #4CAF50;
+  font-size: 14px;
+  font-weight: bold;
+  min-width: 50px;
+}
+
+/* 组成详情 */
+.composition-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.medicine-tag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  transition: all 0.3s;
+}
+
+.medicine-tag.collected {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4CAF50;
+}
+
+.medicine-tag.missing {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.medicine-tag .amount {
+  font-size: 11px;
+  opacity: 0.7;
+  margin-left: 4px;
+}
+
+/* 特殊要求 */
+.special-requirement {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: rgba(255, 152, 0, 0.1);
+  border-radius: 8px;
+  color: #FF9800;
+  font-size: 13px;
+}
+
+.req-icon {
+  font-size: 16px;
+}
+
+/* 右侧信息 */
+.pursuit-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  min-width: 140px;
+  padding-left: 16px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 倒计时 */
+.countdown {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+}
+
+.countdown-icon {
+  font-size: 16px;
+}
+
+.countdown .urgent {
+  color: #F44336;
+  font-weight: bold;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* 奖励预览 */
+.reward-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reward-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #FFD700;
+  font-size: 14px;
+}
+
+.reward-item.badge {
+  color: #FF9800;
+}
+
+.reward-icon {
+  font-size: 16px;
+}
+
+/* 状态按钮 */
+.status-badge {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.status-badge.completed {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4CAF50;
+}
+
+.complete-btn,
+.goto-btn {
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: none;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.complete-btn {
+  background: linear-gradient(90deg, #FFD700, #FFA500);
+  color: #1a1a2e;
+}
+
+.complete-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.4);
+}
+
+.goto-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.goto-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* 底部统计 */
+.pursuit-stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 16px 24px;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-label {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+}
+
+.stat-value {
+  color: #FFD700;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* ===== 详情弹窗 ===== */
+
+.pursuit-detail-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+
+.pursuit-detail-modal {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* 详情头部 */
+.detail-header {
+  padding: 24px;
+  text-align: center;
+  border-bottom: 3px solid;
+  position: relative;
+}
+
+.detail-difficulty {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  color: white;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.detail-title {
+  color: #fff;
+  font-size: 28px;
+  margin: 0 0 8px 0;
+}
+
+.detail-category {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+.detail-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.detail-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+/* 详情内容 */
+.detail-content {
+  padding: 24px;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.detail-section {
+  margin-bottom: 24px;
+}
+
+.detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.detail-section h3 {
+  color: #FFD700;
+  font-size: 16px;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 组成列表 */
+.composition-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.composition-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.3s;
+}
+
+.composition-item.collected {
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.composition-item.missing {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.role-tag {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+.role-tag[data-role="jun"] { background: #F44336; }
+.role-tag[data-role="chen"] { background: #FF9800; }
+.role-tag[data-role="zuo"] { background: #2196F3; }
+.role-tag[data-role="shi"] { background: #4CAF50; }
+
+.medicine-name {
+  flex: 1;
+  color: #fff;
+  font-weight: 500;
+}
+
+.medicine-amount {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+.collect-status {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.composition-item.collected .collect-status {
+  color: #4CAF50;
+  background: rgba(76, 175, 80, 0.2);
+}
+
+.composition-item.missing .collect-status {
+  color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* 功效主治 */
+.functions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.function-item {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+}
+
+.function-item label {
+  color: #FFD700;
+  font-weight: 500;
+}
+
+/* 方歌 */
+.formula-song {
+  padding: 16px;
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 8px;
+  color: #FFD700;
+  font-size: 15px;
+  line-height: 1.8;
+  text-align: center;
+  font-style: italic;
+}
+
+/* 特殊要求 */
+.special-req {
+  padding: 12px;
+  background: rgba(255, 152, 0, 0.1);
+  border-radius: 8px;
+  color: #FF9800;
+  font-size: 14px;
+}
+
+/* 奖励列表 */
+.reward-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reward-detail {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #FFD700;
+  font-size: 15px;
+}
+
+/* 进度详情 */
+.progress-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-bar-large {
+  height: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-fill-large {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+
+.progress-text-large {
+  color: #4CAF50;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* 剩余时间 */
+.time-remaining {
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.time-remaining.urgent {
+  color: #F44336;
+  background: rgba(244, 67, 54, 0.1);
+}
+
+/* 操作按钮 */
+.detail-actions {
+  display: flex;
+  gap: 12px;
+  padding: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.complete-action-btn,
+.abandon-btn {
+  flex: 1;
+  padding: 14px 24px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.complete-action-btn {
+  background: linear-gradient(90deg, #FFD700, #FFA500);
+  color: #1a1a2e;
+}
+
+.complete-action-btn.ready:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(255, 215, 0, 0.4);
+}
+
+.complete-action-btn.disabled {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
+}
+
+.abandon-btn {
+  background: transparent;
+  border: 2px solid rgba(244, 67, 54, 0.5);
+  color: #F44336;
+}
+
+.abandon-btn:hover {
+  background: rgba(244, 67, 54, 0.1);
+  border-color: #F44336;
+}
+
+.completed-message {
+  flex: 1;
+  text-align: center;
+  padding: 14px;
+  color: #4CAF50;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* 滚动条样式 */
+.pursuit-list::-webkit-scrollbar,
+.detail-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.pursuit-list::-webkit-scrollbar-track,
+.detail-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.pursuit-list::-webkit-scrollbar-thumb,
+.detail-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 215, 0, 0.3);
+  border-radius: 3px;
+}
+
+.pursuit-list::-webkit-scrollbar-thumb:hover,
+.detail-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 215, 0, 0.5);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .formula-pursuit-panel {
+    margin: 10px;
+    max-height: 95vh;
+  }
+
+  .pursuit-card {
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .difficulty-badge {
+    flex-direction: row;
+    margin-right: 0;
+    margin-bottom: 12px;
+    align-self: flex-start;
+  }
+
+  .pursuit-meta {
+    flex-direction: row;
+    align-items: center;
+    padding-left: 0;
+    padding-top: 12px;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 12px;
+  }
+
+  .detail-actions {
+    flex-direction: column;
+  }
+
+  .detail-title {
+    font-size: 22px;
+  }
+}

@@ -1,44 +1,50 @@
 import { useRef, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGameStore } from '@stores/gameStore'
-import type { RegionType } from '@types/index'
+import type { WuxingType } from '../../types/index'
 import Seed from '@components/seed/Seed'
 import ParticleSystem from './ParticleSystem'
 
-const regionConfig: Record<RegionType, {
+const regionConfig: Record<WuxingType, {
   name: string
   particleType: 'snow' | 'light' | 'petal' | 'mist' | 'sparkle'
   bgImage: string
+  icon: string
 }> = {
-  mountain: {
-    name: '高山区域',
-    particleType: 'snow',
-    bgImage: '/images/region_mountain.jpg',
-  },
-  forest: {
-    name: '林间区域',
-    particleType: 'light',
-    bgImage: '/images/region_forest.jpg',
-  },
-  flower: {
-    name: '花田区域',
+  wood: {
+    name: '青木林',
     particleType: 'petal',
-    bgImage: '/images/region_flower.jpg',
+    bgImage: '/images/scenes/qingmulin_bg.jpg',
+    icon: '🌳',
   },
-  stream: {
-    name: '溪边区域',
-    particleType: 'mist',
-    bgImage: '/images/region_stream.jpg',
+  fire: {
+    name: '赤焰峰',
+    particleType: 'light',
+    bgImage: '/images/scenes/chiyanfeng_bg.jpg',
+    icon: '🔥',
   },
-  cliff: {
-    name: '岩壁区域',
+  earth: {
+    name: '黄土丘',
+    particleType: 'petal',
+    bgImage: '/images/scenes/huangtuqiu_bg.jpg',
+    icon: '🏔️',
+  },
+  metal: {
+    name: '白金原',
     particleType: 'sparkle',
-    bgImage: '/images/region_cliff.jpg',
+    bgImage: '/images/scenes/baijinyuan_bg.jpg',
+    icon: '⛰️',
+  },
+  water: {
+    name: '黑水潭',
+    particleType: 'mist',
+    bgImage: '/images/scenes/heishuitan_bg.jpg',
+    icon: '💧',
   },
 }
 
 export default function ValleyScene() {
-  const { currentRegion, getSeedsByRegion } = useGameStore()
+  const { currentRegion, getSeedsByWuxing } = useGameStore()
   const containerRef = useRef<HTMLDivElement>(null)
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
   const [imageLoaded, setImageLoaded] = useState(false)
@@ -58,7 +64,7 @@ export default function ValleyScene() {
     return () => window.removeEventListener('resize', updateDimensions)
   }, [])
 
-  const regionSeeds = getSeedsByRegion(currentRegion)
+  const regionSeeds = getSeedsByWuxing(currentRegion as WuxingType)
   const config = regionConfig[currentRegion]
 
   return (
@@ -99,11 +105,7 @@ export default function ValleyScene() {
         className="absolute top-32 left-1/2 -translate-x-1/2 z-10"
       >
         <h2 className="text-2xl font-bold text-white font-title flex items-center gap-2 drop-shadow-lg">
-          {currentRegion === 'mountain' && '🏔️'}
-          {currentRegion === 'forest' && '🌳'}
-          {currentRegion === 'flower' && '🌸'}
-          {currentRegion === 'stream' && '🌊'}
-          {currentRegion === 'cliff' && '🪨'}
+          {config.icon}
           {config.name}
         </h2>
       </motion.div>
@@ -118,7 +120,7 @@ export default function ValleyScene() {
           transition={{ duration: 0.5 }}
           className="absolute inset-0 z-20"
         >
-          {regionSeeds.map((seed, index) => (
+          {regionSeeds.filter(seed => seed.discovered).map((seed, index) => (
             <motion.div
               key={seed.id}
               initial={{ opacity: 0, scale: 0 }}

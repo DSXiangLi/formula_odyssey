@@ -1,9 +1,8 @@
 import { useState, useMemo } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useGameStore } from '@stores/gameStore'
-import type { Medicine } from '@types/index'
-import { cn } from '@utils/index'
-import { getAffinityLevel, getAffinityLevelName } from '@utils/index'
+import type { Medicine } from '../../types/index'
+import { cn, getAffinityLevel } from '@utils/index'
 
 interface CollectionModalProps {
   onClose: () => void
@@ -164,7 +163,6 @@ interface MedicineCardProps {
 
 function MedicineCard({ medicine, isCollected, affinity, onClick }: MedicineCardProps) {
   const affinityLevel = getAffinityLevel(affinity)
-  const levelName = getAffinityLevelName(affinityLevel)
 
   return (
     <motion.div

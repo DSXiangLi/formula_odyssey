@@ -3,7 +3,8 @@ import { useGameStore } from '@stores/gameStore'
 
 export default function ExploreButton() {
   const { player, setExploreOpen } = useGameStore()
-  const canExplore = player.exploreCount > 0
+  const exploreCount = player.exploreCount ?? 3
+  const canExplore = exploreCount > 0
 
   return (
     <motion.button
@@ -44,7 +45,7 @@ export default function ExploreButton() {
           探索
         </p>
         <p className="text-xs text-text-muted">
-          今日剩余: {player.exploreCount}/3
+          今日剩余: {exploreCount}/3
         </p>
       </div>
     </motion.button>

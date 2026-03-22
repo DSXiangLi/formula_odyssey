@@ -1,0 +1,594 @@
+{
+  "version": "2.0",
+  "description": "药灵山谷v2.0 AI生图Prompt配置 - 两层图片系统（植物图+饮片图）",
+  "generator": "Seedream/豆包",
+  "qualityStandard": "《中国药典》2020版标准",
+  "artStyle": "3D渲染风格 + 透明背景 + 《中国药典》标准图谱",
+  "note": "纯中医游戏，只需原植物图和饮片图两层，无需显微镜视角",
+  "promptTemplates": {
+    "plantBase": {
+      "name": "原植物图Prompt模板",
+      "template": "中药{name}，专业摄影，4K高清，无背景",
+      "requirements": [
+        "3D渲染风格",
+        "透明背景（用于游戏UI叠加）",
+        "干净抠图效果",
+        "适合游戏资源使用"
+      ]
+    },
+    "herbBase": {
+      "name": "饮片图Prompt模板",
+      "template": "中药{name}饮片，专业摄影，4K高清，无背景",
+      "requirements": [
+        "3D渲染风格",
+        "透明背景（用于游戏UI叠加）",
+        "干净抠图效果",
+        "适合游戏资源使用"
+      ]
+    },
+    "sceneBase": {
+      "name": "五行场景背景Prompt模板",
+      "template": "Oriental fantasy game scene, {regionName}, {seasonFeatures}, {wuxingColors}, {environmentElements}, {atmosphere}, ethereal glow, magical particles, crystal formations, luminous flora, cinematic lighting, depth of field, 8K, game concept art, polished AAA game quality, rich details, atmospheric perspective, enchanted valley atmosphere",
+      "requirements": [
+        "必须符合五行色彩体系",
+        "必须体现季节特征",
+        "东方幻想风格（非水墨）",
+        "精致游戏美术品质（AAA级）",
+        "光影效果丰富",
+        "有神秘感的水晶/魔法元素",
+        "景深效果强",
+        "适合作为游戏主场景背景"
+      ]
+    }
+  },
+  "medicinePrompts": {
+    "mahuang": {
+      "id": "mahuang",
+      "name": "麻黄",
+      "latinName": "Ephedra sinica",
+      "category": "解表药",
+      "wuxing": "metal",
+      "images": {
+        "plant": {
+          "morphology": "草本状灌木，株高20-40厘米，木质茎短，地上茎直立绿色，分枝对生或轮生",
+          "habitat": "生长于干旱山坡、荒地，北方干燥草原环境",
+          "keyFeatures": "草质茎表面有细纵棱线，节间长2-6厘米，节上有膜质鳞叶对生，呈三角形先端微反卷，关键识别点：茎中空，表面有纵沟棱，鳞叶基部联合成鞘状"
+        },
+        "herb": {
+          "specification": "圆柱形段，长1-2厘米，直径1-2毫米",
+          "appearance": "表面黄绿色，有细纵棱线，节明显，节上有膜质鳞叶对生，红棕色，基部联合成筒状",
+          "crossSection": "体轻质脆，易折断，断面略呈纤维性，髓部红棕色，近圆形"
+        }
+      }
+    },
+    "guizhi": {
+      "id": "guizhi",
+      "name": "桂枝",
+      "latinName": "Cinnamomi Ramulus",
+      "category": "解表药",
+      "wuxing": "fire",
+      "images": {
+        "plant": {
+          "morphology": "常绿乔木肉桂树的嫩枝，长圆柱形，表面红棕色至棕色",
+          "habitat": "生长于热带亚热带常绿阔叶林中，温暖湿润环境",
+          "keyFeatures": "嫩枝呈长圆柱形，表面有叶痕和芽痕，皮部薄，木部黄白色，有特异香气，味甜微辛"
+        },
+        "herb": {
+          "specification": "类圆形厚片或段，长3-10厘米，直径0.3-1厘米",
+          "appearance": "表面红棕色，有细纵皱纹和灰白色地衣斑，皮部薄，易剥落",
+          "crossSection": "断面皮部红棕色，木部黄白色至浅黄棕色，髓部略呈方形，有特异香气"
+        }
+      }
+    },
+    "zisu": {
+      "id": "zisu",
+      "name": "紫苏",
+      "latinName": "Perillae Folium",
+      "category": "解表药",
+      "wuxing": "metal",
+      "images": {
+        "plant": {
+          "morphology": "一年生草本，高60-180厘米，茎方形紫色，叶对生，叶片宽卵形或圆形",
+          "habitat": "生长于村边、路旁、荒地，全国各地广泛栽培",
+          "keyFeatures": "茎方形紫色，叶片宽卵形，边缘有粗锯齿，两面紫色或仅背面紫色，叶柄紫色，揉搓有特异香气"
+        },
+        "herb": {
+          "specification": "叶片皱缩卷曲，完整者展平后呈卵圆形，长4-11厘米，宽2.5-9厘米",
+          "appearance": "两面紫色或上表面绿色下表面紫色，疏生灰白色毛，先端渐尖，边缘具圆锯齿",
+          "crossSection": "叶柄紫方形，叶片薄脆，揉搓有浓烈特异香气，味微辛"
+        }
+      }
+    },
+    "shengjiang": {
+      "id": "shengjiang",
+      "name": "生姜",
+      "latinName": "Zingiberis Rhizoma Recens",
+      "category": "解表药",
+      "wuxing": "metal",
+      "images": {
+        "plant": {
+          "morphology": "多年生草本，高40-100厘米，根茎肥厚，扁平块状，分枝，表面淡黄色",
+          "habitat": "生长于温暖湿润环境，热带亚热带地区广泛栽培",
+          "keyFeatures": "根茎肥厚扁平，指状分枝，表面淡黄色，有环节和芽痕，断面鲜黄色，有浓烈香气"
+        },
+        "herb": {
+          "specification": "不规则块状，略扁，具指状分枝，长4-10厘米，厚1-2厘米",
+          "appearance": "表面黄褐色或灰棕色，有环节和芽痕，分枝顶端有茎痕",
+          "crossSection": "断面浅黄色，内皮层环纹明显，维管束散在，纤维性，有特异香气，味辛辣"
+        }
+      }
+    },
+    "shigao": {
+      "id": "shigao",
+      "name": "石膏",
+      "latinName": "Gypsum Fibrosum",
+      "category": "清热药",
+      "wuxing": "water",
+      "images": {
+        "plant": {
+          "morphology": "含水硫酸钙CaSO4·2H2O的矿石，纤维状结晶集合体，白色或灰白色",
+          "habitat": "形成于沉积环境，常与石灰岩、盐岩共生",
+          "keyFeatures": "纤维状或板状晶体集合体，白色或灰白色，透明或半透明，条痕白色，具玻璃光泽或绢丝光泽，质软易碎"
+        },
+        "herb": {
+          "specification": "纤维状集合体，呈长块状、板块状或不规则块状",
+          "appearance": "白色、灰白色或淡黄色，有的半透明，体重质软，指甲可刻划成痕",
+          "crossSection": "纵断面呈纤维状纹理，具绢丝光泽，无臭无味"
+        }
+      }
+    },
+    "zhimu": {
+      "id": "zhimu",
+      "name": "知母",
+      "latinName": "Anemarrhenae Rhizoma",
+      "category": "清热药",
+      "wuxing": "water",
+      "images": {
+        "plant": {
+          "morphology": "多年生草本，高50-100厘米，根茎横走，粗壮，密生金黄色绒毛",
+          "habitat": "生长于山地、丘陵向阳干燥处，耐旱耐寒",
+          "keyFeatures": "根茎横走，上面密生金黄色绒毛，叶基生线形，花淡紫色，蒴果长圆形"
+        },
+        "herb": {
+          "specification": "长条状，微弯曲，略扁，长3-15厘米，直径0.8-1.5厘米",
+          "appearance": "表面黄棕色或棕色，上面有一凹沟，具紧密排列的环状节",
+          "crossSection": "断面黄白色，颗粒性，具金包头特征（一端有淡黄色茎叶残痕），味微甜略苦，嚼之带黏性"
+        }
+      }
+    },
+    "jinyinhua": {
+      "id": "jinyinhua",
+      "name": "金银花",
+      "latinName": "Lonicerae Japonicae Flos",
+      "category": "清热药",
+      "wuxing": "metal",
+      "images": {
+        "plant": {
+          "morphology": "半常绿藤本，茎中空，左旋缠绕，叶对生卵形，花成对腋生",
+          "habitat": "生长于山坡灌丛、疏林中，喜阳光，适应性强",
+          "keyFeatures": "茎中空左旋缠绕，叶对生，花初开白色后转金黄色，故名金银花，有清香气"
+        },
+        "herb": {
+          "specification": "棒状，上粗下细，略弯曲，长2-3厘米，上部直径约3毫米",
+          "appearance": "表面黄白色或绿白色，密被短柔毛，萼片绿色先端5裂",
+          "crossSection": "花冠筒状，先端二唇形，开放者花冠筒状先端开裂，气清香，味淡微苦"
+        }
+      }
+    },
+    "liangqiao": {
+      "id": "liangqiao",
+      "name": "连翘",
+      "latinName": "Forsythiae Fructus",
+      "category": "清热药",
+      "wuxing": "fire",
+      "images": {
+        "plant": {
+          "morphology": "落叶灌木，高2-3米，枝条开展下垂，小枝黄褐色，稍四棱",
+          "habitat": "生长于山坡灌丛、山谷疏林中，耐旱耐寒",
+          "keyFeatures": "枝开展下垂，叶对生卵形，花金黄色先叶开放，蒴果卵球形稍扁，果皮木质"
+        },
+        "herb": {
+          "specification": "长卵形至卵形，稍扁，长1.5-2.5厘米，直径0.5-1.3厘米",
+          "appearance": "表面有不规则纵皱纹和多数凸起的小斑点（皮孔），两面各有1条明显的纵沟",
+          "crossSection": "顶端锐尖，基部有小果梗或已脱落，青翘多不开裂，表面绿褐色，老翘自顶端开裂或裂成两瓣，表面黄棕色，内表面多为浅黄棕色，质脆，种子棕色多已脱落，气微香，味苦"
+        }
+      }
+    },
+    "dahuang": {
+      "id": "dahuang",
+      "name": "大黄",
+      "latinName": "Rhei Radix et Rhizoma",
+      "category": "泻下药",
+      "wuxing": "earth",
+      "images": {
+        "plant": {
+          "morphology": "多年生高大草本，高1-2米，根茎粗壮肥厚，茎直立中空，基生叶大型掌状深裂",
+          "habitat": "生长于高寒山区、林缘草地，海拔1500-4000米",
+          "keyFeatures": "根茎粗壮，断面淡红棕色，星点（异型维管束）排列成环，茎直立中空，叶大型掌状深裂"
+        },
+        "herb": {
+          "specification": "类圆柱形、圆锥形或不规则块片状，长3-17厘米，直径3-10厘米",
+          "appearance": "表面黄棕色或棕褐色，有类白色网状纹理（锦纹），有时可见菊花状星点排列",
+          "crossSection": "质坚实，不易折断，断面淡红棕色或黄棕色，颗粒性，根茎髓部有星点（异型维管束）环列或散在，根木部发达，具放射状纹理，形成层环明显，气清香，味苦微涩，嚼之黏牙，有沙粒感"
+        }
+      }
+    },
+    "mangxiao": {
+      "id": "mangxiao",
+      "name": "芒硝",
+      "latinName": "Natrii Sulfas",
+      "category": "泻下药",
+      "wuxing": "water",
+      "images": {
+        "plant": {
+          "morphology": "含水硫酸钠Na2SO4·10H2O的结晶矿物，单斜晶系，晶体呈短柱状或板状",
+          "habitat": "产于盐湖、盐泉或盐井中，由海水或盐湖水蒸发结晶而成",
+          "keyFeatures": "无色透明或白色半透明结晶，呈短柱状、板状或不规则块状，条痕白色，玻璃光泽"
+        },
+        "herb": {
+          "specification": "棱柱状、长方形或不规则块状及粒状",
+          "appearance": "无色透明或类白色半透明，暴露空气中表面渐风化而覆盖一层白色粉末（无水硫酸钠）",
+          "crossSection": "质脆易碎，断面呈玻璃样光泽，气微，味咸"
+        }
+      }
+    },
+    "renshen": {
+      "id": "renshen",
+      "name": "人参",
+      "latinName": "Ginseng Radix et Rhizoma",
+      "category": "补益药",
+      "wuxing": "fire",
+      "images": {
+        "plant": {
+          "morphology": "多年生草本，高30-60厘米，主根粗壮肉质，纺锤形或圆柱形，根茎短",
+          "habitat": "生长于海拔400-1000米的山地针阔叶混交林下，阴湿环境",
+          "keyFeatures": "主根纺锤形，表面有细密浅纵皱纹，上部有横纹，根茎（芦头）短，上有茎痕（芦碗），掌状复叶轮生茎顶，伞形花序顶生"
+        },
+        "herb": {
+          "specification": "主根纺锤形或圆柱形，长3-15厘米，直径1-2厘米",
+          "appearance": "表面灰黄色，上部或全体有疏浅断续的粗横纹及明显的纵皱纹，下部有支根2-3条",
+          "crossSection": "断面淡黄白色，显粉性，形成层环纹棕黄色，皮部有黄棕色点状树脂道，具菊花心纹理，香气特异，味微苦回甜"
+        }
+      }
+    },
+    "huangqi": {
+      "id": "huangqi",
+      "name": "黄芪",
+      "latinName": "Astragali Radix",
+      "category": "补益药",
+      "wuxing": "earth",
+      "images": {
+        "plant": {
+          "morphology": "多年生草本，高50-80厘米，主根圆柱形，粗壮，长可达1米，外皮淡棕黄色",
+          "habitat": "生长于山坡草地、林缘，耐旱耐寒",
+          "keyFeatures": "主根圆柱形粗壮，外皮淡棕黄色，羽状复叶互生，花淡黄色蝶形，荚果膜质"
+        },
+        "herb": {
+          "specification": "圆柱形，有的有分枝，上端较粗，长30-90厘米，直径1-3.5厘米",
+          "appearance": "表面淡棕黄色或淡棕褐色，有不整齐的纵皱纹或纵沟，质硬而韧，不易折断",
+          "crossSection": "断面纤维性强，并显粉性，皮部黄白色，木部淡黄色，有菊花心及放射状纹理及裂隙，老根中心偶呈枯朽状，黑褐色或呈空洞，气微，味微甜，嚼之微有豆腥气"
+        }
+      }
+    },
+    "baizhu": {
+      "id": "baizhu",
+      "name": "白术",
+      "latinName": "Atractylodis Macrocephalae Rhizoma",
+      "category": "补益药",
+      "wuxing": "earth",
+      "images": {
+        "plant": {
+          "morphology": "多年生草本，高30-60厘米，根茎肥厚块状，下部两侧膨大呈拳状",
+          "habitat": "生长于山坡草地、林下，浙江、安徽等地栽培",
+          "keyFeatures": "根茎肥厚呈拳状，表面灰黄色，下部两侧膨大，顶端有茎基残痕，断面黄白色有朱砂点（油室）"
+        },
+        "herb": {
+          "specification": "不规则的肥厚团块，长3-13厘米，直径1.5-7厘米",
+          "appearance": "表面灰黄色或灰棕色，有瘤状突起及断续的纵皱纹和沟纹，顶端有残留茎基和芽痕",
+          "crossSection": "质坚硬不易折断，断面不平坦，黄白色至淡棕色，有棕黄色的点状油室（朱砂点）散在，烘干者断面角质样，色较深或有裂隙，气清香，味甘微辛，嚼之略带黏性"
+        }
+      }
+    },
+    "fuling": {
+      "id": "fuling",
+      "name": "茯苓",
+      "latinName": "Poria",
+      "category": "利水渗湿药",
+      "wuxing": "earth",
+      "images": {
+        "plant": {
+          "morphology": "寄生于松树根部的真菌，菌核埋于土中，呈类球形或不规则块状",
+          "habitat": "寄生于松科植物赤松或马尾松根部，生于地下20-30厘米处",
+          "keyFeatures": "菌核类球形或不规则块状，表面棕褐色至黑褐色，粗糙，断面白色或淡红色，颗粒状"
+        },
+        "herb": {
+          "specification": "类球形或不规则的块状，大小不一",
+          "appearance": "表面棕褐色或黑褐色，有明显的皱缩纹理，体重质坚实",
+          "crossSection": "断面不平坦，颗粒性，外层淡棕色，内部白色或淡红色，少数呈淡棕色，有的中间抱有松根（茯神），无臭，味淡，嚼之粘牙"
+        }
+      }
+    },
+    "danggui": {
+      "id": "danggui",
+      "name": "当归",
+      "latinName": "Angelicae Sinensis Radix",
+      "category": "补血药",
+      "wuxing": "wood",
+      "images": {
+        "plant": {
+          "morphology": "多年生草本，高40-100厘米，主根粗壮肉质，圆锥形，茎带紫色",
+          "habitat": "生长于高寒阴湿山区，甘肃、云南等地栽培",
+          "keyFeatures": "主根圆锥形，表面黄棕色，有纵皱纹及皮孔，茎带紫色，叶二至三回羽状分裂"
+        },
+        "herb": {
+          "specification": "圆柱形，下部有支根3-5条或更多，长15-25厘米",
+          "appearance": "表面黄棕色至深褐色，有纵皱纹及横长皮孔样突起，根头（归头）直径1.5-4厘米，具环纹",
+          "crossSection": "质柔韧，断面黄白色或淡黄棕色，皮部厚，有棕色油点（朱砂点），形成层环黄棕色，木部色较淡，具浓郁香气，味甘辛微苦"
+        }
+      }
+    },
+    "chuanxiong": {
+      "id": "chuanxiong",
+      "name": "川芎",
+      "latinName": "Chuanxiong Rhizoma",
+      "category": "活血化瘀药",
+      "wuxing": "wood",
+      "images": {
+        "plant": {
+          "morphology": "多年生草本，高40-60厘米，根茎呈不规则结节状拳形团块",
+          "habitat": "生长于温和湿润环境，四川都江堰等地栽培",
+          "keyFeatures": "根茎呈不规则结节状拳形团块，表面黄褐色，粗糙皱缩，断面黄白色有波状环纹"
+        },
+        "herb": {
+          "specification": "不规则结节状拳形团块，直径2-7厘米",
+          "appearance": "表面黄褐色，粗糙皱缩，有多数平行隆起的轮节，顶端有类圆形凹陷的茎痕",
+          "crossSection": "质坚实不易折断，断面黄白色或灰黄色，可见波状环纹（形成层）及错综纹理，散有黄棕色油点（朱砂点），香气浓郁特异，味苦辛，稍有麻舌感，微回甜"
+        }
+      }
+    },
+    "baishao": {
+      "id": "baishao",
+      "name": "白芍",
+      "latinName": "Paeoniae Radix Alba",
+      "category": "补血药",
+      "wuxing": "wood",
+      "images": {
+        "plant": {
+          "morphology": "多年生草本，高50-80厘米，根粗壮圆柱形，茎下部叶为二回三出复叶",
+          "habitat": "生长于山坡草地或林下，浙江、安徽等地栽培",
+          "keyFeatures": "根圆柱形，表面类白色，平滑，茎直立，花大型白色粉红色或红色"
+        },
+        "herb": {
+          "specification": "圆柱形，平直或稍弯曲，两端平截，长5-18厘米，直径1-2.5厘米",
+          "appearance": "表面类白色或淡红棕色，平滑或隐约可见纵皱纹及细根痕",
+          "crossSection": "质坚实不易折断，断面较平坦，类白色或微带棕红色，形成层环明显，射线放射状，气微，味微苦酸"
+        }
+      }
+    },
+    "shudihuang": {
+      "id": "shudihuang",
+      "name": "熟地黄",
+      "latinName": "Rehmanniae Radix Praeparata",
+      "category": "补血药",
+      "wuxing": "water",
+      "images": {
+        "plant": {
+          "morphology": "多年生草本，高10-30厘米，全株密被灰白色长柔毛，根肉质块状",
+          "habitat": "生长于山坡、路边，河南、山东等地栽培",
+          "keyFeatures": "根茎肉质块状，表面棕黑色或乌黑色，有光泽，断面乌黑色，质柔软"
+        },
+        "herb": {
+          "specification": "不规则的块片或碎块，大小不一",
+          "appearance": "表面乌黑色或棕黑色，有光泽，黏性大",
+          "crossSection": "质柔软而带韧性，不易折断，断面乌黑色，有光泽，气微，味甜"
+        }
+      }
+    }
+  },
+  "scenePrompts": {
+    "qingmulin": {
+      "id": "qingmulin",
+      "name": "青木林",
+      "wuxing": "wood",
+      "element": "木",
+      "organ": "肝",
+      "direction": "东",
+      "season": "春",
+      "prompt": {
+        "regionName": "Emerald Grove of Spring",
+        "seasonFeatures": "Spring morning awakening, fresh green sprouts, vibrant bamboo forest, magical vines glowing with soft light",
+        "wuxingColors": "Vivid emerald green (#2E7D32), spring lime (#81C784), crystal dewdrops reflecting rainbow light",
+        "environmentElements": "Towering crystal bamboo stalks with translucent leaves, floating spore particles, bioluminescent flowers, ancient twisted trees with glowing sap, morning mist weaving through the forest, magical fireflies dancing in shafts of sunlight",
+        "atmosphere": "Mystical and vibrant, full of life energy, ethereal spring magic, inviting exploration"
+      }
+    },
+    "chiyanfeng": {
+      "id": "chiyanfeng",
+      "name": "赤焰峰",
+      "wuxing": "fire",
+      "element": "火",
+      "organ": "心",
+      "direction": "南",
+      "season": "夏",
+      "prompt": {
+        "regionName": "Crimson Peak of Summer",
+        "seasonFeatures": "Summer noon heat, blazing sun, magical flames dancing in air, hot springs steaming with ethereal mist",
+        "wuxingColors": "Fiery crimson red (#C62828), warm amber glow (#EF5350), golden sunlight (#FF8A65), molten orange",
+        "environmentElements": "Majestic red crystal formations, volcanic rocks glowing from within, cascading lava flows turned into magical glass, floating embers and sparks, heat distortion in the air, blooming fire lilies, phoenix feathers scattered on the ground, golden light piercing through steam",
+        "atmosphere": "Passionate and powerful, magical heat energy, dramatic and awe-inspiring, heart of fire realm"
+      }
+    },
+    "huangtuqiu": {
+      "id": "huangtuqiu",
+      "name": "黄土丘",
+      "wuxing": "earth",
+      "element": "土",
+      "organ": "脾",
+      "direction": "中",
+      "season": "长夏",
+      "prompt": {
+        "regionName": "Golden Earth Mounds",
+        "seasonFeatures": "Late summer afternoon, abundant harvest season, magical golden wheat swaying, earth energies flowing visibly",
+        "wuxingColors": "Rich golden wheat (#F9A825), warm amber (#FFD54F), ochre brown, honey gold accents",
+        "environmentElements": "Rolling hills covered in golden crystalline wheat, ancient stone circles glowing with earth magic, floating earth motes and golden pollen, underground cavern entrances with warm light, giant mushrooms with golden caps, harvest spirits dancing in the fields, distant villages with smoke rising",
+        "atmosphere": "Abundant and nurturing, grounded and stable, warm harvest magic, center of the world energy"
+      }
+    },
+    "baijinyuan": {
+      "id": "baijinyuan",
+      "name": "白金原",
+      "wuxing": "metal",
+      "element": "金",
+      "organ": "肺",
+      "direction": "西",
+      "season": "秋",
+      "prompt": {
+        "regionName": "Platinum Plains of Autumn",
+        "seasonFeatures": "Autumn twilight, silver frost covering everything, metallic crystal formations, pure crisp air with visible breath",
+        "wuxingColors": "Silver white frost (#E0E0E0), platinum metallic sheen (#B0BEC5), moonlight blue, pale gold sunset",
+        "environmentElements": "Crystalline birch trees with silver bark, floating silver leaves falling slowly, exposed platinum ore veins glowing softly, mirror-like ice pools reflecting sky, metallic flower petals scattering in wind, white quartz formations, distant mountains like carved jade",
+        "atmosphere": "Pure and majestic, crystalline clarity, sharp and focused energy, autumn purification magic"
+      }
+    },
+    "heishuitan": {
+      "id": "heishuitan",
+      "name": "黑水潭",
+      "wuxing": "water",
+      "element": "水",
+      "organ": "肾",
+      "direction": "北",
+      "season": "冬",
+      "prompt": {
+        "regionName": "Obsidian Depths of Winter",
+        "seasonFeatures": "Deep winter night, mysterious dark pool with bioluminescent depths, magical ice formations, snowflakes suspended in time",
+        "wuxingColors": "Deep obsidian blue (#1565C0), crystal ice blue (#42A5F5), midnight black, silver moonlight reflections",
+        "environmentElements": "Dark crystal clear pool with glowing depths, black stone archways covered in frost, floating ice crystals suspended in air, bioluminescent underwater plants visible through ice, aurora-like lights dancing above water, ancient frozen waterfalls, snow-covered pine silhouettes, moonlight creating silver pathways on water",
+        "atmosphere": "Mysterious and profound, deep and contemplative, water of life essence, winter preservation magic"
+      }
+    }
+  },
+  "qualityStandards": {
+    "imageQuality": {
+      "resolution": "8K (7680×4320) 或 4K (3840×2160)",
+      "format": "JPG/PNG",
+      "colorProfile": "sRGB",
+      "dpi": "300"
+    },
+    "scientificAccuracy": {
+      "plantImage": [
+        "形态特征必须与《中国药典》描述一致",
+        "拉丁学名必须准确",
+        "关键识别特征必须清晰可见",
+        "生长环境与实际相符"
+      ],
+      "herbImage": [
+        "药材规格符合药典标准",
+        "性状特征描述准确",
+        "断面特征清晰可见",
+        "颜色和质地符合标准"
+      ]
+    },
+    "artisticStyle": {
+      "overall": "3D渲染风格 + 透明背景",
+      "plant": "3D渲染植物模型 + 透明背景",
+      "herb": "3D渲染药材模型 + 透明背景",
+      "scene": "新国风水墨山水画意境 + 游戏场景风格"
+    },
+    "reviewCriteria": {
+      "pass": [
+        "科学准确性达标（90%以上）",
+        "图像质量清晰（8K/4K）",
+        "风格符合新国风水墨美学",
+        "无明显AI生成痕迹"
+      ],
+      "fail": [
+        "形态特征与药典不符",
+        "图像模糊或失真",
+        "风格偏离水墨美学",
+        "有明显AI生成缺陷"
+      ]
+    }
+  },
+  "generationBatch": {
+    "batch1": {
+      "name": "第一批：解表药+清热药（8味）",
+      "medicines": [
+        "mahuang",
+        "guizhi",
+        "zisu",
+        "shengjiang",
+        "shigao",
+        "zhimu",
+        "jinyinhua",
+        "liangqiao"
+      ],
+      "priority": "high",
+      "estimatedTime": "2小时"
+    },
+    "batch2": {
+      "name": "第二批：补益药核心（4味）",
+      "medicines": [
+        "renshen",
+        "huangqi",
+        "baizhu",
+        "fuling"
+      ],
+      "priority": "high",
+      "estimatedTime": "1.5小时"
+    },
+    "batch3": {
+      "name": "第三批：补血药（4味）",
+      "medicines": [
+        "danggui",
+        "chuanxiong",
+        "baishao",
+        "shudihuang"
+      ],
+      "priority": "high",
+      "estimatedTime": "1.5小时"
+    },
+    "batch4": {
+      "name": "第四批：泻下药+其他（2味）",
+      "medicines": [
+        "dahuang",
+        "mangxiao"
+      ],
+      "priority": "medium",
+      "estimatedTime": "1小时"
+    },
+    "batch5": {
+      "name": "第五批：五行场景背景",
+      "scenes": [
+        "qingmulin",
+        "chiyanfeng",
+        "huangtuqiu",
+        "baijinyuan",
+        "heishuitan"
+      ],
+      "priority": "high",
+      "estimatedTime": "1.5小时"
+    }
+  },
+  "fileNaming": {
+    "plant": "{id}_plant.jpg",
+    "herb": "{id}_herb.jpg",
+    "scene": "{sceneId}_bg.jpg"
+  },
+  "outputDirectory": {
+    "base": "/assets/images/",
+    "plant": "/assets/images/medicines/plant/",
+    "herb": "/assets/images/medicines/herb/",
+    "microscope": "/assets/images/medicines/micro/",
+    "scene": "/assets/images/scenes/"
+  },
+  "apiConfig": {
+    "seedream": {
+      "endpoint": "https://ark.cn-beijing.volces.com/api/v3/images/generations",
+      "model": "doubao-seedream-4-5-251128",
+      "parameters": {
+        "width": 1024,
+        "height": 1024
+      }
+    }
+  }
+}

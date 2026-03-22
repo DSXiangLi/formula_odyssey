@@ -1,17 +1,18 @@
 import { motion } from 'framer-motion'
 import { useGameStore } from '@stores/gameStore'
 import { cn } from '@utils/index'
+import type { WuxingType } from '../../types/index'
 
-const regions = [
-  { id: 'mountain', name: '高山', icon: '🏔️' },
-  { id: 'forest', name: '林间', icon: '🌳' },
-  { id: 'flower', name: '花田', icon: '🌸' },
-  { id: 'stream', name: '溪边', icon: '🌊' },
-  { id: 'cliff', name: '岩壁', icon: '🪨' },
-] as const
+const wuxingRegions: { id: WuxingType; name: string; icon: string }[] = [
+  { id: 'wood', name: '青木林', icon: '🌳' },
+  { id: 'fire', name: '赤焰峰', icon: '🔥' },
+  { id: 'earth', name: '黄土丘', icon: '🏔️' },
+  { id: 'metal', name: '白金原', icon: '⛰️' },
+  { id: 'water', name: '黑水潭', icon: '💧' },
+]
 
 export default function Navigation() {
-  const { currentRegion, setCurrentRegion, getCollectedCount, player } = useGameStore()
+  const { currentRegion, setCurrentRegion, getCollectedCount, player, setFormulaPursuitOpen } = useGameStore()
   const collectedCount = getCollectedCount()
   const totalCount = 50
 
@@ -40,14 +41,14 @@ export default function Navigation() {
         </div>
       </div>
 
-      {/* 中间：区域导航 */}
+      {/* 中间：五行区域导航 */}
       <div className="hidden md:flex items-center gap-2 bg-background-secondary/80 backdrop-blur-sm rounded-full px-4 py-2">
-        {regions.map((region) => (
+        {wuxingRegions.map((region) => (
           <motion.button
             key={region.id}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => setCurrentRegion(region.id as any)}
+            onClick={() => setCurrentRegion(region.id)}
             className={cn(
               'px-4 py-2 rounded-full text-sm font-medium transition-all duration-200',
               currentRegion === region.id
@@ -63,6 +64,15 @@ export default function Navigation() {
 
       {/* 右侧：收集进度 */}
       <div className="flex items-center gap-4">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setFormulaPursuitOpen(true)}
+          className="flex items-center gap-2 bg-gradient-to-r from-amber-600 to-amber-500 backdrop-blur-sm rounded-full px-4 py-2 text-white font-medium hover:shadow-lg hover:shadow-amber-500/30 transition-all duration-200"
+        >
+          <span>📜</span>
+          <span className="text-sm">追缉令</span>
+        </motion.button>
         <div className="flex items-center gap-2 bg-background-secondary/80 backdrop-blur-sm rounded-full px-4 py-2">
           <span className="text-primary">📖</span>
           <span className="text-sm text-text-primary">

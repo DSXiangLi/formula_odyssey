@@ -1,0 +1,766 @@
+/* 方剂图鉴样式 */
+
+/* 遮罩层 */
+.formula-collection-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+/* 主面板 */
+.formula-collection-panel {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 1200px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+/* 标题栏 */
+.collection-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+  position: relative;
+}
+
+.collection-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.title-icon {
+  font-size: 28px;
+}
+
+.collection-title h2 {
+  color: #1a1a2e;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.collection-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #1a1a2e;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.stat-label {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.stat-divider {
+  opacity: 0.3;
+}
+
+.close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(26, 26, 46, 0.2);
+  color: #1a1a2e;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  background: rgba(26, 26, 46, 0.4);
+  transform: rotate(90deg);
+}
+
+/* 搜索和分类 */
+.collection-filters {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.search-icon {
+  font-size: 18px;
+  opacity: 0.5;
+}
+
+.search-box input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-box input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* 分类标签 */
+.category-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.category-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.category-tab:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.category-tab.active {
+  background: #FFD700;
+  color: #1a1a2e;
+}
+
+.tab-icon {
+  font-size: 16px;
+}
+
+/* 方剂网格 */
+.formula-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 20px 24px;
+  overflow-y: auto;
+  max-height: 60vh;
+}
+
+/* 方剂卡片 */
+.formula-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 2px solid transparent;
+  overflow: hidden;
+}
+
+.formula-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+.formula-card.locked {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.formula-card.locked:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.formula-card.unlocked {
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+/* 熟练度徽章 */
+.proficiency-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* 分类徽章 */
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.category-icon {
+  font-size: 14px;
+}
+
+.category-name {
+  font-weight: 500;
+}
+
+/* 方剂名称 */
+.formula-name {
+  color: #fff;
+  font-size: 20px;
+  margin: 0 0 12px 0;
+  font-weight: bold;
+}
+
+/* 组成预览 */
+.composition-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.preview-medicine {
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.more-medicines {
+  padding: 4px 10px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+}
+
+/* 功效预览 */
+.function-preview {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+/* 熟练度条 */
+.proficiency-bar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.proficiency-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+/* 锁定提示 */
+.locked-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 13px;
+}
+
+.lock-icon {
+  font-size: 16px;
+}
+
+/* ===== 详情弹窗 ===== */
+
+.formula-detail-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+
+.formula-detail-modal {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* 详情头部 */
+.detail-header {
+  padding: 24px;
+  text-align: center;
+  border-bottom: 3px solid;
+  position: relative;
+}
+
+.detail-proficiency {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  color: white;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.detail-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.detail-formula-name {
+  color: #fff;
+  font-size: 28px;
+  margin: 0 0 8px 0;
+}
+
+.detail-pinyin {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  margin: 0;
+}
+
+.detail-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.detail-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+/* 熟练度进度条 */
+.detail-proficiency-bar {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.proficiency-label {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.proficiency-track {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.proficiency-progress {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.proficiency-levels {
+  display: flex;
+  justify-content: space-between;
+}
+
+.level-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: all 0.3s;
+}
+
+.level-dot.active {
+  transform: scale(1.1);
+}
+
+/* 标签页 */
+.detail-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0 24px;
+}
+
+.detail-tab {
+  padding: 16px 20px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 15px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.detail-tab:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.detail-tab.active {
+  color: #FFD700;
+}
+
+.detail-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background: #FFD700;
+}
+
+/* 内容区 */
+.detail-content {
+  padding: 24px;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+.tab-content h3 {
+  color: #FFD700;
+  font-size: 16px;
+  margin: 0 0 16px 0;
+}
+
+/* 组成详情 */
+.composition-detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.composition-detail-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.role-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  color: white;
+  font-size: 13px;
+}
+
+.role-name {
+  font-weight: bold;
+}
+
+.role-desc {
+  opacity: 0.8;
+  font-size: 12px;
+}
+
+.medicine-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+.medicine-name-large {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.medicine-amount-large {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+}
+
+/* 功效标签 */
+.function-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.function-tag {
+  padding: 8px 16px;
+  background: rgba(76, 175, 80, 0.2);
+  border-radius: 20px;
+  color: #4CAF50;
+  font-size: 14px;
+}
+
+/* 主治列表 */
+.indication-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.indication-list li {
+  padding: 8px 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.indication-list li:last-child {
+  border-bottom: none;
+}
+
+.indication-list li::before {
+  content: '•';
+  color: #FFD700;
+  margin-right: 8px;
+}
+
+/* 方歌内容 */
+.song-content {
+  padding: 20px;
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.song-line {
+  color: #FFD700;
+  font-size: 16px;
+  line-height: 2;
+  margin: 0;
+  text-align: center;
+}
+
+.unlock-hint {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+}
+
+/* 临床信息 */
+.clinical-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.clinical-stat {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.clinical-stat .stat-label {
+  display: block;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.clinical-stat .stat-value {
+  color: #4CAF50;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.clinical-hint {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* 操作按钮 */
+.detail-actions {
+  display: flex;
+  gap: 12px;
+  padding: 20px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.share-btn,
+.practice-btn {
+  flex: 1;
+  padding: 14px 24px;
+  border-radius: 12px;
+  border: none;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.share-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.share-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.practice-btn {
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+  color: #fff;
+}
+
+.practice-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.4);
+}
+
+/* 滚动条 */
+.formula-grid::-webkit-scrollbar,
+.detail-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.formula-grid::-webkit-scrollbar-track,
+.detail-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.formula-grid::-webkit-scrollbar-thumb,
+.detail-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 215, 0, 0.3);
+  border-radius: 3px;
+}
+
+.category-tabs::-webkit-scrollbar {
+  height: 0;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .formula-collection-panel {
+    margin: 10px;
+    max-height: 95vh;
+  }
+
+  .formula-grid {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .collection-header {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .collection-stats {
+    order: 3;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+
+  .category-tabs {
+    gap: 6px;
+  }
+
+  .category-tab {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .detail-formula-name {
+    font-size: 22px;
+  }
+
+  .detail-tabs {
+    overflow-x: auto;
+    padding: 0 16px;
+  }
+
+  .detail-tab {
+    padding: 12px 16px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .clinical-info {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-actions {
+    flex-direction: column;
+  }
+}

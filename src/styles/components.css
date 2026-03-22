@@ -1,0 +1,502 @@
+/**
+ * 药灵山谷 v2.0 - 五行归元版组件样式
+ * Crystal Ball & WuXing Component Styles
+ */
+
+/* ===== 水晶球组件 ===== */
+.crystal-ball-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* 水晶球主体 */
+.crystal-ball {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.08) 40%,
+    rgba(255, 255, 255, 0.15) 100%
+  );
+  box-shadow:
+    /* 外发光 */
+    0 0 30px rgba(255, 255, 255, 0.2),
+    0 0 60px rgba(255, 215, 0, 0.15),
+    /* 内发光 */
+    inset 0 0 40px rgba(255, 255, 255, 0.1),
+    inset 0 0 80px rgba(255, 255, 255, 0.05),
+    /* 底部阴影 */
+    0 20px 50px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  transition: all 0.4s var(--ease-spring);
+}
+
+.crystal-ball:hover {
+  transform: scale(1.05);
+  box-shadow:
+    0 0 50px rgba(255, 255, 255, 0.3),
+    0 0 80px rgba(255, 215, 0, 0.25),
+    inset 0 0 50px rgba(255, 255, 255, 0.15),
+    inset 0 0 100px rgba(255, 255, 255, 0.08),
+    0 25px 60px rgba(0, 0, 0, 0.6);
+}
+
+/* 水晶球内部图片 */
+.crystal-ball-image {
+  position: absolute;
+  inset: 10px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+}
+
+.crystal-ball-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  transition: all 0.5s var(--ease-smooth);
+}
+
+/* 未收集状态 - 神秘模糊 */
+.crystal-ball.mystery .crystal-ball-image img {
+  filter: blur(4px) brightness(0.7) grayscale(0.4);
+  transform: scale(0.88);
+  opacity: 0.7;
+}
+
+/* 已收集状态 - 清晰显示 */
+.crystal-ball.revealed .crystal-ball-image img {
+  filter: blur(0) brightness(1.05) grayscale(0);
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* 金色光环 - 已收集 */
+.crystal-ball.collected {
+  border-color: var(--currency-gold);
+  animation: gold-aura 3s ease-in-out infinite;
+}
+
+/* 呼吸效果 */
+.crystal-ball.breathing {
+  animation: crystal-breathe 4s var(--ease-breathe) infinite;
+}
+
+/* 悬浮效果 */
+.crystal-ball.floating {
+  animation: crystal-float 6s ease-in-out infinite;
+}
+
+/* 水晶球顶部高光 */
+.crystal-ball::before {
+  content: '';
+  position: absolute;
+  top: 8%;
+  left: 12%;
+  width: 30%;
+  height: 18%;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  filter: blur(4px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* 水晶球闪光扫过效果 */
+.crystal-ball::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -100%;
+  width: 80%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.15) 45%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.15) 55%,
+    rgba(255, 255, 255, 0) 70%,
+    transparent 100%
+  );
+  transform: rotate(30deg);
+  animation: shine-sweep 6s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* 药名标签 */
+.crystal-ball-label {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-align: center;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s var(--ease-spring);
+}
+
+.crystal-ball-label.mystery {
+  color: var(--color-text-muted);
+  letter-spacing: 2px;
+}
+
+.crystal-ball-label.revealed {
+  color: var(--currency-gold);
+  text-shadow: 0 0 10px var(--currency-glow);
+  border-color: var(--currency-gold);
+}
+
+/* ===== 五行徽章 ===== */
+.wuxing-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: var(--font-title);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s var(--ease-spring);
+}
+
+.wuxing-badge.wood {
+  background: linear-gradient(135deg, var(--wuxing-wood-dark) 0%, var(--wuxing-wood-primary) 100%);
+  color: white;
+  box-shadow: 0 4px 15px var(--wuxing-wood-glow);
+}
+
+.wuxing-badge.fire {
+  background: linear-gradient(135deg, var(--wuxing-fire-dark) 0%, var(--wuxing-fire-primary) 100%);
+  color: white;
+  box-shadow: 0 4px 15px var(--wuxing-fire-glow);
+}
+
+.wuxing-badge.earth {
+  background: linear-gradient(135deg, var(--wuxing-earth-dark) 0%, var(--wuxing-earth-primary) 100%);
+  color: #1a1a1a;
+  box-shadow: 0 4px 15px var(--wuxing-earth-glow);
+}
+
+.wuxing-badge.metal {
+  background: linear-gradient(135deg, var(--wuxing-metal-dark) 0%, var(--wuxing-metal-primary) 100%);
+  color: white;
+  box-shadow: 0 4px 15px var(--wuxing-metal-glow);
+}
+
+.wuxing-badge.water {
+  background: linear-gradient(135deg, var(--wuxing-water-dark) 0%, var(--wuxing-water-primary) 100%);
+  color: white;
+  box-shadow: 0 4px 15px var(--wuxing-water-glow);
+}
+
+/* ===== 线索按钮组 ===== */
+.diagnosis-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.diagnosis-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 20px;
+  min-width: 80px;
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-spring);
+  position: relative;
+  overflow: hidden;
+}
+
+.diagnosis-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(255, 215, 0, 0.1) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.diagnosis-btn:hover::before {
+  opacity: 1;
+}
+
+.diagnosis-btn:hover {
+  transform: translateY(-3px);
+  border-color: var(--currency-gold);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+.diagnosis-btn.used {
+  border-color: var(--currency-gold);
+  box-shadow:
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 0 20px rgba(255, 215, 0, 0.15),
+    0 0 25px var(--currency-glow);
+}
+
+.diagnosis-btn.locked {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.diagnosis-btn-icon {
+  font-size: 1.5rem;
+}
+
+.diagnosis-btn-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.diagnosis-btn-cost {
+  font-size: 0.75rem;
+  color: var(--currency-gold);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.diagnosis-btn-result {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+
+/* ===== 线索卡片 ===== */
+.clue-card {
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.clue-card.revealed {
+  border-color: rgba(255, 215, 0, 0.4);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+}
+
+.clue-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.clue-card-content {
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.clue-card-content.highlight {
+  color: var(--currency-gold);
+  font-weight: 500;
+}
+
+/* ===== 方剂追缉令卡片 ===== */
+.pursuit-card {
+  position: relative;
+  padding: 20px;
+  border-radius: 16px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  transition: all 0.4s var(--ease-spring);
+}
+
+.pursuit-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--currency-gold) 0%,
+    var(--currency-gold-light) 50%,
+    var(--currency-gold) 100%
+  );
+}
+
+.pursuit-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+.pursuit-card.completed::before {
+  background: linear-gradient(
+    90deg,
+    var(--color-success) 0%,
+    #81C784 50%,
+    var(--color-success) 100%
+  );
+}
+
+.pursuit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.pursuit-title {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.pursuit-difficulty {
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.pursuit-difficulty.easy {
+  background: var(--wuxing-wood-primary);
+  color: white;
+}
+
+.pursuit-difficulty.normal {
+  background: var(--wuxing-earth-primary);
+  color: #1a1a1a;
+}
+
+.pursuit-difficulty.hard {
+  background: var(--wuxing-fire-primary);
+  color: white;
+}
+
+.pursuit-difficulty.challenge {
+  background: linear-gradient(135deg, var(--wuxing-fire-primary) 0%, var(--currency-gold) 100%);
+  color: white;
+}
+
+.pursuit-composition {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.pursuit-herb {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 0.85rem;
+}
+
+.pursuit-herb.collected {
+  background: rgba(76, 175, 80, 0.3);
+  color: #81C784;
+}
+
+.pursuit-herb.pending {
+  color: var(--color-text-muted);
+}
+
+.pursuit-reward {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--currency-gold);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* ===== 响应式调整 ===== */
+@media (max-width: 640px) {
+  .crystal-ball {
+    width: 150px;
+    height: 150px;
+  }
+
+  .crystal-ball-image {
+    inset: 8px;
+  }
+
+  .diagnosis-btn {
+    padding: 10px 14px;
+    min-width: 65px;
+  }
+
+  .diagnosis-btn-icon {
+    font-size: 1.2rem;
+  }
+
+  .diagnosis-btn-label {
+    font-size: 0.8rem;
+  }
+}

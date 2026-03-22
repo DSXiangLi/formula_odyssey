@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AnimatePresence } from 'framer-motion'
 import { useGameStore } from '@stores/gameStore'
 import ValleyScene from '@components/scene/ValleyScene'
 import ExploreModal from '@components/explore/ExploreModal'
@@ -8,15 +8,21 @@ import MedicineDetail from '@components/collection/MedicineDetail'
 import Navigation from '@components/ui/Navigation'
 import ExploreButton from '@components/ui/ExploreButton'
 import CollectionButton from '@components/ui/CollectionButton'
-import DailyReward from '@components/ui/DailyReward'
+import FormulaPursuitPanel from '@components/formula/FormulaPursuit'
+import ClinicalCaseComponent from '@components/clinical/ClinicalCase'
 
 function App() {
   const {
     isExploreOpen,
     isCollectionOpen,
+    isFormulaPursuitOpen,
+    isClinicalCaseOpen,
     selectedMedicine,
+    currentCase,
     setExploreOpen,
     setCollectionOpen,
+    setFormulaPursuitOpen,
+    setClinicalCaseOpen,
     setSelectedMedicine,
     login,
   } = useGameStore()
@@ -64,6 +70,23 @@ function App() {
           <MedicineDetail
             medicineId={selectedMedicine}
             onClose={() => setSelectedMedicine(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* 方剂追缉令 */}
+      <AnimatePresence>
+        {isFormulaPursuitOpen && (
+          <FormulaPursuitPanel onClose={() => setFormulaPursuitOpen(false)} />
+        )}
+      </AnimatePresence>
+
+      {/* 临床实习 */}
+      <AnimatePresence>
+        {isClinicalCaseOpen && currentCase && (
+          <ClinicalCaseComponent
+            caseId={currentCase}
+            onClose={() => setClinicalCaseOpen(false)}
           />
         )}
       </AnimatePresence>

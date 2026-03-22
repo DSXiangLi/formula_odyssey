@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGameStore } from '@stores/gameStore'
-import { getAffinityLevel, getAffinityLevelName, addMedicineAffinity } from '@utils/index'
+import { getAffinityLevel, getAffinityLevelName } from '@utils/index'
 import { cn } from '@utils/index'
 
 interface MedicineDetailProps {

@@ -1,0 +1,294 @@
+{
+  "version": "2.0",
+  "description": "药灵山谷v2.0 游戏数值平衡设计",
+  "lastUpdated": "2026-03-21",
+
+  "currencySystem": {
+    "diamond": {
+      "name": "方灵石",
+      "symbol": "💎",
+      "description": "游戏主要货币，用于购买线索、加速收集、购买提示",
+      "initialAmount": 200,
+      "maxDailyEarning": 3000,
+      "minDailyEarning": 800
+    },
+    "reputation": {
+      "name": "声望值",
+      "symbol": "⭐",
+      "description": "玩家等级指标，解锁高级内容",
+      "initialAmount": 0,
+      "maxLevel": 50
+    },
+    "affinity": {
+      "name": "亲密度",
+      "symbol": "❤️",
+      "description": "与每味药的亲密关系，解锁药灵故事和显微图",
+      "maxPerMedicine": 100,
+      "levels": [
+        { "name": "初识", "min": 0, "max": 20, "unlocks": ["基础信息"] },
+        { "name": "熟悉", "min": 21, "max": 40, "unlocks": ["药灵故事1"] },
+        { "name": "知己", "min": 41, "max": 60, "unlocks": ["显微图解锁"] },
+        { "name": "挚友", "min": 61, "max": 80, "unlocks": ["药灵故事2", "特殊对话"] },
+        { "name": "知己", "min": 81, "max": 100, "unlocks": ["药灵故事3", "专属奖励"] }
+      ]
+    }
+  },
+
+  "diagnosisCosts": {
+    "wang": {
+      "name": "药图",
+      "cost": 0,
+      "unlockAt": 0,
+      "reveals": ["药物原图", "五行归属"],
+      "description": "免费获取药物外观和五行线索"
+    },
+    "wen": {
+      "name": "四气",
+      "cost": 5,
+      "unlockAt": 0,
+      "reveals": ["四气（寒热温凉）"],
+      "description": "通过气味判断药性寒热"
+    },
+    "wenq": {
+      "name": "五味",
+      "cost": 10,
+      "unlockAt": 10,
+      "reveals": ["五味（酸苦甘辛咸）", "毒性"],
+      "description": "了解药物味道和毒性信息"
+    },
+    "qie": {
+      "name": "归经",
+      "cost": 15,
+      "unlockAt": 20,
+      "reveals": ["升降浮沉", "归经"],
+      "description": "通过脉象判断药物归经和走向"
+    },
+    "cha": {
+      "name": "查诊",
+      "cost": 20,
+      "unlockAt": 30,
+      "reveals": ["功效", "主治完整信息"],
+      "description": "查阅药典获取完整功效主治"
+    },
+    "reveal": {
+      "name": "直接查看答案",
+      "cost": 50,
+      "unlockAt": 0,
+      "reveals": ["药名", "所有信息"],
+      "description": "花费钻石直接查看答案"
+    }
+  },
+
+  "guessRewards": {
+    "baseFormula": {
+      "description": "猜测奖励计算公式",
+      "baseReward": 100,
+      "cluePenalty": {
+        "wen": 20,
+        "wenq": 20,
+        "qie": 20,
+        "cha": 20
+      },
+      "formula": "奖励 = 100 - (使用的诊察次数 × 对应惩罚)",
+      "examples": [
+        { "clues": ["望"], "cost": 0, "reward": 100, "title": "慧眼识药" },
+        { "clues": ["望", "闻"], "cost": 5, "reward": 80, "title": "闻香识药" },
+        { "clues": ["望", "闻", "问"], "cost": 15, "reward": 60, "title": "循序渐进" },
+        { "clues": ["望", "闻", "问", "切"], "cost": 30, "reward": 40, "title": "稳扎稳打" },
+        { "clues": ["查看答案"], "cost": 50, "reward": 0, "title": "求学若渴" }
+      ]
+    },
+    "affinityGain": {
+      "description": "亲密度增长",
+      "baseGain": 20,
+      "cluePenalty": {
+        "wen": 5,
+        "wenq": 5,
+        "qie": 5,
+        "cha": 5
+      },
+      "formula": "亲密度 = 20 - (使用的诊察次数 × 5)",
+      "examples": [
+        { "clues": ["望"], "gain": 20 },
+        { "clues": ["望", "闻"], "gain": 15 },
+        { "clues": ["望", "闻", "问"], "gain": 10 },
+        { "clues": ["望", "闻", "问", "切"], "gain": 5 },
+        { "clues": ["查看答案"], "gain": 0 }
+      ]
+    },
+    "streakBonus": {
+      "description": "连续正确奖励",
+      "3_correct": { "bonus": 30, "badge": "三连中" },
+      "5_correct": { "bonus": 60, "badge": "五连绝世", "extra": "神秘种子" },
+      "10_correct": { "bonus": 150, "badge": "药圣转世", "title": "药圣转世" }
+    }
+  },
+
+  "dailyEconomy": {
+    "income": {
+      "login": { "amount": 50, "description": "每日登录奖励" },
+      "formulas": {
+        "easy": { "amount": 200, "description": "入门方剂追缉令" },
+        "normal": { "amount": 300, "description": "普通方剂追缉令" },
+        "hard": { "amount": 500, "description": "困难方剂追缉令" },
+        "challenge": { "amount": 800, "description": "挑战方剂追缉令" }
+      },
+      "exploration": {
+        "base": { "amount": 60, "description": "平均每次探索奖励" },
+        "daily": { "amount": 600, "description": "每日探索10次平均收益" }
+      },
+      "clinical": {
+        "base": { "amount": 150, "description": "平均每次临床实习" },
+        "daily": { "amount": 450, "description": "每日3次临床实习平均收益" }
+      }
+    },
+    "expense": {
+      "exploration": {
+        "average": { "amount": 150, "description": "探索10次平均消耗" },
+        "detail": "每次探索平均使用3个线索（望+闻+问）"
+      },
+      "acceleration": { "amount": 200, "description": "方剂追缉加速" },
+      "hints": { "amount": 150, "description": "临床实习提示" }
+    },
+    "summary": {
+      "dailyIncome": 2600,
+      "dailyExpense": 500,
+      "netProfit": 2100,
+      "description": "玩家每日净收益约2100钻石，可持续积累"
+    }
+  },
+
+  "formulaPursuit": {
+    "difficulty": {
+      "easy": {
+        "name": "入门",
+        "compositionSize": "2-3味药",
+        "timeLimit": 24,
+        "reward": 200,
+        "dailyCount": 1
+      },
+      "normal": {
+        "name": "普通",
+        "compositionSize": "3-4味药",
+        "timeLimit": 18,
+        "reward": 300,
+        "dailyCount": 2
+      },
+      "hard": {
+        "name": "困难",
+        "compositionSize": "4-6味药",
+        "timeLimit": 12,
+        "reward": 500,
+        "dailyCount": 1
+      },
+      "challenge": {
+        "name": "挑战",
+        "compositionSize": "6味以上",
+        "specialRequirements": "特殊限制（如仅用药图）",
+        "timeLimit": 6,
+        "reward": 800,
+        "dailyCount": 1
+      }
+    },
+    "specialRequirements": [
+      "仅用药图收集全部药物",
+      "仅用四气五味收集全部药物",
+      "不使用功效完成收集",
+      "连续猜对5次",
+      "使用少于50钻石完成收集"
+    ]
+  },
+
+  "proficiency": {
+    "levels": [
+      { "level": 1, "name": "初识", "requiredXP": 0, "unlocks": ["基础信息"] },
+      { "level": 2, "name": "熟悉", "requiredXP": 5, "unlocks": ["方歌解锁"] },
+      { "level": 3, "name": "掌握", "requiredXP": 15, "unlocks": ["加减变化"] },
+      { "level": 4, "name": "精通", "requiredXP": 30, "unlocks": ["类方对比"] },
+      { "level": 5, "name": "化境", "requiredXP": 50, "unlocks": ["医案精华"] }
+    ],
+    "xpGain": {
+      "perfect": { "amount": 2, "description": "完美辨证（治法+方剂+君药全对）" },
+      "correct": { "amount": 1, "description": "基本正确（方剂选对）" },
+      "wrong": { "amount": 0, "description": "方剂选错" }
+    }
+  },
+
+  "clinicalCase": {
+    "scoring": {
+      "perfect": {
+        "name": "完美辨证",
+        "condition": "治法+方剂+君药全对",
+        "reward": 200,
+        "proficiencyXP": 2,
+        "badge": "辨证如神"
+      },
+      "correct": {
+        "name": "基本正确",
+        "condition": "方剂选对",
+        "reward": 100,
+        "proficiencyXP": 1
+      },
+      "wrong": {
+        "name": "需要努力",
+        "condition": "方剂选错",
+        "reward": 50,
+        "proficiencyXP": 0,
+        "extra": "正确答案解析"
+      }
+    },
+    "hintCost": 50
+  },
+
+  "regionMechanics": {
+    "qingmulin": {
+      "name": "青木林",
+      "element": "木",
+      "mechanic": "春季生发",
+      "effect": "探索时有几率额外获得一条免费线索",
+      "probability": 0.15
+    },
+    "chiyanfeng": {
+      "name": "赤焰峰",
+      "element": "火",
+      "mechanic": "心主神明",
+      "effect": "首次猜测免费",
+      "probability": 1.0
+    },
+    "huangtuqiu": {
+      "name": "黄土丘",
+      "element": "土",
+      "mechanic": "脾主运化",
+      "effect": "线索价格降低20%",
+      "discount": 0.2
+    },
+    "baijinyuan": {
+      "name": "白金原",
+      "element": "金",
+      "mechanic": "肺主肃降",
+      "effect": "可以快速跳过当前种子",
+      "cooldown": 300
+    },
+    "heishuitan": {
+      "name": "黑水潭",
+      "element": "水",
+      "mechanic": "肾藏精",
+      "effect": "收集成功后奖励翻倍",
+      "multiplier": 2.0
+    }
+  },
+
+  "balanceCheck": {
+    "playerProgression": {
+      "day1": { "expectedDiamonds": 200, "expectedMedicines": 3, "description": "初始状态" },
+      "day7": { "expectedDiamonds": 15000, "expectedMedicines": 15, "description": "一周进度" },
+      "day30": { "expectedDiamonds": 60000, "expectedMedicines": 35, "description": "一月进度" },
+      "day90": { "expectedDiamonds": 180000, "expectedMedicines": 50, "description": "三月毕业" }
+    },
+    "difficultyCurve": {
+      "early": { "difficulty": "简单", "description": "熟悉玩法，收集入门药物" },
+      "mid": { "difficulty": "中等", "description": "掌握线索策略，收集进阶药物" },
+      "late": { "difficulty": "困难", "description": "精通性味归经，收集稀有药物" }
+    }
+  }
+}

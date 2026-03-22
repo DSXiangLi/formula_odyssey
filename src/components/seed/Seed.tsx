@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useGameStore } from '@stores/gameStore'
-import type { Seed as SeedType } from '@types/index'
+import type { Seed as SeedType, Medicine } from '../../types/index'
 import { cn } from '@utils/index'
 import { useSound } from '@services/soundService'
-import { SeedPlaceholder } from '@components/ui/ImageSystem'
+import DiagnosisModal from '@components/explore/DiagnosisModal'
 
 interface SeedProps {
   seed: SeedType
@@ -13,25 +13,28 @@ interface SeedProps {
 }
 
 export default function Seed({ seed, containerWidth, containerHeight }: SeedProps) {
-  const { collectSeed, setSelectedMedicine, medicines } = useGameStore()
+  const { setSelectedMedicine, medicines } = useGameStore()
   const [isHovered, setIsHovered] = useState(false)
   const [showCollectAnimation, setShowCollectAnimation] = useState(false)
+  const [showDiagnosis, setShowDiagnosis] = useState(false)
   const { play } = useSound()
 
   const medicine = medicines.find(m => m.id === seed.medicineId)
   if (!medicine) return null
 
+  // 计算实际位置（百分比转为像素）
+  const x = (seed.position.x / 100) * containerWidth
+  const y = (seed.position.y / 100) * containerHeight
+
   const handleClick = () => {
     if (seed.collected) {
+      // 已收集，查看详情
       play('button-click')
       setSelectedMedicine(seed.medicineId)
     } else {
-      play('seed-collect')
-      setShowCollectAnimation(true)
-      setTimeout(() => {
-        collectSeed(seed.id)
-        setShowCollectAnimation(false)
-      }, 1500)
+      // 未收集，打开性味归经探查
+      play('diagnosis-open')
+      setShowDiagnosis(true)
     }
   }
 
@@ -42,9 +45,16 @@ export default function Seed({ seed, containerWidth, containerHeight }: SeedProp
     }
   }
 
-  // 计算实际位置（百分比转为像素）
-  const x = (seed.position.x / 100) * containerWidth
-  const y = (seed.position.y / 100) * containerHeight
+  const handleDiagnosisClose = () => {
+    setShowDiagnosis(false)
+    // 如果已收集，播放收集动画
+    if (seed.collected) {
+      setShowCollectAnimation(true)
+      setTimeout(() => {
+        setShowCollectAnimation(false)
+      }, 1500)
+    }
+  }
 
   return (
     <>
@@ -66,10 +76,11 @@ export default function Seed({ seed, containerWidth, containerHeight }: SeedProp
         }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
       >
-        {/* 使用SVG占位符 */}
-        <SeedPlaceholder
-          collected={seed.collected}
-          className="w-full h-full"
+        {/* 水晶球种子 */}
+        <CrystalBallSeed
+          seed={seed}
+          medicine={medicine}
+          isHovered={isHovered}
         />
 
         {/* 标签 */}
@@ -78,9 +89,9 @@ export default function Seed({ seed, containerWidth, containerHeight }: SeedProp
           animate={{ opacity: isHovered ? 1 : 0.7 }}
         >
           <span className={cn(
-            'text-xs font-medium px-2 py-1 rounded-full',
+            'text-xs font-medium px-2 py-1 rounded-full backdrop-blur-sm',
             seed.collected
-              ? 'bg-primary text-background-primary'
+              ? 'bg-primary/90 text-background-primary'
               : 'bg-background-tertiary/80 text-text-muted'
           )}>
             {seed.collected ? medicine.name : '???'}
@@ -94,7 +105,108 @@ export default function Seed({ seed, containerWidth, containerHeight }: SeedProp
           <CollectAnimation x={x} y={y} onComplete={() => setShowCollectAnimation(false)} />
         )}
       </AnimatePresence>
+
+      {/* 性味归经探查弹窗 */}
+      <AnimatePresence>
+        {showDiagnosis && !seed.collected && (
+          <DiagnosisModal
+            seed={seed}
+            medicine={medicine}
+            onClose={handleDiagnosisClose}
+          />
+        )}
+      </AnimatePresence>
     </>
+  )
+}
+
+// 水晶球种子组件
+function CrystalBallSeed({
+  seed,
+  medicine,
+  isHovered,
+}: {
+  seed: SeedType
+  medicine: Medicine
+  isHovered: boolean
+}) {
+  const wuxingColors = {
+    wood: '#2E7D32',
+    fire: '#C62828',
+    earth: '#F9A825',
+    metal: '#78909C',
+    water: '#1565C0',
+  }
+
+  const color = wuxingColors[seed.wuxing]
+
+  return (
+    <div className="relative w-full h-full">
+      {/* 外发光效果 */}
+      <motion.div
+        animate={{
+          boxShadow: isHovered
+            ? `0 0 25px ${color}80, 0 0 50px ${color}40`
+            : `0 0 15px ${color}40`,
+        }}
+        transition={{ duration: 0.3 }}
+        className="absolute inset-0 rounded-full"
+      />
+
+      {/* 水晶球主体 */}
+      <div className="relative w-full h-full rounded-full overflow-hidden bg-gradient-to-br from-white/30 via-white/10 to-transparent backdrop-blur-sm border border-white/50">
+        {/* 内部模糊药物图 */}
+        <div className="absolute inset-1 rounded-full overflow-hidden">
+          {medicine.imagePlant ? (
+            <img
+              src={medicine.imagePlant}
+              alt="药物"
+              className="w-full h-full object-cover"
+              style={{ filter: 'blur(4px)' }}
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-transparent">
+              <span className="text-2xl opacity-30">🌿</span>
+            </div>
+          )}
+        </div>
+
+        {/* 水晶折射效果 */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-transparent" />
+        <div className="absolute top-2 left-2 w-4 h-4 bg-white/60 rounded-full blur-sm" />
+        <div className="absolute bottom-3 right-3 w-2 h-2 bg-white/50 rounded-full" />
+
+        {/* 已收集标记 */}
+        {seed.collected && (
+          <div className="absolute inset-0 flex items-center justify-center bg-primary/20">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="w-8 h-8 rounded-full bg-status-success flex items-center justify-center"
+            >
+              <span className="text-white text-sm">✓</span>
+            </motion.div>
+          </div>
+        )}
+      </div>
+
+      {/* 呼吸动画光环 */}
+      {!seed.collected && (
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+          className="absolute inset-0 rounded-full border-2 border-white/30"
+          style={{ margin: '-4px' }}
+        />
+      )}
+    </div>
   )
 }
 

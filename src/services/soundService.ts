@@ -3,7 +3,6 @@
 
 class SoundManager {
   private audioContext: AudioContext | null = null;
-  private sounds: Map<string, AudioBuffer> = new Map();
   private enabled: boolean = true;
 
   constructor() {
@@ -18,7 +17,7 @@ class SoundManager {
   }
 
   // 生成简单音效
-  private createTone(frequency: number, duration: number, type: OscillatorType = 'sine'): AudioBuffer {
+  private createTone(frequency: number, duration: number): AudioBuffer {
     this.initAudioContext();
     if (!this.audioContext) return new AudioBuffer({ length: 1, sampleRate: 44100 });
 
@@ -43,14 +42,19 @@ class SoundManager {
     if (!this.audioContext) return;
 
     const soundEffects: Record<string, () => AudioBuffer> = {
-      'seed-hover': () => this.createTone(880, 0.1, 'sine'),
-      'seed-collect': () => this.createTone(1760, 0.3, 'sine'),
-      'button-click': () => this.createTone(440, 0.05, 'square'),
-      'explore-success': () => this.createTone(523.25, 0.4, 'sine'), // C5
-      'explore-fail': () => this.createTone(220, 0.3, 'sawtooth'),
-      'modal-open': () => this.createTone(330, 0.15, 'sine'),
-      'modal-close': () => this.createTone(294, 0.15, 'sine'),
-      'achievement': () => this.createTone(784, 0.5, 'sine'), // G5
+      'seed-hover': () => this.createTone(880, 0.1),
+      'seed-collect': () => this.createTone(1760, 0.3),
+      'button-click': () => this.createTone(440, 0.05),
+      'explore-success': () => this.createTone(523.25, 0.4),
+      'explore-fail': () => this.createTone(220, 0.3),
+      'modal-open': () => this.createTone(330, 0.15),
+      'modal-close': () => this.createTone(294, 0.15),
+      'achievement': () => this.createTone(784, 0.5),
+      // 性味归经探查音效
+      'diagnosis-open': () => this.createTone(523.25, 0.2),
+      'diagnosis-reveal': () => this.createTone(659.25, 0.3),
+      'collect-success': () => this.createTone(880, 0.5),
+      'error': () => this.createTone(196, 0.2),
     };
 
     const generator = soundEffects[name];

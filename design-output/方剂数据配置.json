@@ -1,0 +1,364 @@
+{
+  "version": "2.0",
+  "totalFormulas": 20,
+  "categories": [
+    "解表剂",
+    "清热剂",
+    "补益剂",
+    "祛湿剂",
+    "理气剂",
+    "理血剂",
+    "温里剂",
+    "祛痰剂"
+  ],
+  "formulas": [
+    {
+      "id": "mahuang_tang",
+      "name": "麻黄汤",
+      "pinyin": "Má Huáng Tāng",
+      "category": "解表剂",
+      "difficulty": "normal",
+      "composition": [
+        { "medicineId": "mahuang", "amount": "9g", "role": "jun" },
+        { "medicineId": "guizhi", "amount": "6g", "role": "chen" },
+        { "medicineId": "xingren", "amount": "9g", "role": "zuo" },
+        { "medicineId": "gancao", "amount": "3g", "role": "shi" }
+      ],
+      "functions": ["发汗解表", "宣肺平喘"],
+      "indications": ["外感风寒表实证", "恶寒发热", "头痛身痛", "无汗而喘", "舌苔薄白", "脉浮紧"],
+      "song": "麻黄汤中用桂枝，杏仁甘草四般施。发热恶寒头项痛，喘而无汗服之宜。"
+    },
+    {
+      "id": "guizhi_tang",
+      "name": "桂枝汤",
+      "pinyin": "Guì Zhī Tāng",
+      "category": "解表剂",
+      "difficulty": "normal",
+      "composition": [
+        { "medicineId": "guizhi", "amount": "9g", "role": "jun" },
+        { "medicineId": "baishao", "amount": "9g", "role": "chen" },
+        { "medicineId": "shengjiang", "amount": "9g", "role": "zuo" },
+        { "medicineId": "dazao", "amount": "3枚", "role": "zuo" },
+        { "medicineId": "gancao", "amount": "6g", "role": "shi" }
+      ],
+      "functions": ["解肌发表", "调和营卫"],
+      "indications": ["外感风寒表虚证", "发热头痛", "汗出恶风", "鼻鸣干呕", "苔白不渴", "脉浮缓或浮弱"],
+      "song": "桂枝汤治太阳风，芍药甘草姜枣同。解肌发表调营卫，汗出恶风此方功。"
+    },
+    {
+      "id": "yinqiao_san",
+      "name": "银翘散",
+      "pinyin": "Yín Qiào Sǎn",
+      "category": "解表剂",
+      "difficulty": "hard",
+      "composition": [
+        { "medicineId": "jinyinhua", "amount": "30g", "role": "jun" },
+        { "medicineId": "liangqiao", "amount": "30g", "role": "jun" },
+        { "medicineId": "niubangzi", "amount": "18g", "role": "chen" },
+        { "medicineId": "jiegeng", "amount": "18g", "role": "chen" },
+        { "medicineId": "bohe", "amount": "18g", "role": "chen" },
+        { "medicineId": "zhuye", "amount": "12g", "role": "zuo" },
+        { "medicineId": "jingjie", "amount": "12g", "role": "zuo" },
+        { "medicineId": "dandouchi", "amount": "15g", "role": "zuo" },
+        { "medicineId": "gancao", "amount": "15g", "role": "shi" }
+      ],
+      "functions": ["辛凉透表", "清热解毒"],
+      "indications": ["温病初起", "发热无汗或有汗不畅", "微恶风寒", "头痛口渴", "咳嗽咽痛", "舌尖红", "苔薄白或薄黄", "脉浮数"],
+      "song": "银翘散主上焦医，竹叶荆牛豉薄荷。甘桔芦根凉解法，风温初感此方宜。"
+    },
+    {
+      "id": "baihu_tang",
+      "name": "白虎汤",
+      "pinyin": "Bái Hǔ Tāng",
+      "category": "清热剂",
+      "difficulty": "normal",
+      "composition": [
+        { "medicineId": "shigao", "amount": "50g", "role": "jun" },
+        { "medicineId": "zhimu", "amount": "18g", "role": "chen" },
+        { "medicineId": "gancao", "amount": "6g", "role": "zuo" },
+        { "medicineId": "jingmi", "amount": "9g", "role": "shi" }
+      ],
+      "functions": ["清热生津"],
+      "indications": ["气分热盛证", "壮热面赤", "烦渴引饮", "汗出恶热", "脉洪大有力"],
+      "song": "白虎膏知甘草粳，气分大热此方清。热渴汗出脉洪大，加入人参气津生。"
+    },
+    {
+      "id": "huanglian_jiedu_tang",
+      "name": "黄连解毒汤",
+      "pinyin": "Huáng Lián Jiě Dú Tāng",
+      "category": "清热剂",
+      "difficulty": "hard",
+      "composition": [
+        { "medicineId": "huanglian", "amount": "9g", "role": "jun" },
+        { "medicineId": "huangqin", "amount": "6g", "role": "chen" },
+        { "medicineId": "huangbo", "amount": "6g", "role": "chen" },
+        { "medicineId": "zhizi", "amount": "9g", "role": "chen" }
+      ],
+      "functions": ["泻火解毒"],
+      "indications": ["三焦火毒热盛证", "大热烦躁", "口燥咽干", "错语不眠", "或热病吐血", "衄血", "或热甚发斑", "或身热下利", "或湿热黄疸", "或外科痈疡疔毒", "小便黄赤", "舌红苔黄", "脉数有力"],
+      "song": "黄连解毒汤四味，黄柏黄芩栀子备。躁狂大热呕不眠，吐衄斑黄皆可使。"
+    },
+    {
+      "id": "sijunzi_tang",
+      "name": "四君子汤",
+      "pinyin": "Sì Jūn Zǐ Tāng",
+      "category": "补益剂",
+      "difficulty": "easy",
+      "composition": [
+        { "medicineId": "renshen", "amount": "9g", "role": "jun" },
+        { "medicineId": "baizhu", "amount": "9g", "role": "chen" },
+        { "medicineId": "fuling", "amount": "9g", "role": "zuo" },
+        { "medicineId": "gancao", "amount": "6g", "role": "shi" }
+      ],
+      "functions": ["益气健脾"],
+      "indications": ["脾胃气虚证", "面色萎白", "语声低微", "气短乏力", "食少便溏", "舌淡苔白", "脉虚弱"],
+      "song": "四君子汤中和义，参术茯苓甘草比。益以夏陈名六君，祛痰补益气虚饵。"
+    },
+    {
+      "id": "siwu_tang",
+      "name": "四物汤",
+      "pinyin": "Sì Wù Tāng",
+      "category": "补益剂",
+      "difficulty": "easy",
+      "composition": [
+        { "medicineId": "danggui", "amount": "9g", "role": "jun" },
+        { "medicineId": "chuanxiong", "amount": "6g", "role": "chen" },
+        { "medicineId": "baishao", "amount": "9g", "role": "chen" },
+        { "medicineId": "shudi", "amount": "12g", "role": "jun" }
+      ],
+      "functions": ["补血和血"],
+      "indications": ["营血虚滞证", "心悸失眠", "头晕目眩", "面色无华", "妇人月经不调", "量少或经闭不行", "脐腹作痛", "舌淡", "脉细弦或细涩"],
+      "song": "四物地芍与归芎，血家百病此方通。八珍合入四君子，气血双疗功独崇。"
+    },
+    {
+      "id": "buzhong_yiqi_tang",
+      "name": "补中益气汤",
+      "pinyin": "Bǔ Zhōng Yì Qì Tāng",
+      "category": "补益剂",
+      "difficulty": "hard",
+      "composition": [
+        { "medicineId": "huangqi", "amount": "18g", "role": "jun" },
+        { "medicineId": "renshen", "amount": "6g", "role": "chen" },
+        { "medicineId": "baizhu", "amount": "9g", "role": "chen" },
+        { "medicineId": "gancao", "amount": "9g", "role": "chen" },
+        { "medicineId": "danggui", "amount": "3g", "role": "zuo" },
+        { "medicineId": "chenpi", "amount": "6g", "role": "zuo" },
+        { "medicineId": "shengma", "amount": "6g", "role": "shi" },
+        { "medicineId": "chaihu", "amount": "6g", "role": "shi" }
+      ],
+      "functions": ["补中益气", "升阳举陷"],
+      "indications": ["脾胃气虚证", "饮食减少", "体倦肢软", "少气懒言", "面色萎黄", "大便稀溏", "舌淡", "脉虚", "以及脱肛", "子宫脱垂", "久泻", "久痢", "崩漏等"],
+      "song": "补中益气芪术陈，升柴参草当归身。虚劳内伤功独擅，亦治阳虚外感因。"
+    },
+    {
+      "id": "wuling_san",
+      "name": "五苓散",
+      "pinyin": "Wǔ Líng Sǎn",
+      "category": "祛湿剂",
+      "difficulty": "normal",
+      "composition": [
+        { "medicineId": "zexie", "amount": "15g", "role": "jun" },
+        { "medicineId": "fuling", "amount": "9g", "role": "chen" },
+        { "medicineId": "zhuling", "amount": "9g", "role": "chen" },
+        { "medicineId": "baizhu", "amount": "9g", "role": "zuo" },
+        { "medicineId": "guizhi", "amount": "6g", "role": "shi" }
+      ],
+      "functions": ["利水渗湿", "温阳化气"],
+      "indications": ["蓄水证", "小便不利", "头痛微热", "烦渴欲饮", "甚则水入即吐", "或脐下动悸", "吐涎沫而头目眩晕", "或短气而咳", "或水肿", "泄泻", "舌苔白", "脉浮或浮数"],
+      "song": "五苓散治太阳腑，泽泻猪苓茯苓术。桂枝温通化水气，利水渗湿此方主。"
+    },
+    {
+      "id": "pingwei_san",
+      "name": "平胃散",
+      "pinyin": "Píng Wèi Sǎn",
+      "category": "祛湿剂",
+      "difficulty": "easy",
+      "composition": [
+        { "medicineId": "cangzhu", "amount": "120g", "role": "jun" },
+        { "medicineId": "houpo", "amount": "90g", "role": "chen" },
+        { "medicineId": "chenpi", "amount": "60g", "role": "zuo" },
+        { "medicineId": "gancao", "amount": "60g", "role": "shi" }
+      ],
+      "functions": ["燥湿运脾", "行气和胃"],
+      "indications": ["湿滞脾胃证", "脘腹胀满", "不思饮食", "口淡无味", "恶心呕吐", "嗳气吞酸", "肢体沉重", "怠惰嗜卧", "常多自利", "舌苔白腻而厚", "脉缓"],
+      "song": "平胃散用苍术朴，陈皮甘草四般药。燥湿运脾又和胃，除湿散满此方确。"
+    },
+    {
+      "id": "chaihu_shugan_san",
+      "name": "柴胡疏肝散",
+      "pinyin": "Chái Hú Shū Gān Sǎn",
+      "category": "理气剂",
+      "difficulty": "hard",
+      "composition": [
+        { "medicineId": "chaihu", "amount": "6g", "role": "jun" },
+        { "medicineId": "chenpi", "amount": "6g", "role": "chen" },
+        { "medicineId": "chuanxiong", "amount": "5g", "role": "chen" },
+        { "medicineId": "zhike", "amount": "5g", "role": "chen" },
+        { "medicineId": "shaoyao", "amount": "5g", "role": "chen" },
+        { "medicineId": "xiangfu", "amount": "5g", "role": "chen" },
+        { "medicineId": "gancao", "amount": "3g", "role": "shi" }
+      ],
+      "functions": ["疏肝解郁", "行气止痛"],
+      "indications": ["肝气郁滞证", "胁肋疼痛", "胸闷善太息", "情志抑郁", "易怒", "或嗳气", "脘腹胀满", "脉弦"],
+      "song": "柴胡疏肝芍川芎，枳壳陈皮草香附。疏肝行气兼活血，胁肋疼痛此方除。"
+    },
+    {
+      "id": "banxia_houpo_tang",
+      "name": "半夏厚朴汤",
+      "pinyin": "Bàn Xià Hòu Pò Tāng",
+      "category": "理气剂",
+      "difficulty": "normal",
+      "composition": [
+        { "medicineId": "banxia", "amount": "12g", "role": "jun" },
+        { "medicineId": "houpo", "amount": "9g", "role": "chen" },
+        { "medicineId": "fuling", "amount": "12g", "role": "zuo" },
+        { "medicineId": "shengjiang", "amount": "9g", "role": "zuo" },
+        { "medicineId": "zisu", "amount": "6g", "role": "shi" }
+      ],
+      "functions": ["行气散结", "降逆化痰"],
+      "indications": ["梅核气", "咽中如有物阻", "咯吐不出", "吞咽不下", "胸膈满闷", "或咳或呕", "舌苔白润或白腻", "脉弦缓或弦滑"],
+      "song": "半夏厚朴痰气疏，茯苓生姜共紫苏。加枣同煎名四七，痰凝气滞皆能除。"
+    },
+    {
+      "id": "xuefu_zhuyu_tang",
+      "name": "血府逐瘀汤",
+      "pinyin": "Xuè Fǔ Zhú Yū Tāng",
+      "category": "理血剂",
+      "difficulty": "challenge",
+      "composition": [
+        { "medicineId": "taoren", "amount": "12g", "role": "jun" },
+        { "medicineId": "honghua", "amount": "9g", "role": "jun" },
+        { "medicineId": "danggui", "amount": "9g", "role": "chen" },
+        { "medicineId": "chuanxiong", "amount": "5g", "role": "chen" },
+        { "medicineId": "chishao", "amount": "6g", "role": "chen" },
+        { "medicineId": "chuanxiong", "amount": "5g", "role": "zuo" },
+        { "medicineId": "niuxi", "amount": "9g", "role": "zuo" },
+        { "medicineId": "jiegen", "amount": "5g", "role": "zuo" },
+        { "medicineId": "chaihu", "amount": "3g", "role": "zuo" },
+        { "medicineId": "zhiqiao", "amount": "6g", "role": "zuo" },
+        { "medicineId": "shengdi", "amount": "9g", "role": "shi" },
+        { "medicineId": "gancao", "amount": "6g", "role": "shi" }
+      ],
+      "functions": ["活血化瘀", "行气止痛"],
+      "indications": ["胸中血瘀证", "胸痛头痛", "日久不愈", "痛如针刺而有定处", "或呃逆日久不止", "或饮水即呛", "干呕", "或内热瞀闷", "或心悸怔忡", "失眠多梦", "急躁易怒", "入暮潮热", "唇暗或两目暗黑", "舌质暗红", "或舌有瘀斑", "瘀点", "脉涩或弦紧"],
+      "song": "血府当归生地桃，红花甘草赤芍熬。柴胡芎枳加牛膝，血化下行不作痨。"
+    },
+    {
+      "id": "guipi_tang",
+      "name": "归脾汤",
+      "pinyin": "Guī Pí Tāng",
+      "category": "补益剂",
+      "difficulty": "hard",
+      "composition": [
+        { "medicineId": "huangqi", "amount": "12g", "role": "jun" },
+        { "medicineId": "renshen", "amount": "6g", "role": "chen" },
+        { "medicineId": "baizhu", "amount": "6g", "role": "chen" },
+        { "medicineId": "danggui", "amount": "6g", "role": "chen" },
+        { "medicineId": "fuling", "amount": "9g", "role": "zuo" },
+        { "medicineId": "shenqu", "amount": "9g", "role": "zuo" },
+        { "medicineId": "longyanrou", "amount": "12g", "role": "zuo" },
+        { "medicineId": "suanzaoren", "amount": "12g", "role": "zuo" },
+        { "medicineId": "muxiang", "amount": "6g", "role": "shi" },
+        { "medicineId": "gancao", "amount": "3g", "role": "shi" }
+      ],
+      "functions": ["益气补血", "健脾养心"],
+      "indications": ["心脾气血两虚证", "心悸怔忡", "健忘失眠", "盗汗", "体倦食少", "面色萎黄", "舌淡", "苔薄白", "脉细弱", "脾不统血证", "便血", "皮下紫癜", "妇女崩漏"],
+      "song": "归脾汤用术参芪，归草茯神远志宜。酸枣木香龙眼肉，煎加姜枣益心脾。"
+    },
+    {
+      "id": "sini_tang",
+      "name": "四逆汤",
+      "pinyin": "Sì Nì Tāng",
+      "category": "温里剂",
+      "difficulty": "challenge",
+      "composition": [
+        { "medicineId": "fuzi", "amount": "15g", "role": "jun" },
+        { "medicineId": "ganjiang", "amount": "9g", "role": "chen" },
+        { "medicineId": "gancao", "amount": "6g", "role": "shi" }
+      ],
+      "functions": ["回阳救逆"],
+      "indications": ["心肾阳衰寒厥证", "四肢厥逆", "恶寒蜷卧", "神衰欲寐", "面色苍白", "腹痛下利", "呕吐不渴", "舌苔白滑", "脉微细"],
+      "song": "四逆汤中附草姜，四肢厥逆急煎尝。腹痛吐泻脉沉细，急投此方可回阳。"
+    },
+    {
+      "id": "lizhong_wan",
+      "name": "理中丸",
+      "pinyin": "Lǐ Zhōng Wán",
+      "category": "温里剂",
+      "difficulty": "normal",
+      "composition": [
+        { "medicineId": "ganjiang", "amount": "9g", "role": "jun" },
+        { "medicineId": "renshen", "amount": "9g", "role": "chen" },
+        { "medicineId": "baizhu", "amount": "9g", "role": "chen" },
+        { "medicineId": "gancao", "amount": "9g", "role": "shi" }
+      ],
+      "functions": ["温中祛寒", "补气健脾"],
+      "indications": ["脾胃虚寒证", "脘腹疼痛", "喜温喜按", "呕吐", "大便稀溏", "脘痞食少", "畏寒肢冷", "口不渴", "舌淡苔白", "脉沉细或沉迟无力", "阳虚失血证", "便血", "吐血", "衄血或崩漏等", "胸痹", "病后多涎唾", "或小儿慢惊等"],
+      "song": "理中丸主理中乡，甘草人参术干姜。呕利腹痛阴寒盛，或加附子总扶阳。"
+    },
+    {
+      "id": "erchen_tang",
+      "name": "二陈汤",
+      "pinyin": "Èr Chén Tāng",
+      "category": "祛痰剂",
+      "difficulty": "easy",
+      "composition": [
+        { "medicineId": "banxia", "amount": "15g", "role": "jun" },
+        { "medicineId": "chenpi", "amount": "15g", "role": "chen" },
+        { "medicineId": "fuling", "amount": "9g", "role": "zuo" },
+        { "medicineId": "gancao", "amount": "5g", "role": "shi" },
+        { "medicineId": "shengjiang", "amount": "3g", "role": "shi" }
+      ],
+      "functions": ["燥湿化痰", "理气和中"],
+      "indications": ["湿痰证", "咳嗽痰多", "色白易咯", "恶心呕吐", "胸膈痞闷", "肢体困重", "或头眩心悸", "舌苔白滑或腻", "脉滑"],
+      "song": "二陈汤用半夏陈，益以茯苓甘草臣。利气调中兼去湿，一切痰饮此方珍。"
+    },
+    {
+      "id": "wenjing_tang",
+      "name": "温经汤",
+      "pinyin": "Wēn Jīng Tāng",
+      "category": "理血剂",
+      "difficulty": "challenge",
+      "composition": [
+        { "medicineId": "wuzhuyu", "amount": "9g", "role": "jun" },
+        { "medicineId": "guizhi", "amount": "6g", "role": "chen" },
+        { "medicineId": "danggui", "amount": "6g", "role": "chen" },
+        { "medicineId": "chuanxiong", "amount": "6g", "role": "chen" },
+        { "medicineId": "baishao", "amount": "6g", "role": "chen" },
+        { "medicineId": "danggui", "amount": "6g", "role": "zuo" },
+        { "medicineId": "e_jiao", "amount": "6g", "role": "zuo" },
+        { "medicineId": "maidong", "amount": "9g", "role": "zuo" },
+        { "medicineId": "mugenpi", "amount": "6g", "role": "zuo" },
+        { "medicineId": "dangshen", "amount": "6g", "role": "zuo" },
+        { "medicineId": "banxia", "amount": "6g", "role": "shi" },
+        { "medicineId": "gancao", "amount": "6g", "role": "shi" }
+      ],
+      "functions": ["温经散寒", "养血祛瘀"],
+      "indications": ["冲任虚寒", "瘀血阻滞证", "漏下不止", "月经不调", "或前或后", "或一月再行", "或经停不至", "而见入暮发热", "手心烦热", "唇口干燥", "少腹里急", "腹满", "舌质暗红", "脉细而涩", "亦治妇人少腹寒", "久不受孕"],
+      "song": "温经汤用吴萸芎，归芍丹桂姜夏冬。参草阿胶调气血，暖宫祛瘀在温通。"
+    },
+    {
+      "id": "tianma_gouteng_yin",
+      "name": "天麻钩藤饮",
+      "pinyin": "Tiān Má Gōu Téng Yǐn",
+      "category": "祛痰剂",
+      "difficulty": "hard",
+      "composition": [
+        { "medicineId": "tianma", "amount": "9g", "role": "jun" },
+        { "medicineId": "gouteng", "amount": "12g", "role": "jun" },
+        { "medicineId": "shijueming", "amount": "18g", "role": "chen" },
+        { "medicineId": "zhizi", "amount": "9g", "role": "chen" },
+        { "medicineId": "huangqin", "amount": "9g", "role": "chen" },
+        { "medicineId": "duzhong", "amount": "9g", "role": "zuo" },
+        { "medicineId": "niuxi", "amount": "12g", "role": "zuo" },
+        { "medicineId": "yiyiren", "amount": "9g", "role": "zuo" },
+        { "medicineId": "sangjisheng", "amount": "9g", "role": "zuo" },
+        { "medicineId": "yemujiao", "amount": "9g", "role": "zuo" },
+        { "medicineId": "fuling", "amount": "9g", "role": "shi" }
+      ],
+      "functions": ["平肝息风", "清热活血", "补益肝肾"],
+      "indications": ["肝阳偏亢", "肝风上扰证", "头痛", "眩晕", "失眠多梦", "或口苦面红", "舌红苔黄", "脉弦或数"],
+      "song": "天麻钩藤石决明，栀芩寄生与茯神。夜藤牛膝益母草，主治眩晕与头痛。"
+    }
+  ]
+}

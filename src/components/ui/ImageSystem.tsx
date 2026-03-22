@@ -3,14 +3,8 @@
 
 import React from 'react';
 
-interface PlaceholderImageProps {
-  type: 'mountain' | 'forest' | 'flower' | 'stream' | 'cliff' | 'seed' | 'herb' | 'spirit';
-  seedId?: string;
-  className?: string;
-}
-
 // 区域背景SVG占位符
-export const RegionBackground: React.FC<{ region: string; className?: string }> = ({ region, className }) => {
+export const RegionBackground: React.FC<{ region: string }> = ({ region }) => {
   const gradients: Record<string, string> = {
     mountain: 'from-blue-900/40 via-slate-800/60 to-slate-900',
     forest: 'from-emerald-900/40 via-green-900/60 to-green-950',
@@ -219,7 +213,7 @@ export const GameImage: React.FC<GameImageProps> = ({ src, placeholderType, plac
   if (!src || error) {
     // 显示占位符
     if (placeholderType === 'region') {
-      return <RegionBackground region={placeholderData || 'mountain'} className={className} />;
+      return <RegionBackground region={placeholderData || 'mountain'} />;
     }
     if (placeholderType === 'seed') {
       return <SeedPlaceholder collected={placeholderData === 'collected'} className={className} />;

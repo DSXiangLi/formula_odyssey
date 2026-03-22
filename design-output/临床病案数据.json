@@ -1,0 +1,438 @@
+{
+  "version": "1.0",
+  "description": "临床病案数据 - 用于临床实习系统",
+  "cases": [
+    {
+      "id": "case_mahuang_001",
+      "formulaId": "formula_mahuang",
+      "patientInfo": "李某，男，28岁",
+      "symptoms": [
+        "恶寒发热，无汗",
+        "头痛身痛",
+        "喘咳，咳痰清稀",
+        "口不渴",
+        "精神萎靡"
+      ],
+      "tongue": "舌苔薄白",
+      "pulse": "脉浮紧",
+      "correctTreatment": "辛温解表",
+      "correctFormula": "麻黄汤",
+      "correctJun": "麻黄",
+      "explanation": "患者恶寒发热、无汗、头痛身痛，为外感风寒表实证；喘咳为肺气不宣；脉浮紧为风寒束表之象。治宜辛温解表、宣肺平喘，方用麻黄汤。麻黄为君药，发汗解表、宣肺平喘。"
+    },
+    {
+      "id": "case_mahuang_002",
+      "formulaId": "formula_mahuang",
+      "patientInfo": "王某，女，35岁",
+      "symptoms": [
+        "恶寒重发热轻",
+        "无汗",
+        "咳嗽气喘",
+        "鼻塞流涕",
+        "全身酸痛"
+      ],
+      "tongue": "舌淡红，苔薄白",
+      "pulse": "脉浮紧有力",
+      "correctTreatment": "辛温解表",
+      "correctFormula": "麻黄汤",
+      "correctJun": "麻黄",
+      "explanation": "恶寒重发热轻、无汗、脉浮紧，为典型风寒表实证。咳嗽气喘为肺气郁闭，治当辛温发汗、宣肺平喘。麻黄汤主之，麻黄发汗解表、宣肺平喘为君。"
+    },
+    {
+      "id": "case_mahuang_003",
+      "formulaId": "formula_mahuang",
+      "patientInfo": "张某，男，42岁",
+      "symptoms": [
+        "发热恶寒",
+        "无汗而喘",
+        "胸满闷",
+        "头痛项强",
+        "四肢拘急"
+      ],
+      "tongue": "舌苔薄白微腻",
+      "pulse": "脉浮紧数",
+      "correctTreatment": "辛温解表",
+      "correctFormula": "麻黄汤",
+      "correctJun": "麻黄",
+      "explanation": "外感风寒，卫阳被遏，腠理闭塞则无汗；肺气不宣则喘；寒性收引则头痛项强、四肢拘急。当辛温解表，宣肺平喘，方用麻黄汤，麻黄为君发汗解表。"
+    },
+    {
+      "id": "case_guizhi_001",
+      "formulaId": "formula_guizhi",
+      "patientInfo": "陈某，女，26岁",
+      "symptoms": [
+        "发热汗出",
+        "恶风不恶寒",
+        "头痛",
+        "鼻鸣干呕",
+        "四肢酸楚"
+      ],
+      "tongue": "舌苔薄白",
+      "pulse": "脉浮缓",
+      "correctTreatment": "解肌发表",
+      "correctFormula": "桂枝汤",
+      "correctJun": "桂枝",
+      "explanation": "患者发热汗出、恶风、脉浮缓，为外感风寒表虚证。营卫不和，腠理不固则汗出；卫阳受伤则恶风。治宜解肌发表、调和营卫，方用桂枝汤。桂枝为君，解肌发表。"
+    },
+    {
+      "id": "case_guizhi_002",
+      "formulaId": "formula_guizhi",
+      "patientInfo": "刘某，男，31岁",
+      "symptoms": [
+        "汗出恶风",
+        "发热不高",
+        "鼻流清涕",
+        "食欲不振",
+        "体倦乏力"
+      ],
+      "tongue": "舌淡苔白",
+      "pulse": "脉浮弱",
+      "correctTreatment": "解肌发表",
+      "correctFormula": "桂枝汤",
+      "correctJun": "桂枝",
+      "explanation": "汗出恶风、脉浮弱为表虚卫外不固；发热不高说明邪气不甚。此为风寒表虚证，非麻黄汤无汗之表实。治宜桂枝汤解肌发表、调和营卫，桂枝为君药。"
+    },
+    {
+      "id": "case_sijunzi_001",
+      "formulaId": "formula_sijunzi",
+      "patientInfo": "赵某，男，45岁",
+      "symptoms": [
+        "面色萎白",
+        "语声低微",
+        "四肢乏力",
+        "食少便溏",
+        "精神倦怠"
+      ],
+      "tongue": "舌淡苔白",
+      "pulse": "脉虚弱",
+      "correctTreatment": "益气健脾",
+      "correctFormula": "四君子汤",
+      "correctJun": "人参",
+      "explanation": "面色萎白、语声低微、四肢乏力、食少便溏，为脾胃气虚证。脾胃为气血生化之源，气虚则运化无力。治宜益气健脾，方用四君子汤。人参大补元气为君。"
+    },
+    {
+      "id": "case_sijunzi_002",
+      "formulaId": "formula_sijunzi",
+      "patientInfo": "孙某，女，38岁",
+      "symptoms": [
+        "气短懒言",
+        "食欲减退",
+        "腹胀便溏",
+        "面色少华",
+        "动则汗出"
+      ],
+      "tongue": "舌淡胖有齿痕，苔白",
+      "pulse": "脉细弱",
+      "correctTreatment": "益气健脾",
+      "correctFormula": "四君子汤",
+      "correctJun": "人参",
+      "explanation": "脾胃气虚，运化失司则食少腹胀、便溏；气血生化不足则面色少华；气虚卫外不固则动则汗出。治宜益气健脾，四君子汤主之，人参大补脾胃之气为君。"
+    },
+    {
+      "id": "case_sijunzi_003",
+      "formulaId": "formula_sijunzi",
+      "patientInfo": "周某，男，52岁",
+      "symptoms": [
+        "神疲乏力",
+        "少气懒言",
+        "纳呆食少",
+        "大便溏薄",
+        "形体消瘦"
+      ],
+      "tongue": "舌质淡，苔薄白",
+      "pulse": "脉缓弱无力",
+      "correctTreatment": "益气健脾",
+      "correctFormula": "四君子汤",
+      "correctJun": "人参",
+      "explanation": "患者年老体衰，脾胃气虚，运化无力则纳呆便溏；气血生化乏源则形体消瘦、神疲乏力。治当益气健脾，方用四君子汤。人参为君，大补元气。"
+    },
+    {
+      "id": "case_siniwu_001",
+      "formulaId": "formula_siniwu",
+      "patientInfo": "吴某，女，30岁",
+      "symptoms": [
+        "面色无华",
+        "头晕目眩",
+        "心悸失眠",
+        "唇甲色淡",
+        "月经量少色淡"
+      ],
+      "tongue": "舌淡苔白",
+      "pulse": "脉细无力",
+      "correctTreatment": "补血和血",
+      "correctFormula": "四物汤",
+      "correctJun": "熟地黄",
+      "explanation": "面色无华、唇甲色淡、月经量少色淡为血虚之象；血不养心则心悸失眠；血虚不能上荣则头晕目眩。治宜补血和血，方用四物汤。熟地黄滋阴补血为君。"
+    },
+    {
+      "id": "case_siniwu_002",
+      "formulaId": "formula_siniwu",
+      "patientInfo": "郑某某，女，27岁",
+      "symptoms": [
+        "月经不调，经行腹痛",
+        "量少色淡",
+        "面色萎黄",
+        "头晕眼花",
+        "手足发麻"
+      ],
+      "tongue": "舌淡红，苔薄白",
+      "pulse": "脉细涩",
+      "correctTreatment": "补血和血",
+      "correctFormula": "四物汤",
+      "correctJun": "熟地黄",
+      "explanation": "营血虚滞，冲任失养则月经不调、量少色淡；血虚经脉失养则手足发麻。治宜补血调血，方用四物汤。熟地黄滋阴补血填精为君药。"
+    },
+    {
+      "id": "case_xiaochengqi_001",
+      "formulaId": "formula_xiaochengqi",
+      "patientInfo": "钱某，男，35岁",
+      "symptoms": [
+        "大便不通",
+        "腹胀拒按",
+        "潮热谵语",
+        "手足濈然汗出",
+        "口渴欲饮"
+      ],
+      "tongue": "舌红，苔黄厚而燥",
+      "pulse": "脉沉实",
+      "correctTreatment": "峻下热结",
+      "correctFormula": "大承气汤",
+      "correctJun": "大黄",
+      "explanation": "患者大便不通、腹胀拒按、潮热谵语，为阳明腑实重证。燥屎内结，热盛伤津则口渴；热扰心神则谵语。治宜峻下热结，方用大承气汤。大黄泻热通便为君。"
+    },
+    {
+      "id": "case_xiaochengqi_002",
+      "formulaId": "formula_xiaochengqi",
+      "patientInfo": "冯某，男，40岁",
+      "symptoms": [
+        "腹胀痛拒按",
+        "大便秘结",
+        "发热汗出",
+        "烦躁不宁",
+        "气粗口臭"
+      ],
+      "tongue": "舌苔黄燥起刺",
+      "pulse": "脉滑数有力",
+      "correctTreatment": "峻下热结",
+      "correctFormula": "大承气汤",
+      "correctJun": "大黄",
+      "explanation": "阳明腑实，燥屎内结则腹胀痛拒按、大便秘结；热盛则发热汗出、烦躁不宁。治当峻下热结，急下存阴，方用大承气汤。大黄苦寒泻下为君。"
+    },
+    {
+      "id": "case_xiaoqinglong_001",
+      "formulaId": "formula_xiaoqinglong",
+      "patientInfo": "沈某，男，33岁",
+      "symptoms": [
+        "恶寒发热",
+        "无汗",
+        "喘咳",
+        "痰多清稀",
+        "胸痞干呕"
+      ],
+      "tongue": "舌苔白滑",
+      "pulse": "脉浮",
+      "correctTreatment": "解表散寒，温肺化饮",
+      "correctFormula": "小青龙汤",
+      "correctJun": "麻黄、桂枝",
+      "explanation": "外感风寒，内有痰饮。恶寒发热、无汗为风寒表实证；痰饮犯肺则喘咳痰多清稀。治宜解表散寒、温肺化饮，方用小青龙汤。麻黄、桂枝相须为君，发汗解表。"
+    },
+    {
+      "id": "case_xiaoqinglong_002",
+      "formulaId": "formula_xiaoqinglong",
+      "patientInfo": "杨某，女，29岁",
+      "symptoms": [
+        "发热恶寒，无汗",
+        "咳嗽气喘",
+        "痰白清稀量多",
+        "胸闷不舒",
+        "背部恶寒"
+      ],
+      "tongue": "舌淡胖，苔白腻",
+      "pulse": "脉浮弦",
+      "correctTreatment": "解表散寒，温肺化饮",
+      "correctFormula": "小青龙汤",
+      "correctJun": "麻黄、桂枝",
+      "explanation": "外有风寒束表，内有水饮停肺。恶寒无汗为表寒；痰白清稀量多、背部恶寒为饮邪。治宜外散风寒、内化水饮，方用小青龙汤。麻黄、桂枝为君发汗解表。"
+    },
+    {
+      "id": "case_xiaoqinglong_003",
+      "formulaId": "formula_xiaoqinglong",
+      "patientInfo": "徐某，男，45岁",
+      "symptoms": [
+        "咳喘日久",
+        "遇寒即发",
+        "痰多清稀",
+        "恶寒头痛",
+        "肢体浮肿"
+      ],
+      "tongue": "舌苔白滑",
+      "pulse": "脉浮紧",
+      "correctTreatment": "解表散寒，温肺化饮",
+      "correctFormula": "小青龙汤",
+      "correctJun": "麻黄、桂枝",
+      "explanation": "素有痰饮，复感风寒。痰饮内停，外感风寒诱发宿疾。治当解表化饮，方用小青龙汤。麻黄、桂枝为君，既发汗解表，又宣肺平喘。"
+    },
+    {
+      "id": "case_shenlingbaizhu_001",
+      "formulaId": "formula_shenlingbaizhu",
+      "patientInfo": "马某，女，41岁",
+      "symptoms": [
+        "饮食不化",
+        "胸脘痞闷",
+        "肠鸣泄泻",
+        "四肢乏力",
+        "形体消瘦"
+      ],
+      "tongue": "舌淡苔白腻",
+      "pulse": "脉虚缓",
+      "correctTreatment": "益气健脾，渗湿止泻",
+      "correctFormula": "参苓白术散",
+      "correctJun": "人参",
+      "explanation": "脾胃虚弱，运化失司则饮食不化；湿浊内阻则胸脘痞闷、肠鸣泄泻。治宜益气健脾、渗湿止泻，方用参苓白术散。人参大补脾胃之气为君。"
+    },
+    {
+      "id": "case_shenlingbaizhu_002",
+      "formulaId": "formula_shenlingbaizhu",
+      "patientInfo": "朱某，男，36岁",
+      "symptoms": [
+        "食少便溏",
+        "气短咳嗽",
+        "面色萎黄",
+        "肢体倦怠",
+        "痰多清稀"
+      ],
+      "tongue": "舌淡，苔薄白",
+      "pulse": "脉细弱",
+      "correctTreatment": "益气健脾，渗湿止泻",
+      "correctFormula": "参苓白术散",
+      "correctJun": "人参",
+      "explanation": "脾虚湿盛，运化失司则食少便溏；土不生金则气短咳嗽。治当培土生金，益气健脾渗湿，方用参苓白术散。人参为君补脾益肺。"
+    },
+    {
+      "id": "case_yinqiaosan_001",
+      "formulaId": "formula_yinqiaosan",
+      "patientInfo": "胡某，女，22岁",
+      "symptoms": [
+        "发热，微恶风寒",
+        "无汗或有汗不畅",
+        "头痛口渴",
+        "咽痛咳嗽",
+        "舌尖红"
+      ],
+      "tongue": "舌苔薄白或薄黄",
+      "pulse": "脉浮数",
+      "correctTreatment": "辛凉解表",
+      "correctFormula": "银翘散",
+      "correctJun": "金银花、连翘",
+      "explanation": "温病初起，邪在卫分。发热微恶风寒、头痛口渴为风热表证；咽痛咳嗽为热伤肺卫。治宜辛凉解表、清热解毒，方用银翘散。金银花、连翘清热解毒为君。"
+    },
+    {
+      "id": "case_yinqiaosan_002",
+      "formulaId": "formula_yinqiaosan",
+      "patientInfo": "郭某，男，25岁",
+      "symptoms": [
+        "发热较高",
+        "微恶风寒",
+        "咽痛红肿",
+        "口渴明显",
+        "咳嗽痰黄"
+      ],
+      "tongue": "舌红，苔薄黄",
+      "pulse": "脉浮数有力",
+      "correctTreatment": "辛凉解表",
+      "correctFormula": "银翘散",
+      "correctJun": "金银花、连翘",
+      "explanation": "风热外感，热毒偏盛。发热较高、咽痛红肿、口渴、痰黄均为热象。治当辛凉透表、清热解毒，方用银翘散。金银花、连翘为君清热解毒。"
+    },
+    {
+      "id": "case_yinqiaosan_003",
+      "formulaId": "formula_yinqiaosan",
+      "patientInfo": "何某，女，19岁",
+      "symptoms": [
+        "身热头痛",
+        "微恶风寒",
+        "咽痛",
+        "咳嗽",
+        "胸闷"
+      ],
+      "tongue": "舌尖红，苔薄黄",
+      "pulse": "脉浮数",
+      "correctTreatment": "辛凉解表",
+      "correctFormula": "银翘散",
+      "correctJun": "金银花、连翘",
+      "explanation": "温病初起，风热在表。身热头痛、微恶风寒为卫分证；咽痛咳嗽为肺卫受邪。治宜辛凉解表，方用银翘散。金银花、连翘轻宣透表、清热解毒为君。"
+    },
+    {
+      "id": "case_banxiabaizhu_001",
+      "formulaId": "formula_banxiabaizhu",
+      "patientInfo": "林某，女，38岁",
+      "symptoms": [
+        "心下痞满",
+        "恶心呕吐",
+        "肠鸣腹泻",
+        "肢体困倦",
+        "食少倦怠"
+      ],
+      "tongue": "舌苔腻而微黄",
+      "pulse": "脉滑数",
+      "correctTreatment": "和胃降逆，开结消痞",
+      "correctFormula": "半夏泻心汤",
+      "correctJun": "半夏",
+      "explanation": "寒热互结于中焦，脾胃升降失常。心下痞满、恶心呕吐为胃气上逆；肠鸣腹泻为脾失健运。治宜和胃降逆、开结消痞，方用半夏泻心汤。半夏为君和胃降逆。"
+    },
+    {
+      "id": "case_banxiabaizhu_002",
+      "formulaId": "formula_banxiabaizhu",
+      "patientInfo": "罗某某，男，42岁",
+      "symptoms": [
+        "胃脘痞闷",
+        "恶心呕吐",
+        "肠鸣便溏",
+        "口苦",
+        "不思饮食"
+      ],
+      "tongue": "舌淡红，苔黄白相兼",
+      "pulse": "脉弦数",
+      "correctTreatment": "和胃降逆，开结消痞",
+      "correctFormula": "半夏泻心汤",
+      "correctJun": "半夏",
+      "explanation": "脾胃不和，寒热互结。胃脘痞闷为寒热互结心下；恶心呕吐为胃气上逆；口苦为热，便溏为寒。治当调和寒热、和胃消痞，方用半夏泻心汤。半夏为君降逆和胃。"
+    },
+    {
+      "id": "case_lizhong_001",
+      "formulaId": "formula_lizhong",
+      "patientInfo": "高某，男，50岁",
+      "symptoms": [
+        "脘腹疼痛",
+        "喜温喜按",
+        "畏寒肢冷",
+        "呕吐便溏",
+        "不欲饮食"
+      ],
+      "tongue": "舌淡苔白",
+      "pulse": "脉沉细",
+      "correctTreatment": "温中祛寒，补气健脾",
+      "correctFormula": "理中丸",
+      "correctJun": "干姜",
+      "explanation": "脾胃虚寒，运化失司。脘腹疼痛、喜温喜按为虚寒之象；畏寒肢冷为阳气不足；呕吐便溏为脾胃升降失常。治宜温中祛寒、补气健脾，方用理中丸。干姜为君温中祛寒。"
+    },
+    {
+      "id": "case_lizhong_002",
+      "formulaId": "formula_lizhong",
+      "patientInfo": "丁某，女，46岁",
+      "symptoms": [
+        "腹痛绵绵",
+        "得温则减",
+        "自利不渴",
+        "手足不温",
+        "神疲乏力"
+      ],
+      "tongue": "舌淡胖，苔白滑",
+      "pulse": "脉沉迟无力",
+      "correctTreatment": "温中祛寒，补气健脾",
+      "correctFormula": "理中丸",
+      "correctJun": "干姜",
+      "explanation": "中焦虚寒，脾失健运。腹痛绵绵、得温则减为中焦虚寒；自利不渴为脾阳虚；手足不温为阳气不达四末。治当温中健脾，方用理中丸。干姜温中散寒为君。"
+    }
+  ]
+}
