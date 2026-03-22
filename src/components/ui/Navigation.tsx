@@ -11,7 +11,11 @@ const wuxingRegions: { id: WuxingType; name: string; icon: string }[] = [
   { id: 'water', name: '黑水潭', icon: '💧' },
 ]
 
-export default function Navigation() {
+interface NavigationProps {
+  onOpenChapters?: () => void
+}
+
+export default function Navigation({ onOpenChapters }: NavigationProps) {
   const { currentRegion, setCurrentRegion, getCollectedCount, player, setFormulaPursuitOpen } = useGameStore()
   const collectedCount = getCollectedCount()
   const totalCount = 50
@@ -62,8 +66,20 @@ export default function Navigation() {
         ))}
       </div>
 
-      {/* 右侧：收集进度 */}
+      {/* 右侧：收集进度和章节入口 */}
       <div className="flex items-center gap-4">
+        {/* 章节选择按钮 */}
+        {onOpenChapters && (
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={onOpenChapters}
+            className="flex items-center gap-2 bg-gradient-to-r from-[#C9A961] to-[#E8D4A2] backdrop-blur-sm rounded-full px-4 py-2 text-[#1A1A1A] font-medium hover:shadow-lg hover:shadow-[#C9A961]/30 transition-all duration-200"
+          >
+            <span>📜</span>
+            <span className="text-sm">章节</span>
+          </motion.button>
+        )}
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
