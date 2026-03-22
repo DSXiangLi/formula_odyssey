@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { GeneratedEvent, EventType } from '../../types/openWorld';
+import type { GeneratedEvent } from '../../types/openWorld';
 import { getEventTypeConfig, OPEN_WORLD_REGIONS } from '../../services/openWorldService';
 
 interface EventModalProps {
@@ -341,8 +341,6 @@ function EventTaskTab({
 // 病案内容
 function CaseContent({
   event,
-  selectedAnswers,
-  setSelectedAnswers,
 }: {
   event: GeneratedEvent;
   selectedAnswers: number[];

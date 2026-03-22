@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import type { GeneratedEvent } from '../../types/openWorld';
 import { getEventTypeConfig, getDifficultyLabel, getDifficultyColor } from '../../services/openWorldService';
 

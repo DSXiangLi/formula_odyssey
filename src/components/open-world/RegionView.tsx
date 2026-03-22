@@ -1,7 +1,40 @@
 import { motion } from 'framer-motion';
 import type { GeneratedEvent } from '../../types/openWorld';
 import { OPEN_WORLD_REGIONS, getEventTypeConfig } from '../../services/openWorldService';
-import { WUXING_REGIONS } from '../../stores/gameStore';
+
+// 本地定义WUXING_REGIONS，避免循环依赖
+const WUXING_REGIONS: Record<string, { name: string; themeColor: string; themeColorLight: string; specialMechanism: string }> = {
+  wood: {
+    name: '青木林',
+    themeColor: '#2E7D32',
+    themeColorLight: '#81C784',
+    specialMechanism: '春季生发 - 探索时有几率额外获得线索',
+  },
+  fire: {
+    name: '赤焰峰',
+    themeColor: '#C62828',
+    themeColorLight: '#EF5350',
+    specialMechanism: '心主神明 - 首次猜测免费',
+  },
+  earth: {
+    name: '黄土丘',
+    themeColor: '#F9A825',
+    themeColorLight: '#FFD54F',
+    specialMechanism: '脾主运化 - 线索价格降低20%',
+  },
+  metal: {
+    name: '白金原',
+    themeColor: '#78909C',
+    themeColorLight: '#B0BEC5',
+    specialMechanism: '肺主肃降 - 可以快速跳过当前种子',
+  },
+  water: {
+    name: '黑水潭',
+    themeColor: '#1565C0',
+    themeColorLight: '#42A5F5',
+    specialMechanism: '肾藏精 - 收集成功后奖励翻倍',
+  },
+};
 
 interface RegionViewProps {
   regionId: string;

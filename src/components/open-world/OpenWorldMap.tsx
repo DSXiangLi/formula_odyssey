@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import type { GeneratedEvent, OpenWorldRegion } from '../../types/openWorld';
-import { getEventTypeConfig, getDifficultyColor, getUnlockedRegions } from '../../services/openWorldService';
+import type { GeneratedEvent } from '../../types/openWorld';
+import { getUnlockedRegions } from '../../services/openWorldService';
 
 interface OpenWorldMapProps {
   unlockedRegions: string[];
