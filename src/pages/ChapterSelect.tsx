@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ChapterMap } from '@components/chapter'
-import type { Chapter } from '../../types/chapter'
+import type { Chapter } from '../types/chapter'
 
 // 20章数据配置
 const chaptersData = [

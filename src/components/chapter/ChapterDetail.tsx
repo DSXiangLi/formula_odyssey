@@ -214,7 +214,7 @@ export default function ChapterDetail({
                       <span>📜</span> 解锁方剂
                     </h3>
                     <div className="space-y-2">
-                      {chapter.formulas.map((formulaId, index) => (
+                      {chapter.formulas.map((formulaId) => (
                         <div
                           key={formulaId}
                           className="p-3 rounded-lg bg-white/5 flex items-center justify-between"
@@ -268,7 +268,7 @@ export default function ChapterDetail({
                   animate={{ opacity: 1, y: 0 }}
                   className="space-y-3"
                 >
-                  {chapter.medicines.map((medicineId, index) => {
+                  {chapter.medicines.map((medicineId) => {
                     const isCollected = progress?.collectedMedicines?.includes(medicineId)
                     return (
                       <div
