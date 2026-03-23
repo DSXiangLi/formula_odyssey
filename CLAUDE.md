@@ -1,44 +1,98 @@
-# CLAUDE.md
+# 药灵山谷 v3.0 - 师承问道版
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## 项目定位
 
-## Project Overview
-
-**《方灵旅记》** (Fang Ling Travelogue / Medicine Spirit Journey) is an AI-native educational game for learning Traditional Chinese Medicine (TCM) herbal formulas and pharmacology.
-
-**Current Version: v2.0 五行归元版** - 从"收集游戏"升级为"中医专业学习模拟器"
-
-### v2.0 核心设计哲学
-- 以**五行学说**为骨架：金木水火土对应五脏、五方、五色、五季
-- 以**性味归经**为玩法：药图、四气、五味、归经、功效五种探查方式，策略性获取信息
-- 以**方剂追缉**为目标：每日明确的方剂收集任务，学以致用
-- 以**临床实习**为归宿：将所学知识应用于病案分析
+**《药灵山谷 v3.0》** 是一款AI-native中医学习游戏，融合：
+- 🌿 **五行归元** - 中医五行世界观
+- 👨‍⚕️ **AI导师** - 青木先生全程陪伴学习
+- 🎮 **山谷采药** - 探索+采集小游戏
+- ⌨️ **药灵守护** - 打字战斗巩固知识
 
 ---
 
-## Current Status
+## 版本信息
 
-**药灵山谷 v2.0** 已完成核心架构设计，正在进行功能开发。
-
-### 已完成内容
-- `design-output/药灵山谷v2.0_五行归元版设计.md` - 完整2.0设计文档
-- `design-output/药灵数据配置v2.0.json` - 50味药完整数据（含五行、四气五味、归经等）
-- `design-output/方剂数据配置.json` - 20个经典方剂数据
-- `design-output/临床病案数据.json` - 20个临床病案
-- `src/` - React + TypeScript项目架构（v2.0数据模型已实现）
-
-### 用户体验修复 (2026-03-21)
-
-1. **方剂追缉令入口** - Navigation添加"📜 追缉令"按钮
-2. **探查命名** - 改为"药图"、"四气"、"五味"、"归经"、"功效"
-3. **药图显示** - 查看药图后显示清晰药物图片
-4. **背景路径** - 修复场景背景图片路径
-5. **追缉令刷新** - 改为1小时刷新（保留已接受的）
-6. **种子显示** - 实现分批解锁机制
+| 版本 | 名称 | 状态 | 文档 |
+|------|------|------|------|
+| v2.0 | 五行归元版 | 已完成 | `药灵山谷v2.0_五行归元版设计.md` |
+| v3.0 | 师承问道版 | 设计中 | `药灵山谷v3.0_融合设计.md` |
 
 ---
 
-## Commands
+## 核心设计文档
+
+### 主设计文档
+- **药灵山谷v3.0_融合设计.md** - 完整设计文档
+
+### 细分文档
+```
+design-output/v3.0-specs/
+├── tech/                     # 技术细分文档
+│   ├── 01-architecture.md   # 系统架构设计
+│   ├── 02-data-models.md    # 数据模型详细设计
+│   ├── 03-ai-integration.md # AI集成设计
+│   ├── 04-battle-system.md  # 战斗系统技术设计
+│   ├── 05-map-system.md     # 地图系统技术设计
+│   └── 06-testing-strategy.md # 测试策略（必看）
+├── gameplay/                 # 游戏策略细分文档
+│   ├── 01-gathering-adventure.md  # 山谷采药冒险
+│   ├── 02-typing-battle.md        # 药灵守护战
+│   ├── 03-chapter-system.md       # 章节系统
+│   └── 04-open-world.md           # 开放世界
+└── design/                   # 设计细分文档
+    ├── 01-ui-ux.md          # UI/UX规范
+    ├── 02-visual-style.md   # 视觉风格
+    ├── 03-animation-effects.md # 动画效果
+    └── 04-sound-design.md   # 音效设计
+```
+
+---
+
+## 开发导航
+
+### 按功能模块查找文档
+
+| 开发任务 | 必读文档 | 参考文档 |
+|----------|----------|----------|
+| **系统架构** | [01-architecture.md](design-output/v3.0-specs/tech/01-architecture.md) | [02-data-models.md](design-output/v3.0-specs/tech/02-data-models.md) |
+| **数据模型/类型定义** | [02-data-models.md](design-output/v3.0-specs/tech/02-data-models.md) | [01-architecture.md](design-output/v3.0-specs/tech/01-architecture.md) |
+| **AI导师集成** | [03-ai-integration.md](design-output/v3.0-specs/tech/03-ai-integration.md) | [01-gathering-adventure.md](design-output/v3.0-specs/gameplay/01-gathering-adventure.md) |
+| **战斗系统开发** | [04-battle-system.md](design-output/v3.0-specs/tech/04-battle-system.md) | [02-typing-battle.md](design-output/v3.0-specs/gameplay/02-typing-battle.md), [03-animation-effects.md](design-output/v3.0-specs/design/03-animation-effects.md) |
+| **地图系统开发** | [05-map-system.md](design-output/v3.0-specs/tech/05-map-system.md) | [01-gathering-adventure.md](design-output/v3.0-specs/gameplay/01-gathering-adventure.md), [02-visual-style.md](design-output/v3.0-specs/design/02-visual-style.md) |
+| **测试与验收** | [06-testing-strategy.md](design-output/v3.0-specs/tech/06-testing-strategy.md) | - |
+| **山谷采药玩法** | [01-gathering-adventure.md](design-output/v3.0-specs/gameplay/01-gathering-adventure.md) | [05-map-system.md](design-output/v3.0-specs/tech/05-map-system.md) |
+| **药灵守护战玩法** | [02-typing-battle.md](design-output/v3.0-specs/gameplay/02-typing-battle.md) | [04-battle-system.md](design-output/v3.0-specs/tech/04-battle-system.md) |
+| **章节系统设计** | [03-chapter-system.md](design-output/v3.0-specs/gameplay/03-chapter-system.md) | [01-architecture.md](design-output/v3.0-specs/tech/01-architecture.md) |
+| **开放世界设计** | [04-open-world.md](design-output/v3.0-specs/gameplay/04-open-world.md) | [05-map-system.md](design-output/v3.0-specs/tech/05-map-system.md) |
+| **UI/UX实现** | [01-ui-ux.md](design-output/v3.0-specs/design/01-ui-ux.md) | [02-visual-style.md](design-output/v3.0-specs/design/02-visual-style.md) |
+| **视觉美术** | [02-visual-style.md](design-output/v3.0-specs/design/02-visual-style.md) | [03-animation-effects.md](design-output/v3.0-specs/design/03-animation-effects.md) |
+| **动画特效** | [03-animation-effects.md](design-output/v3.0-specs/design/03-animation-effects.md) | [02-visual-style.md](design-output/v3.0-specs/design/02-visual-style.md) |
+| **音效实现** | [04-sound-design.md](design-output/v3.0-specs/design/04-sound-design.md) | - |
+
+### 按开发阶段查找文档
+
+| 阶段 | 主要文档 | 完成标准 |
+|------|----------|----------|
+| **Phase 1: 核心框架** | [01-architecture.md](design-output/v3.0-specs/tech/01-architecture.md), [02-data-models.md](design-output/v3.0-specs/tech/02-data-models.md), [03-chapter-system.md](design-output/v3.0-specs/gameplay/03-chapter-system.md) | TypeScript 0错误，章节数据可加载 |
+| **Phase 2: 山谷采药** | [05-map-system.md](design-output/v3.0-specs/tech/05-map-system.md), [01-gathering-adventure.md](design-output/v3.0-specs/gameplay/01-gathering-adventure.md), [02-visual-style.md](design-output/v3.0-specs/design/02-visual-style.md) | 地图生成正常，小游戏可玩 |
+| **Phase 3: 药灵守护** | [04-battle-system.md](design-output/v3.0-specs/tech/04-battle-system.md), [02-typing-battle.md](design-output/v3.0-specs/gameplay/02-typing-battle.md), [03-animation-effects.md](design-output/v3.0-specs/design/03-animation-effects.md) | 输入响应<100ms，战斗流程完整 |
+| **Phase 4: AI导师** | [03-ai-integration.md](design-output/v3.0-specs/tech/03-ai-integration.md), [01-gathering-adventure.md](design-output/v3.0-specs/gameplay/01-gathering-adventure.md) | 对话流畅，缓存有效 |
+| **Phase 5: 开放世界** | [04-open-world.md](design-output/v3.0-specs/gameplay/04-open-world.md), [05-map-system.md](design-output/v3.0-specs/tech/05-map-system.md) | 区域解锁正常，事件可触发 |
+| **Phase 6: Polish** | [03-animation-effects.md](design-output/v3.0-specs/design/03-animation-effects.md), [04-sound-design.md](design-output/v3.0-specs/design/04-sound-design.md), [06-testing-strategy.md](design-output/v3.0-specs/tech/06-testing-strategy.md) | 所有测试通过，AI验收S级 |
+
+### 关键决策参考
+
+| 决策点 | 参考文档 | 章节 |
+|--------|----------|------|
+| 技术栈选择 | [01-architecture.md](design-output/v3.0-specs/tech/01-architecture.md) | Tech Stack |
+| AI离线优先策略 | [03-ai-integration.md](design-output/v3.0-specs/tech/03-ai-integration.md) | 离线优先架构 |
+| 拼音输入支持 | [04-battle-system.md](design-output/v3.0-specs/tech/04-battle-system.md) | 输入处理系统 |
+| 地图生成算法 | [05-map-system.md](design-output/v3.0-specs/tech/05-map-system.md) | 地图生成算法 |
+| 测试通过标准 | [06-testing-strategy.md](design-output/v3.0-specs/tech/06-testing-strategy.md) | Definition of Done |
+
+---
+
+## 快速开始
 
 ### 启动开发服务器
 ```bash
@@ -53,275 +107,200 @@ cd /home/lixiang/Desktop/zhongyi_game/src
 npm run build
 ```
 
-### 代码格式化
-```bash
-cd /home/lixiang/Desktop/zhongyi_game/src
-npm run format
-```
-
 ---
 
 ## Tech Stack
 
 ### Frontend
-- Framework: React + TypeScript
-- State Management: Zustand (with persistence)
-- Animations: Framer Motion
-- Styling: CSS with custom properties
+- **Framework**: React 18 + TypeScript + Vite
+- **State Management**: Zustand (with persistence)
+- **Animations**: Framer Motion
+- **Styling**: Tailwind CSS + CSS Modules
 
 ### AI Services
-- **GLM** (智谱): Text generation via Volces API
-- **Qwen-VL** (通义): Image understanding via DashScope
-- **Seedream** (豆包): Image generation via Volces
+- **GLM-4**: 文本生成（导师对话、智能出题）
+- **Qwen-VL**: 图像理解（药材识别）
+- **Seedream**: 图像生成（药材图片）
+
+### 技术特点
+- 章节化学习进度持久化
+- AI对话流式响应
+- 打字战斗实时输入检测
+- 地图系统Canvas渲染
 
 ---
 
-## v2.0 五行归元系统
-
-### 五行架构
-
-| 五行 | 脏腑 | 方位 | 季节 | 代表色 | 区域名称 | 专属机制 |
-|------|------|------|------|--------|----------|----------|
-| **木** | 肝 | 东 | 春 | 青 | 青木林 | 春季生发 - 探索时有几率额外获得线索 |
-| **火** | 心 | 南 | 夏 | 赤 | 赤焰峰 | 心主神明 - 首次猜测免费 |
-| **土** | 脾 | 中 | 长夏 | 黄 | 黄土丘 | 脾主运化 - 线索价格降低20% |
-| **金** | 肺 | 西 | 秋 | 白 | 白金原 | 肺主肃降 - 可以快速跳过当前种子 |
-| **水** | 肾 | 北 | 冬 | 黑 | 黑水潭 | 肾藏精 - 收集成功后奖励翻倍 |
-
-### 性味归经探查玩法
-
-| 探查方式 | 消耗钻石 | 获取信息 | 解锁条件 |
-|------|----------|----------|----------|
-| **药图** | 0💎（免费） | 药物原图 + 五行归属 | 初始解锁 |
-| **四气** | 5💎 | 四气（寒热温凉） | 初始解锁 |
-| **五味** | 10💎 | 五味 + 毒性 | 收集10味药解锁 |
-| **归经** | 15💎 | 升降浮沉 + 归经 | 收集20味药解锁 |
-| **功效** | 20💎 | 功效主治完整信息 | 收集30味药解锁 |
-
-### 猜测奖励机制
-
-| 使用线索 | 猜测正确奖励 | 成就称号 |
-|----------|--------------|----------|
-| 仅用"药图"（0💎） | 100💎 + 亲密度+20 | "慧眼识药" |
-| 用"药图+四气"（5💎） | 80💎 + 亲密度+15 | "闻香识药" |
-| 用"药图+四气+五味"（15💎） | 60💎 + 亲密度+10 | "循序渐进" |
-| 用"药图+四气+五味+归经"（30💎） | 40💎 + 亲密度+5 | "稳扎稳打" |
-| 查看答案 | 0💎，仅获得基础收集 | "求学若渴" |
-
----
-
-## Core Game Loop v2.0
+## 游戏核心循环
 
 ```
-探索五行区域 → 发现药灵种子 → 性味归经探查猜药 → 收集药材
-       ↑                                            ↓
-       └──── 方剂追缉令 ← 临床实习 ← 方剂图鉴 ←────┘
+师导入门 → 山谷采药 → 药灵守护 → 方剂学习 → 临床考核 → 开放世界
+   ↑                                                           ↓
+   └──────────────── 下一章解锁 ← 技能获得 ← 声望提升 ←───────┘
 ```
 
 ---
 
-## Data Models
+## 数据结构
 
-### Medicine (药灵数据)
-```typescript
-interface Medicine {
-  id: string;
-  name: string;
-  pinyin: string;
-  latinName: string;
-  category: string;          // 功效分类
-  wuxing: WuxingType;        // 五行归属
-
-  // 中药专业属性
-  fourQi: FourQi;            // 四气
-  fiveFlavors: FiveFlavors[]; // 五味
-  movement: Movement;        // 升降浮沉
-  meridians: string[];       // 归经
-  toxicity: string;          // 毒性
-  functions: string[];       // 功效
-  indications: string[];     // 主治
-  contraindications: string[]; // 禁忌
-
-  // 两层图片系统（纯中医游戏，无需显微镜视角）
-  imagePlant: string;        // 原植物/矿物图
-  imageHerb: string;         // 饮片图
-
-  // 亲密度
-  stories: string[];
-  affinity: number;
-  collected: boolean;
-}
-```
-
-### Formula (方剂数据)
-```typescript
-interface Formula {
-  id: string;
-  name: string;
-  category: string;
-  difficulty: 'easy' | 'normal' | 'hard' | 'challenge';
-  composition: {
-    medicineId: string;
-    amount: string;
-    role: 'jun' | 'chen' | 'zuo' | 'shi'; // 君臣佐使
-  }[];
-  functions: string[];
-  indications: string[];
-  song?: string;            // 方歌
-  proficiency: number;      // 熟练度 0-5
-}
-```
-
-### ClinicalCase (临床病案)
-```typescript
-interface ClinicalCase {
-  id: string;
-  formulaId: string;
-  patientInfo: string;
-  symptoms: string[];
-  tongue: string;
-  pulse: string;
-  correctTreatment: string;
-  correctFormula: string;
-  correctJun: string;
-  explanation: string;
-}
-```
+### 核心实体
+- **Chapter** - 章节
+- **Medicine** - 药材（v2.0保留）
+- **Formula** - 方剂（v2.0保留）
+- **ClinicalCase** - 病案（v2.0保留）
+- **AIMentor** - AI导师
+- **PlayerProgress** - 玩家进度
 
 ---
 
-## Content Scope (v2.0)
+## 开发阶段
 
-- **50味药** 完整五行归属、四气五味、归经数据
-- **20个经典方剂** (麻黄汤、桂枝汤、四君子汤、四物汤等)
-- **20个临床病案** 对应方剂实习
-- **两层图片系统** (原植物/饮片)
-- **五行场景** 专属机制与粒子效果
+### Phase 1: 核心框架（2周）
+**参考文档**: [01-architecture.md](design-output/v3.0-specs/tech/01-architecture.md), [02-data-models.md](design-output/v3.0-specs/tech/02-data-models.md), [03-chapter-system.md](design-output/v3.0-specs/gameplay/03-chapter-system.md)
+
+- 20章数据配置
+- AI导师基础系统
+- 章节进度存储
+- 智能出题系统
+
+### Phase 2: 山谷采药（2周）⭐
+**参考文档**: [05-map-system.md](design-output/v3.0-specs/tech/05-map-system.md), [01-gathering-adventure.md](design-output/v3.0-specs/gameplay/01-gathering-adventure.md), [02-visual-style.md](design-output/v3.0-specs/design/02-visual-style.md)
+
+- 五行山谷地图系统
+- 地块探索与移动
+- 药材发现与识别
+- 采集小游戏（挖掘/敲击/套索）
+- 采药工具系统
+
+### Phase 3: 药灵守护（2周）⭐
+**参考文档**: [04-battle-system.md](design-output/v3.0-specs/tech/04-battle-system.md), [02-typing-battle.md](design-output/v3.0-specs/gameplay/02-typing-battle.md), [03-animation-effects.md](design-output/v3.0-specs/design/03-animation-effects.md)
+
+- 打字战斗核心系统
+- 敌人波次系统
+- 连击与技能系统
+- 战斗场景与特效
+
+### Phase 4: AI导师（2周）
+**参考文档**: [03-ai-integration.md](design-output/v3.0-specs/tech/03-ai-integration.md), [01-gathering-adventure.md](design-output/v3.0-specs/gameplay/01-gathering-adventure.md)
+
+- 导师立绘与表情
+- 对话系统
+- 苏格拉底引导
+
+### Phase 5: 开放世界（1周）
+**参考文档**: [04-open-world.md](design-output/v3.0-specs/gameplay/04-open-world.md), [05-map-system.md](design-output/v3.0-specs/tech/05-map-system.md)
+
+- 区域解锁
+- 每日事件
+- 技能系统
+
+### Phase 6: Polish（1周）
+**参考文档**: [03-animation-effects.md](design-output/v3.0-specs/design/03-animation-effects.md), [04-sound-design.md](design-output/v3.0-specs/design/04-sound-design.md), [06-testing-strategy.md](design-output/v3.0-specs/tech/06-testing-strategy.md)
+
+- 动画效果
+- 音效
+- Bug修复
+- **AI端到端验收**（必做，参考[06-testing-strategy.md](design-output/v3.0-specs/tech/06-testing-strategy.md)）
 
 ---
 
-## Art Style
+## 设计规范
 
-**东方幻想 + 精致游戏美术 (Oriental Fantasy + Polished Game Art)**
-
-### 风格定位
-- **场景背景**: AAA级游戏概念美术，非水墨画风格
-- **核心元素**: 水晶、魔法、发光植物、生物荧光
-- **光影效果**: 电影级光影 + 景深效果 (cinematic lighting, depth of field)
-- **整体质感**: 精致、吸引人、一眼抓住用户的游戏场景
-
-### 五行场景风格
-
-**青木林 (木)** - 水晶竹林、发光藤蔓、生物荧光花朵、魔法萤火虫
-
-**赤焰峰 (火)** - 红色水晶、熔岩魔法玻璃、飘浮余烬、凤凰羽毛
-
-**黄土丘 (土)** - 金色水晶麦田、发光石圈、漂浮大地微粒、巨型金色蘑菇
-
-**白金原 (金)** - 银色水晶桦树、漂浮银叶、铂金矿脉、镜面冰池
-
-**黑水潭 (水)** - 黑曜石深潭、生物发光水下植物、悬浮冰晶、极光光芒
-
-### 五行色彩
+### 色彩系统
 ```css
-/* 木行 - 青木林 */
+/* 五行色 */
 --wood-primary: #2E7D32;
 --wood-light: #81C784;
-
-/* 火行 - 赤焰峰 */
 --fire-primary: #C62828;
 --fire-light: #EF5350;
-
-/* 土行 - 黄土丘 */
 --earth-primary: #F9A825;
 --earth-light: #FFD54F;
-
-/* 金行 - 白金原 */
 --metal-primary: #78909C;
 --metal-light: #B0BEC5;
-
-/* 水行 - 黑水潭 */
 --water-primary: #1565C0;
 --water-light: #42A5F5;
+
+/* 功能色 */
+--currency-primary: #FFD700;
+--success: #4CAF50;
+--error: #F44336;
 ```
 
 ---
 
-## File Structure
+## 数据文件
 
+- `药灵数据配置v2.0.json` - 50味药数据
+- `方剂数据配置.json` - 20个方剂
+- `临床病案数据.json` - 20个病案
+
+---
+
+## 开发团队
+
+| 角色 | 职责 |
+|------|------|
+| game-designer | 游戏策略兼美术设计 |
+| fullstack-dev | 全栈开发工程师 |
+
+---
+
+*Version: v3.0*
+*Last Updated: 2026-03-23*
+
+---
+
+## 附录
+
+### 实施计划（开发任务拆分）
+
+| Phase | 名称 | 实施计划 | 预计时间 | 状态 |
+|-------|------|----------|----------|------|
+| 1 | 核心框架 | [2026-03-23-phase1-core-framework.md](docs/superpowers/plans/2026-03-23-phase1-core-framework.md) | 2周 | 待开始 |
+| 2 | 山谷采药 | [2026-03-23-phase2-gathering-map.md](docs/superpowers/plans/2026-03-23-phase2-gathering-map.md) | 2周 | 待开始 |
+| 3 | 药灵守护 | [2026-03-23-phase3-battle-system.md](docs/superpowers/plans/2026-03-23-phase3-battle-system.md) | 2周 | 待开始 |
+| 4 | AI导师 | [2026-03-23-phase4-ai-mentor.md](docs/superpowers/plans/2026-03-23-phase4-ai-mentor.md) | 2周 | 待开始 |
+| 5 | 开放世界 | [2026-03-23-phase5-open-world.md](docs/superpowers/plans/2026-03-23-phase5-open-world.md) | 1周 | 待开始 |
+| 6 | Polish | [2026-03-23-phase6-polish-testing.md](docs/superpowers/plans/2026-03-23-phase6-polish-testing.md) | 1周 | 待开始 |
+
+**执行方式**: 使用 `superpowers:subagent-driven-development` 或 `superpowers:executing-plans` skill 按Task逐步执行
+
+---
+
+### 测试与验收
+
+**开发前必读**: [06-testing-strategy.md](design-output/v3.0-specs/tech/06-testing-strategy.md)
+
+所有代码提交前必须通过：
+1. **TypeScript编译** - 0错误，0警告
+2. **单元测试** - 覆盖率>70%
+3. **功能测试** - Playwright自动化测试通过
+4. **AI端到端测试** - GLM-4游戏体验官评分≥B级
+
+**测试 checklist**:
+```bash
+# 提交前运行
+npm run type-check    # TypeScript检查
+npm run test:unit     # 单元测试
+npm run test:e2e      # 端到端测试
+npm run test:ai       # AI游戏体验测试
 ```
-/home/lixiang/Desktop/zhongyi_game/
-├── CLAUDE.md                     # 项目指南
-├── PROGRESS.md                   # 进度管理
-├── design-output/                # 设计输出
-│   ├── 药灵山谷v2.0_五行归元版设计.md
-│   ├── 药灵数据配置v2.0.json    # 50味药数据
-│   ├── 方剂数据配置.json        # 20个方剂
-│   ├── 临床病案数据.json        # 20个病案
-│   ├── 核心玩法设计.md
-│   ├── 美术规范指南.md
-│   └── AI生图Prompt模板.md
-├── design/                       # 设计文档
-│   ├── 方灵旅记_完整设计文档.md
-│   ├── 分阶段开发详细规划.md
-│   └── 交互设计_里程碑1_药灵山谷.md
-└── src/                          # 源代码
-    ├── App.tsx
-    ├── main.tsx
-    ├── types/index.ts            # TypeScript类型定义
-    ├── stores/gameStore.ts       # Zustand状态管理
-    ├── components/
-    │   ├── scene/                # 场景组件
-    │   ├── seed/                 # 种子组件
-    │   ├── collection/           # 图鉴组件
-    │   ├── explore/              # 探索组件
-    │   ├── formula/              # 方剂组件
-    │   ├── clinical/             # 临床组件
-    │   └── ui/                   # UI组件
-    ├── services/                 # AI服务
-    ├── styles/                   # 样式文件
-    └── utils/                    # 工具函数
-```
 
----
+### 设计文档完整索引
 
-## Next Steps
-
-See `PROGRESS.md` for detailed development tasks and current status.
-
----
-
-## Development Team
-
-**Team Name**: yaoling-valley-v2
-
-| 角色 | 职责 | 当前任务 |
-|------|------|----------|
-| **game-designer** | 游戏策略兼美术设计 | AI生图Prompt设计、数值平衡、视觉规范 |
-| **fullstack-dev** | 全栈开发工程师 | 性味归经探查玩法、方剂系统、自动化测试 |
-
-### 团队工作流程
-1. 美术设计师完成Prompt设计 → 开发工程师实现生图脚本
-2. 开发工程师实现功能 → AI自动化测试验证
-3. 团队通过TaskList协调任务分配
-
----
-
-## AI-First Development Strategy
-
-### AI生图全自动化
-- 所有图片资源由AI生图模型生成（Seedream/豆包）
-- 专业美术设计Prompt模板，确保中医药专业标准
-- 批量自动化流水线，一键生成155+张图片
-- AI自动验证图片质量（Qwen-VL审核）
-
-### AI自动化测试
-- 零传统单元测试，100% AI驱动端到端测试
-- Playwright + Qwen-VL + GLM-4V 测试架构
-- 模拟真实用户操作，验证功能和视觉效果
-- 每次提交自动触发测试，生成测试报告
-
----
-
-*Version: v2.0*
-*Last Updated: 2026-03-21*
+| 类别 | 文档 | 说明 |
+|------|------|------|
+| **主设计** | [药灵山谷v3.0_融合设计.md](design-output/药灵山谷v3.0_融合设计.md) | v3.0完整设计文档 |
+| **技术** | [01-architecture.md](design-output/v3.0-specs/tech/01-architecture.md) | 系统架构 |
+| **技术** | [02-data-models.md](design-output/v3.0-specs/tech/02-data-models.md) | 数据模型 |
+| **技术** | [03-ai-integration.md](design-output/v3.0-specs/tech/03-ai-integration.md) | AI集成 |
+| **技术** | [04-battle-system.md](design-output/v3.0-specs/tech/04-battle-system.md) | 战斗系统 |
+| **技术** | [05-map-system.md](design-output/v3.0-specs/tech/05-map-system.md) | 地图系统 |
+| **技术** | [06-testing-strategy.md](design-output/v3.0-specs/tech/06-testing-strategy.md) | 测试策略 |
+| **玩法** | [01-gathering-adventure.md](design-output/v3.0-specs/gameplay/01-gathering-adventure.md) | 山谷采药 |
+| **玩法** | [02-typing-battle.md](design-output/v3.0-specs/gameplay/02-typing-battle.md) | 药灵守护战 |
+| **玩法** | [03-chapter-system.md](design-output/v3.0-specs/gameplay/03-chapter-system.md) | 章节系统 |
+| **玩法** | [04-open-world.md](design-output/v3.0-specs/gameplay/04-open-world.md) | 开放世界 |
+| **设计** | [01-ui-ux.md](design-output/v3.0-specs/design/01-ui-ux.md) | UI/UX规范 |
+| **设计** | [02-visual-style.md](design-output/v3.0-specs/design/02-visual-style.md) | 视觉风格 |
+| **设计** | [03-animation-effects.md](design-output/v3.0-specs/design/03-animation-effects.md) | 动画特效 |
+| **设计** | [04-sound-design.md](design-output/v3.0-specs/design/04-sound-design.md) | 音效设计 |
