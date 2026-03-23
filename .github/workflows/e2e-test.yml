@@ -1,0 +1,62 @@
+name: AI游戏体验官 - E2E测试
+
+on:
+  push:
+    branches: [ main, develop, feature/* ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  e2e-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: |
+        cd src
+        npm ci
+
+    - name: Install Playwright
+      run: |
+        cd src
+        npx playwright install chromium
+
+    - name: Run smoke tests
+      run: |
+        cd src
+        npx playwright test e2e/tests/smoke-test.spec.ts
+
+    - name: Run AI vision tests (if API key available)
+      env:
+        DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+      run: |
+        cd src
+        if [ -n "$DASHSCOPE_API_KEY" ]; then
+          npx playwright test e2e/tests/chapter-select.spec.ts e2e/tests/scene-visual.spec.ts
+        else
+          echo "Skipping AI vision tests (no API key)"
+        fi
+
+    - name: Run game logic tests
+      run: |
+        cd src
+        npx playwright test e2e/tests/game-logic.spec.ts
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: |
+          src/e2e/screenshots/
+          src/e2e/reports/
+          src/playwright-report/
+        retention-days: 7
