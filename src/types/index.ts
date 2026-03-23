@@ -262,6 +262,3 @@ export interface AnimationConfig {
   ease: string;
   delay?: number;
 }
-
-// v3.0 开放世界类型
-export * from './openWorld';

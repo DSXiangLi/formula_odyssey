@@ -57,3 +57,7 @@ export {
   useOpenWorldData,
   useAIDialogData,
 } from './hooks';
+
+// v3.0 New Zustand stores
+export { usePlayerStore } from './playerStore';
+export { useChapterStore } from './chapterStore';
