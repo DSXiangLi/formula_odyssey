@@ -27,7 +27,7 @@ describe('Store Integration', () => {
       currentChapterId: null,
       currentStageIndex: 0,
     });
-    localStorage.clear();
+    // localStorage is mocked in test-setup.ts
   });
 
   it('should sync medicine collection across stores', () => {
