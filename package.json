@@ -1,9 +1,25 @@
 {
+  "name": "fangling-valley",
+  "version": "1.0.0",
+  "description": "药灵山谷 - 中医方剂学习游戏",
+  "type": "module",
+  "scripts": {
+    "dev": "cd src && vite",
+    "build": "cd src && tsc && vite build",
+    "preview": "cd src && vite preview",
+    "test": "cd src && vitest",
+    "test:unit": "cd src && vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:ai": "playwright test e2e/tests/chapter-select.spec.ts e2e/tests/scene-visual.spec.ts",
+    "type-check": "cd src && tsc --noEmit"
+  },
   "dependencies": {
     "immer": "^11.1.4",
     "react-router-dom": "^7.13.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@testing-library/react": "^16.3.2",
     "jsdom": "^29.0.1",
     "vitest": "^4.1.0"

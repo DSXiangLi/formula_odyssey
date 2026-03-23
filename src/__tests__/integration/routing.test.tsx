@@ -1,7 +1,16 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import ChapterSelect from '../../pages/ChapterSelect';
+import '@testing-library/jest-dom/vitest';
+
+// Ensure jsdom environment is loaded for this test file
+// @vitest-environment jsdom
+
+// Cleanup after each test
+beforeEach(() => {
+  cleanup();
+});
 
 // Mock the stores and data modules
 vi.mock('../../stores/playerStore', () => ({
@@ -133,7 +142,7 @@ describe('Routing', () => {
   });
 
   it('should render different chapters based on route parameter', () => {
-    const { rerender } = render(
+    const { unmount } = render(
       <MemoryRouter initialEntries={['/chapter/chapter-1']}>
         <Routes>
           <Route path="/chapter/:chapterId" element={<MockChapterEntry />} />
@@ -141,9 +150,11 @@ describe('Routing', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('Chapter: chapter-1')).toBeInTheDocument();
+    expect(screen.getByTestId('chapter-entry')).toHaveTextContent('Chapter: chapter-1');
 
-    // Re-render with different route
+    // Cleanup and re-render with different route
+    unmount();
+
     render(
       <MemoryRouter initialEntries={['/chapter/chapter-2']}>
         <Routes>
@@ -152,7 +163,7 @@ describe('Routing', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('Chapter: chapter-2')).toBeInTheDocument();
+    expect(screen.getByTestId('chapter-entry')).toHaveTextContent('Chapter: chapter-2');
   });
 
   it('should handle nested routes under chapter', () => {
