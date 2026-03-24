@@ -35,9 +35,17 @@ export class GameStateValidator {
 
   async getLocalStorage(key: string): Promise<StorageState | null> {
     try {
+      // 等待页面完全加载
+      await this.page.waitForLoadState('domcontentloaded');
+      await this.page.waitForTimeout(500);
+
       return await this.page.evaluate((k) => {
-        const item = localStorage.getItem(k);
-        return item ? JSON.parse(item) : null;
+        try {
+          const item = localStorage.getItem(k);
+          return item ? JSON.parse(item) : null;
+        } catch (e) {
+          return null;
+        }
       }, key);
     } catch (error) {
       console.error(`Failed to get localStorage key ${key}:`, error);

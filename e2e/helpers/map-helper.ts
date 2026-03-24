@@ -25,15 +25,27 @@ export class MapHelper {
    * 获取玩家当前位置（从localStorage或DOM）
    */
   async getPlayerPosition(): Promise<MapPosition | null> {
-    const position = await this.page.evaluate(() => {
-      const v3Key = 'fangling-valley-v3-storage';
-      const v2Key = 'fangling-valley-v2-storage';
-      const item = localStorage.getItem(v3Key) || localStorage.getItem(v2Key);
-      if (!item) return null;
-      const gameState = JSON.parse(item);
-      return gameState.state?.playerPosition || null;
-    });
-    return position;
+    try {
+      // 等待页面完全加载
+      await this.page.waitForLoadState('domcontentloaded');
+      await this.page.waitForTimeout(500);
+
+      const position = await this.page.evaluate(() => {
+        try {
+          const v3Key = 'fangling-valley-v3-storage';
+          const v2Key = 'fangling-valley-v2-storage';
+          const item = localStorage.getItem(v3Key) || localStorage.getItem(v2Key);
+          if (!item) return null;
+          const gameState = JSON.parse(item);
+          return gameState.state?.playerPosition || null;
+        } catch (e) {
+          return null;
+        }
+      });
+      return position;
+    } catch (e) {
+      return null;
+    }
   }
 
   /**
@@ -87,42 +99,66 @@ export class MapHelper {
    * 获取当前章节五行属性
    */
   async getChapterWuxing(): Promise<string | null> {
-    return await this.page.evaluate(() => {
-      const v3Key = 'fangling-valley-v3-storage';
-      const item = localStorage.getItem(v3Key);
-      if (!item) return null;
-      const gameState = JSON.parse(item);
-      return gameState.state?.currentChapterWuxing || null;
-    });
+    try {
+      return await this.page.evaluate(() => {
+        try {
+          const v3Key = 'fangling-valley-v3-storage';
+          const item = localStorage.getItem(v3Key);
+          if (!item) return null;
+          const gameState = JSON.parse(item);
+          return gameState.state?.currentChapterWuxing || null;
+        } catch (e) {
+          return null;
+        }
+      });
+    } catch (e) {
+      return null;
+    }
   }
 
   /**
    * 获取地图尺寸信息
    */
   async getMapSize(): Promise<number> {
-    return await this.page.evaluate(() => {
-      const v3Key = 'fangling-valley-v3-storage';
-      const item = localStorage.getItem(v3Key);
-      if (!item) return 0;
-      const gameState = JSON.parse(item);
-      return gameState.state?.mapSize || 0;
-    });
+    try {
+      return await this.page.evaluate(() => {
+        try {
+          const v3Key = 'fangling-valley-v3-storage';
+          const item = localStorage.getItem(v3Key);
+          if (!item) return 0;
+          const gameState = JSON.parse(item);
+          return gameState.state?.mapSize || 0;
+        } catch (e) {
+          return 0;
+        }
+      });
+    } catch (e) {
+      return 0;
+    }
   }
 
   /**
    * 检查是否存在可采集的药材
    */
   async hasMedicineAtPosition(x: number, y: number): Promise<boolean> {
-    return await this.page.evaluate(({ px, py }) => {
-      const v3Key = 'fangling-valley-v3-storage';
-      const item = localStorage.getItem(v3Key);
-      if (!item) return false;
-      const gameState = JSON.parse(item);
-      const tiles = gameState.state?.mapTiles || [];
-      const tile = tiles.find((t: { position: { x: number; y: number } }) =>
-        t.position.x === px && t.position.y === py
-      );
-      return tile?.medicine != null;
-    }, { px: x, py: y });
+    try {
+      return await this.page.evaluate(({ px, py }) => {
+        try {
+          const v3Key = 'fangling-valley-v3-storage';
+          const item = localStorage.getItem(v3Key);
+          if (!item) return false;
+          const gameState = JSON.parse(item);
+          const tiles = gameState.state?.mapTiles || [];
+          const tile = tiles.find((t: { position: { x: number; y: number } }) =>
+            t.position.x === px && t.position.y === py
+          );
+          return tile?.medicine != null;
+        } catch (e) {
+          return false;
+        }
+      }, { px: x, py: y });
+    } catch (e) {
+      return false;
+    }
   }
 }
