@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ChapterSelect from './pages/ChapterSelect';
+import { GatheringStage } from './pages/GatheringStage';
 
 // Placeholder for ChapterEntry (will be implemented in later phase)
 const ChapterEntry: React.FC = () => {
@@ -27,6 +28,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<ChapterSelect />} />
         <Route path="/chapter/:chapterId" element={<ChapterEntry />} />
+        <Route path="/chapter/:chapterId/gathering" element={<GatheringStage />} />
       </Routes>
     </BrowserRouter>
   );
