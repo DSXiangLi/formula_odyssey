@@ -11,6 +11,8 @@ import {
   TerrainType,
   DiscoveryState,
   TERRAIN_PROPERTIES,
+  GameMap,
+  MedicineSpawn,
 } from './types';
 
 /**
@@ -134,13 +136,20 @@ export class TileManager {
 
   /**
    * 采集药材
-   * @returns 采集到的药材ID，如果没有则返回null
+   * @param map - 游戏地图，用于更新已采集药材记录
+   * @returns 采集到的药材信息，如果没有则返回null
    */
-  collectMedicine(): string | null {
+  collectMedicine(map?: GameMap): MedicineSpawn | null {
     if (this.tile.medicine && this.tile.discoveryState === 'explored') {
-      const medicineId = this.tile.medicine.medicineId;
+      const medicine = this.tile.medicine;
       this.tile.medicine = undefined;
-      return medicineId;
+
+      // 更新地图的已采集药材集合
+      if (map) {
+        map.collectedMedicines.add(medicine.medicineId);
+      }
+
+      return medicine;
     }
     return null;
   }

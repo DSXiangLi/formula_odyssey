@@ -6,6 +6,7 @@
  */
 
 import { WuxingType, CollectionType, WeatherType, DayPhase } from '../../types';
+import { Medicine } from '../../types/medicine';
 
 /**
  * 位置坐标
@@ -82,6 +83,8 @@ export interface MapConfig {
   eventFrequency: number;
   /** 是否启用天气 */
   weatherEnabled: boolean;
+  /** 可用药材列表 */
+  medicines?: Medicine[];
   /** 特殊规则 */
   specialRules?: string[];
 }

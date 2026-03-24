@@ -236,7 +236,7 @@ export class MapGenerator {
    * 根据章节配置在地图上分布药材
    */
   private distributeMedicines(): void {
-    const { medicines } = this.config as MapConfig & { medicines?: Medicine[] };
+    const { medicines } = this.config;
     const { medicineDensity } = this.config;
     const size = this.config.size;
     const totalTiles = size * size;
