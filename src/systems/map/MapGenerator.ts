@@ -480,7 +480,7 @@ export class MapGenerator {
     return neighbors;
   }
 
-/**
+  /**
    * 应用五行主题
    * 根据五行类型调整地图元素
    */

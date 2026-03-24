@@ -24,6 +24,7 @@ export class DiscoverySystem {
   private map: GameMap;
   private baseVisibilityRadius: number = 2;
   private currentVisibilityRadius: number = 2;
+  private visibilityTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
   /**
    * 创建发现系统
@@ -242,9 +243,25 @@ export class DiscoverySystem {
   expandVisibility(radius: number, duration: number): void {
     this.currentVisibilityRadius = radius;
 
-    setTimeout(() => {
+    // Clear existing timeout
+    if (this.visibilityTimeoutId) {
+      clearTimeout(this.visibilityTimeoutId);
+    }
+
+    this.visibilityTimeoutId = setTimeout(() => {
       this.currentVisibilityRadius = this.baseVisibilityRadius;
+      this.visibilityTimeoutId = null;
     }, duration);
+  }
+
+  /**
+   * 销毁发现系统，清理资源
+   */
+  destroy(): void {
+    if (this.visibilityTimeoutId) {
+      clearTimeout(this.visibilityTimeoutId);
+      this.visibilityTimeoutId = null;
+    }
   }
 
   /**
