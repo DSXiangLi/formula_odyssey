@@ -1,6 +1,6 @@
-import { test, expect } from '../../fixtures/game-fixtures';
-import { MinigameHelper } from '../../helpers/minigame-helper';
-import { tappingMinigameRequirements } from '../../requirements/phase2-requirements';
+import { test, expect } from '../../../fixtures/game-fixtures';
+import { MinigameHelper } from '../../../helpers/minigame-helper';
+import { tappingMinigameRequirements } from '../../../requirements/phase2-requirements';
 
 test.describe('Phase 2: 敲击小游戏', () => {
   let minigameHelper: MinigameHelper;
