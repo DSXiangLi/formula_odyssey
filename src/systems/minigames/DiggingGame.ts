@@ -162,7 +162,7 @@ export class DiggingGame {
     }
   }
 
-  private complete(finalQuality: HitQuality): void {
+  private complete(_finalQuality: HitQuality): void {
     this.state.status = 'complete';
 
     if (this.animationId) {
