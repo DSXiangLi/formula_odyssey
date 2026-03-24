@@ -208,7 +208,11 @@ export const ClinicalCaseComponent: React.FC<ClinicalCaseProps> = ({
                   <User className={styles.patientIcon} />
                   <h3 className={styles.patientTitle}>患者信息</h3>
                 </div>
-                <p className={styles.patientInfo}>{currentCase.patientInfo}</p>
+                <p className={styles.patientInfo}>
+                  {typeof currentCase.patientInfo === 'string'
+                    ? currentCase.patientInfo
+                    : `${currentCase.patientInfo.name}，${currentCase.patientInfo.age}岁，${currentCase.patientInfo.gender === 'male' ? '男' : '女'}`}
+                </p>
 
                 {/* 症状 */}
                 <div className={styles.symptomSection}>
@@ -232,14 +236,22 @@ export const ClinicalCaseComponent: React.FC<ClinicalCaseProps> = ({
                       <Droplets className={styles.examIcon} />
                       <span>舌象</span>
                     </div>
-                    <p className={styles.examValue}>{currentCase.tongue}</p>
+                    <p className={styles.examValue}>
+                      {typeof currentCase.tongue === 'string'
+                        ? currentCase.tongue
+                        : `${currentCase.tongue.color}，${currentCase.tongue.coating}${currentCase.tongue.shape ? '，' + currentCase.tongue.shape : ''}`}
+                    </p>
                   </div>
                   <div className={styles.examItem}>
                     <div className={styles.examLabel}>
                       <Heart className={styles.examIcon} />
                       <span>脉象</span>
                     </div>
-                    <p className={styles.examValue}>{currentCase.pulse}</p>
+                    <p className={styles.examValue}>
+                      {typeof currentCase.pulse === 'string'
+                        ? currentCase.pulse
+                        : `${currentCase.pulse.type}脉，${currentCase.pulse.description}`}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -496,7 +508,11 @@ export const ClinicalCaseList: React.FC<{
                       onClick={() => onSelectCase(c.id)}
                     >
                       <span className={styles.caseNumber}>病案 {index + 1}</span>
-                      <span className={styles.casePatient}>{c.patientInfo}</span>
+                      <span className={styles.casePatient}>
+                        {typeof c.patientInfo === 'string'
+                          ? c.patientInfo
+                          : `${c.patientInfo.name}，${c.patientInfo.age}岁`}
+                      </span>
                       {isCompleted && <CheckCircle className={styles.completedIcon} />}
                     </button>
                   );

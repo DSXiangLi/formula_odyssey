@@ -5,7 +5,7 @@ import type { WuxingType } from '../../types/index'
 import Seed from '@components/seed/Seed'
 import ParticleSystem from './ParticleSystem'
 
-const regionConfig: Record<WuxingType, {
+const regionConfig: Record<WuxingType | string, {
   name: string
   particleType: 'snow' | 'light' | 'petal' | 'mist' | 'sparkle'
   bgImage: string
@@ -40,6 +40,37 @@ const regionConfig: Record<WuxingType, {
     particleType: 'mist',
     bgImage: '/images/scenes/heishuitan_bg.jpg',
     icon: '💧',
+  },
+  // 向后兼容
+  mountain: {
+    name: '山地区',
+    particleType: 'sparkle',
+    bgImage: '/images/scenes/baijinyuan_bg.jpg',
+    icon: '⛰️',
+  },
+  forest: {
+    name: '森林区',
+    particleType: 'petal',
+    bgImage: '/images/scenes/qingmulin_bg.jpg',
+    icon: '🌳',
+  },
+  flower: {
+    name: '花丛区',
+    particleType: 'petal',
+    bgImage: '/images/scenes/huangtuqiu_bg.jpg',
+    icon: '🌸',
+  },
+  stream: {
+    name: '溪流区',
+    particleType: 'mist',
+    bgImage: '/images/scenes/heishuitan_bg.jpg',
+    icon: '💧',
+  },
+  cliff: {
+    name: '悬崖区',
+    particleType: 'light',
+    bgImage: '/images/scenes/chiyanfeng_bg.jpg',
+    icon: '🔥',
   },
 }
 

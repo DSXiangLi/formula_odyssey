@@ -1,13 +1,5 @@
 import { z } from 'zod';
-import { WuxingType, FourQi, CollectionType } from './index';
-
-// 升降浮沉
-export enum Movement {
-  Ascending = 'ascending',
-  Descending = 'descending',
-  Floating = 'floating',
-  Sinking = 'sinking',
-}
+import { WuxingType, FourQi, CollectionType, Movement } from './enums';
 
 // 药灵数据 v3.0
 export const MedicineSchema = z.object({
@@ -31,6 +23,10 @@ export const MedicineSchema = z.object({
   stories: z.array(z.string()).default([]),
   affinity: z.number().default(0),
   isCollected: z.boolean().default(false),
+  // 向后兼容字段
+  nature: z.string().optional(), // 性味（v2.0格式："甘、微温"）
+  region: z.string().optional(), // 旧区域
+  collected: z.boolean().default(false), // 别名
 });
 
 export type Medicine = z.infer<typeof MedicineSchema>;
@@ -76,6 +72,14 @@ export const SeedSchema = z.object({
   isVisible: z.boolean().default(false),
   isCollected: z.boolean().default(false),
   discoveredAt: z.number().optional(),
+  // 诊断线索状态
+  examinedWang: z.boolean().default(false),
+  examinedWen: z.boolean().default(false),
+  examinedAsk: z.boolean().default(false),
+  examinedQie: z.boolean().default(false),
+  examinedCha: z.boolean().default(false),
+  discovered: z.boolean().default(false),
+  collected: z.boolean().default(false),
 });
 
 export type Seed = z.infer<typeof SeedSchema>;

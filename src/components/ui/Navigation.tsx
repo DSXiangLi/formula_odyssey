@@ -1,14 +1,14 @@
 import { motion } from 'framer-motion'
 import { useGameStore } from '@stores/gameStore'
 import { cn } from '@utils/index'
-import type { WuxingType } from '../../types/index'
+import { WuxingType } from '../../types/index'
 
 const wuxingRegions: { id: WuxingType; name: string; icon: string }[] = [
-  { id: 'wood', name: '青木林', icon: '🌳' },
-  { id: 'fire', name: '赤焰峰', icon: '🔥' },
-  { id: 'earth', name: '黄土丘', icon: '🏔️' },
-  { id: 'metal', name: '白金原', icon: '⛰️' },
-  { id: 'water', name: '黑水潭', icon: '💧' },
+  { id: WuxingType.Wood, name: '青木林', icon: '🌳' },
+  { id: WuxingType.Fire, name: '赤焰峰', icon: '🔥' },
+  { id: WuxingType.Earth, name: '黄土丘', icon: '🏔️' },
+  { id: WuxingType.Metal, name: '白金原', icon: '⛰️' },
+  { id: WuxingType.Water, name: '黑水潭', icon: '💧' },
 ]
 
 export default function Navigation() {

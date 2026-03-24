@@ -4,10 +4,12 @@ import { AIVisionResult, DesignRequirement } from '../types';
 export class AIVisionService {
   private apiKey: string;
   private baseURL: string;
+  private modelName: string;
 
   constructor() {
-    this.apiKey = process.env.DASHSCOPE_API_KEY || '';
-    this.baseURL = 'https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation';
+    this.apiKey = process.env.QWEN_VL_KEY || '';
+    this.baseURL = process.env.QWEN_VL_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1';
+    this.modelName = process.env.QWEN_VL_MODEL_NAME || 'qwen-vl-max';
   }
 
   async analyzeScreenshot(
@@ -19,33 +21,31 @@ export class AIVisionService {
     const prompt = this.buildPrompt(requirement);
 
     try {
-      const response = await fetch(this.baseURL, {
+      const response = await fetch(`${this.baseURL}/chat/completions`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${this.apiKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'qwen-vl-max',
-          input: {
-            messages: [
-              {
-                role: 'user',
-                content: [
-                  { type: 'text', text: prompt },
-                  {
-                    type: 'image_url',
-                    image_url: { url: `data:image/png;base64,${imageBase64}` }
-                  }
-                ]
-              }
-            ]
-          }
+          model: this.modelName,
+          messages: [
+            {
+              role: 'user',
+              content: [
+                { type: 'text', text: prompt },
+                {
+                  type: 'image_url',
+                  image_url: { url: `data:image/png;base64,${imageBase64}` }
+                }
+              ]
+            }
+          ]
         })
       });
 
       const data = await response.json();
-      return this.parseAIResponse(data.output.choices[0].message.content);
+      return this.parseAIResponse(data.choices[0].message.content);
     } catch (error) {
       console.error('AI Vision API error:', error);
       return {

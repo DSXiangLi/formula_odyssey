@@ -55,7 +55,7 @@ const wuxingNames: Record<WuxingType, string> = {
 export default function ChapterSelect() {
   const navigate = useNavigate();
   const playerStore = usePlayerStore();
-  const [selectedChapter, setSelectedChapter] = useState<string | null>(null);
+  const [_selectedChapter, setSelectedChapter] = useState<string | null>(null);
   const [filterWuxing, setFilterWuxing] = useState<WuxingType | null>(null);
 
   // 从playerStore获取解锁和完成的章节
@@ -138,8 +138,8 @@ export default function ChapterSelect() {
                   }`}
                   style={{
                     backgroundColor: wuxingColors[wuxing].light,
-                    ringColor: filterWuxing === wuxing ? wuxingColors[wuxing].primary : undefined,
-                  }}
+                    '--tw-ring-color': filterWuxing === wuxing ? wuxingColors[wuxing].primary : undefined,
+                  } as React.CSSProperties}
                   title={wuxingNames[wuxing]}
                 >
                   {wuxingIcons[wuxing]}
@@ -187,6 +187,7 @@ export default function ChapterSelect() {
               return (
                 <motion.div
                   key={chapter.id}
+                  data-chapter-id={chapter.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
@@ -209,11 +210,11 @@ export default function ChapterSelect() {
                     {/* 状态图标 */}
                     <div className="absolute top-3 right-3">
                       {completed ? (
-                        <span className="text-2xl" title="已完成">✅</span>
+                        <span className="text-2xl" title="已完成" data-testid="completed-icon">✅</span>
                       ) : unlocked ? (
-                        <span className="text-2xl" title="已解锁">🔓</span>
+                        <span className="text-2xl" title="已解锁" data-testid="unlocked-icon">🔓</span>
                       ) : (
-                        <span className="text-2xl" title="未解锁">🔒</span>
+                        <span className="text-2xl" title="未解锁" data-testid="lock-icon">🔒</span>
                       )}
                     </div>
 

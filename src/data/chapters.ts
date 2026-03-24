@@ -27,7 +27,7 @@ export const chapters: Chapter[] = [
     chapterNumber: 1,
     title: '解表剂山谷',
     subtitle: '第一章·解表剂',
-    wuxing: WuxingType.Metal,
+    wuxing: WuxingType.Wood,
     description: '药灵山谷的第一站，这里生长着解表发散的药灵。学习麻黄汤、桂枝汤等经典解表方剂，掌握风寒表证的治疗要领。本章收集麻黄、桂枝、紫苏、生姜四味解表要药。',
     unlockRequirements: [],
     stages: [

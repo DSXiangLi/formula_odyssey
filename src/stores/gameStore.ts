@@ -3,7 +3,6 @@ import { persist } from 'zustand/middleware';
 import type {
   Medicine,
   RegionType,
-  WuxingType,
   Seed,
   Player,
   GameState,
@@ -13,13 +12,11 @@ import type {
   DailyStats,
   Region,
   DiagnosisType,
-  FourQi,
-  FiveFlavors,
-  Movement
 } from '../types/index';
+import { WuxingType, FourQi, FiveFlavors, Movement } from '../types/enums';
 
 // 药灵数据
-import medicineData from '../../design-output/药灵数据配置.json';
+import medicineData from '../../design-output/药灵数据配置v2.0.json';
 
 // 五行区域配置
 export const WUXING_REGIONS: Record<WuxingType, Region> = {
@@ -87,11 +84,11 @@ export const WUXING_REGIONS: Record<WuxingType, Region> = {
 
 // 旧区域到五行的映射（向后兼容）
 const LEGACY_TO_WUXING: Record<string, WuxingType> = {
-  mountain: 'metal',
-  forest: 'wood',
-  flower: 'earth',
-  stream: 'water',
-  cliff: 'fire',
+  mountain: WuxingType.Metal,
+  forest: WuxingType.Wood,
+  flower: WuxingType.Earth,
+  stream: WuxingType.Water,
+  cliff: WuxingType.Fire,
 };
 
 // 线索配置
@@ -228,44 +225,57 @@ interface GameStore extends GameState {
 function migrateMedicineData(medicines: any[]): Medicine[] {
   return medicines.map(m => {
     // 优先使用数据中已有的 wuxing 字段，如果没有则根据旧 region 映射
-    const wuxing: WuxingType = m.wuxing || LEGACY_TO_WUXING[m.region] || 'earth';
+    const wuxing: WuxingType = m.wuxing || LEGACY_TO_WUXING[m.region] || WuxingType.Earth;
 
     // 优先使用数据中已有的 fourQi 字段，否则解析 nature 字段
     let fourQi: FourQi = m.fourQi;
     if (!fourQi && m.nature) {
       const natureParts = m.nature.split('，');
-      const fourQiMatch = natureParts[1]?.match(/[寒热温凉平]/);
-      fourQi = (fourQiMatch ? fourQiMatch[0] : '平') as FourQi;
+      const fourQiMatch = natureParts[1]?.match(/[寒热温凉]/);
+      if (fourQiMatch) {
+        const qiMap: Record<string, FourQi> = {
+          '寒': FourQi.Cold,
+          '热': FourQi.Hot,
+          '温': FourQi.Warm,
+          '凉': FourQi.Cool,
+        };
+        fourQi = qiMap[fourQiMatch[0]];
+      }
     }
-    fourQi = fourQi || '平';
+    fourQi = fourQi || FourQi.Warm;
 
     // 优先使用数据中已有的 fiveFlavors 字段，否则解析 nature 字段
     let fiveFlavors: FiveFlavors[] = m.fiveFlavors;
     if ((!fiveFlavors || fiveFlavors.length === 0) && m.nature) {
       const natureParts = m.nature.split('，');
       const flavors = natureParts[0]?.split('、') || [];
-      const flavorMap: Record<string, string> = {
-        '辛': '辛', '苦': '苦', '甘': '甘', '酸': '酸', '咸': '咸',
-        '微苦': '苦', '微甘': '甘', '微寒': '凉', '大寒': '寒',
+      const flavorMap: Record<string, FiveFlavors> = {
+        '辛': FiveFlavors.Spicy,
+        '苦': FiveFlavors.Bitter,
+        '甘': FiveFlavors.Sweet,
+        '酸': FiveFlavors.Sour,
+        '咸': FiveFlavors.Salty,
+        '微苦': FiveFlavors.Bitter,
+        '微甘': FiveFlavors.Sweet,
       };
       fiveFlavors = flavors
-        .map((f: string) => flavorMap[f] || f)
-        .filter((f: string) => ['酸', '苦', '甘', '辛', '咸'].includes(f)) as FiveFlavors[];
+        .map((f: string) => flavorMap[f])
+        .filter((f: FiveFlavors | undefined): f is FiveFlavors => f !== undefined);
     }
-    fiveFlavors = fiveFlavors?.length > 0 ? fiveFlavors : ['甘'];
+    fiveFlavors = fiveFlavors?.length > 0 ? fiveFlavors : [FiveFlavors.Sweet];
 
     // 优先使用数据中已有的 movement 字段
     let movement: Movement = m.movement;
     if (!movement) {
       const movementMap: Record<string, Movement> = {
-        '解表药': '升浮',
-        '清热药': '沉降',
-        '泻下药': '沉降',
-        '补益药': '平和',
-        '理气药': '升浮',
-        '活血化瘀药': '升浮',
+        '解表药': Movement.Ascending,
+        '清热药': Movement.Descending,
+        '泻下药': Movement.Descending,
+        '补益药': Movement.Floating,
+        '理气药': Movement.Ascending,
+        '活血化瘀药': Movement.Ascending,
       };
-      movement = (movementMap[m.category] || '平和') as Movement;
+      movement = movementMap[m.category] || Movement.Floating;
     }
 
     // 优先使用数据中已有的 toxicity 字段，否则解析 nature 字段
@@ -282,6 +292,7 @@ function migrateMedicineData(medicines: any[]): Medicine[] {
       id: m.id,
       name: m.name,
       pinyin: m.pinyin,
+      latinName: m.latinName || '',
       category: m.category,
       wuxing,
       fourQi,
@@ -292,9 +303,12 @@ function migrateMedicineData(medicines: any[]): Medicine[] {
       functions: m.functions || [],
       indications: m.indications || [],
       contraindications: m.contraindications || [],
+      imagePlant: m.imagePlant || '',
+      imageHerb: m.imageHerb || '',
+      collectionType: m.collectionType || 'digging',
       stories: m.stories || [],
       affinity: m.affinity || 0,
-      collected: m.collected || false,
+      isCollected: m.collected || false,
       // 旧字段兼容
       region: m.region,
       nature: m.nature,
@@ -318,8 +332,8 @@ function generateSeeds(medicines: Medicine[]): Seed[] {
           x: Math.random() * 80 + 10, // 10% - 90%
           y: Math.random() * 60 + 20, // 20% - 80%
         },
-        visible: true,
-        collected: false,
+        isVisible: true,
+        isCollected: false,
         discovered: false, // 默认未解锁
         hint: medicine.stories[0],
         // 线索状态
@@ -348,8 +362,10 @@ function getTodayString(): string {
 function createInitialDailyStats(): DailyStats {
   return {
     date: getTodayString(),
-    seedsExplored: 0,
-    pursuitsCompleted: 0,
+    seedsCollected: 0,
+    medicinesCollected: [],
+    currencyEarned: 0,
+    currencySpent: 0,
     casesCompleted: 0,
     correctGuesses: 0,
   };
@@ -361,21 +377,30 @@ function createInitialPlayer(): Player {
   return {
     id: generatePlayerId(),
     name: '方灵师',
+    level: 1,
+    experience: 0,
     currency: 100,           // 初始方灵石
     reputation: 0,           // 初始声望
-    collectedSeeds: [],
+    wuxingAffinity: {
+      [WuxingType.Wood]: 0,
+      [WuxingType.Fire]: 0,
+      [WuxingType.Earth]: 0,
+      [WuxingType.Metal]: 0,
+      [WuxingType.Water]: 0,
+    },
+    unlockedChapters: ['chapter-1'],
+    completedChapters: [],
     collectedMedicines: [],
-    medicineAffinity: {},
-    unlockedFormulas: [],
-    formulaProficiency: {},
+    masteredFormulas: [],
     completedCases: [],
-    caseProficiency: {},
-    activePursuits: [],
-    completedPursuits: [],
+    medicineAffinity: {},
+    skills: [],
+    exploreCount: 3,
+    maxExploreCount: 10,
+    lastExploreReset: 0,
     dailyStats: createInitialDailyStats(),
-    lastLoginDate: today,
-    loginStreak: 1,
-    exploreCount: 3,         // 向后兼容
+    createdAt: Date.now(),
+    lastPlayed: Date.now(),
   };
 }
 

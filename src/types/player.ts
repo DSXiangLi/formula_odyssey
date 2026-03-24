@@ -35,7 +35,23 @@ export const PlayerSchema = z.object({
   completedChapters: z.array(z.string()).default([]),
   collectedMedicines: z.array(z.string()).default([]),
   masteredFormulas: z.array(z.string()).default([]),
+  completedCases: z.array(z.string()).default([]),
+  medicineAffinity: z.record(z.string(), z.number()).default({}),
   skills: z.array(PlayerSkillSchema).default([]),
+  // 探索相关
+  exploreCount: z.number().default(0),
+  maxExploreCount: z.number().default(10),
+  lastExploreReset: z.number().default(0),
+  // 每日统计
+  dailyStats: z.object({
+    date: z.string().default(() => new Date().toISOString().split('T')[0]),
+    seedsCollected: z.number().default(0),
+    medicinesCollected: z.array(z.string()).default([]),
+    currencyEarned: z.number().default(0),
+    currencySpent: z.number().default(0),
+    casesCompleted: z.number().default(0),
+    correctGuesses: z.number().default(0),
+  }).default({}),
   createdAt: z.number(),
   lastPlayed: z.number(),
 });

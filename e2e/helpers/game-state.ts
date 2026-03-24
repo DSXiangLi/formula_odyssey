@@ -165,7 +165,7 @@ export class GameStateValidator {
   }
 
   async clearAllData(): Promise<void> {
-    await this.page.evaluate((v2Key, v3Key) => {
+    await this.page.evaluate(({ v2Key, v3Key }) => {
       // 清除 v2.0 和 v3.0 存储键
       localStorage.removeItem(v2Key);
       localStorage.removeItem(v3Key);
@@ -179,7 +179,7 @@ export class GameStateValidator {
         }
       }
       keysToRemove.forEach((key) => localStorage.removeItem(key));
-    }, V2_STORAGE_KEY, V3_STORAGE_KEY);
+    }, { v2Key: V2_STORAGE_KEY, v3Key: V3_STORAGE_KEY });
   }
 
   async getPlayerCurrency(): Promise<number | null> {

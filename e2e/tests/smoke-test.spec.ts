@@ -23,7 +23,7 @@ test.describe('冒烟测试 - 核心功能快速验证', () => {
   test('localStorage正常工作', async ({ page }) => {
     const validator = new GameStateValidator(page);
     await page.goto('/');
-    const playerState = await validator.getLocalStorage('yaoling-player-storage');
+    const playerState = await validator.getLocalStorage('fangling-valley-v2-storage');
     expect(playerState).toBeTruthy();
     expect(playerState.state).toBeTruthy();
   });
