@@ -17,9 +17,9 @@ export const MedicineSchema = z.object({
   functions: z.array(z.string()),
   indications: z.array(z.string()),
   contraindications: z.array(z.string()).default([]),
-  imagePlant: z.string(),
-  imageHerb: z.string(),
-  collectionType: z.nativeEnum(CollectionType),
+  imagePlant: z.string().optional(), // 改为可选，兼容旧数据
+  imageHerb: z.string().optional(), // 改为可选，兼容旧数据
+  collectionType: z.nativeEnum(CollectionType).optional(), // 改为可选，兼容v2.0数据
   stories: z.array(z.string()).default([]),
   affinity: z.number().default(0),
   isCollected: z.boolean().default(false),
@@ -30,6 +30,9 @@ export const MedicineSchema = z.object({
 });
 
 export type Medicine = z.infer<typeof MedicineSchema>;
+
+// v2.0 向后兼容别名
+export type MedicineV2 = Medicine;
 
 // 药灵战斗属性（v3.0战斗系统）
 export const MedicineBattleStatsSchema = z.object({

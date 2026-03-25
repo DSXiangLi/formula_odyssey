@@ -10,7 +10,7 @@ test.describe('Phase 2: 套索小游戏', () => {
   });
 
   test('套索小游戏应显示移动目标', async ({ page, aiVision, screenshotHelper }) => {
-    await page.goto('/chapter/chapter-1/gathering');
+    await page.goto('/chapter/chapter-1/stage?stage=1');
     await page.waitForLoadState('networkidle');
 
     const canvas = page.locator('canvas').first();
@@ -29,7 +29,7 @@ test.describe('Phase 2: 套索小游戏', () => {
   });
 
   test('套索游戏应支持鼠标交互', async ({ page }) => {
-    await page.goto('/chapter/chapter-1/gathering');
+    await page.goto('/chapter/chapter-1/stage?stage=1');
     await page.waitForLoadState('networkidle');
 
     const canvas = page.locator('canvas').first();
@@ -46,7 +46,7 @@ test.describe('Phase 2: 套索小游戏', () => {
   });
 
   test('套索游戏视觉元素验收', async ({ page, aiVision, screenshotHelper }) => {
-    await page.goto('/chapter/chapter-1/gathering');
+    await page.goto('/chapter/chapter-1/stage?stage=1');
     await page.waitForLoadState('networkidle');
 
     const canvas = page.locator('canvas').first();

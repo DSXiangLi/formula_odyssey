@@ -173,21 +173,29 @@ export class GameStateValidator {
   }
 
   async clearAllData(): Promise<void> {
-    await this.page.evaluate(({ v2Key, v3Key }) => {
-      // 清除 v2.0 和 v3.0 存储键
-      localStorage.removeItem(v2Key);
-      localStorage.removeItem(v3Key);
+    try {
+      await this.page.evaluate(({ v2Key, v3Key }) => {
+        try {
+          // 清除 v2.0 和 v3.0 存储键
+          localStorage.removeItem(v2Key);
+          localStorage.removeItem(v3Key);
 
-      // 清除所有相关备份
-      const keysToRemove: string[] = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && (key.startsWith(v2Key) || key.startsWith(v3Key))) {
-          keysToRemove.push(key);
+          // 清除所有相关备份
+          const keysToRemove: string[] = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && (key.startsWith(v2Key) || key.startsWith(v3Key))) {
+              keysToRemove.push(key);
+            }
+          }
+          keysToRemove.forEach((key) => localStorage.removeItem(key));
+        } catch (e) {
+          console.log('localStorage access error:', e);
         }
-      }
-      keysToRemove.forEach((key) => localStorage.removeItem(key));
-    }, { v2Key: V2_STORAGE_KEY, v3Key: V3_STORAGE_KEY });
+      }, { v2Key: V2_STORAGE_KEY, v3Key: V3_STORAGE_KEY });
+    } catch (e) {
+      console.log('Failed to clear data:', e);
+    }
   }
 
   async getPlayerCurrency(): Promise<number | null> {

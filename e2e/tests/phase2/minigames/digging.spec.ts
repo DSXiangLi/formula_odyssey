@@ -11,7 +11,7 @@ test.describe('Phase 2: 挖掘小游戏', () => {
 
   test('挖掘小游戏应正确显示多层土壤结构', async ({ page, aiVision, screenshotHelper }) => {
     // 进入采集关卡
-    await page.goto('/chapter/chapter-1/gathering');
+    await page.goto('/chapter/chapter-1/stage?stage=1');
     await page.waitForLoadState('networkidle');
 
     // 点击地图触发小游戏
@@ -33,7 +33,7 @@ test.describe('Phase 2: 挖掘小游戏', () => {
   });
 
   test('挖掘小游戏应支持键盘和鼠标交互', async ({ page }) => {
-    await page.goto('/chapter/chapter-1/gathering');
+    await page.goto('/chapter/chapter-1/stage?stage=1');
     await page.waitForLoadState('networkidle');
 
     // 点击地图
@@ -63,7 +63,7 @@ test.describe('Phase 2: 挖掘小游戏', () => {
   test('完成挖掘游戏应获得药材奖励', async ({ page, gameStateValidator }) => {
     const beforeMedicines = await gameStateValidator.getCollectedMedicines();
 
-    await page.goto('/chapter/chapter-1/gathering');
+    await page.goto('/chapter/chapter-1/stage?stage=1');
     await page.waitForLoadState('networkidle');
 
     // 触发小游戏
@@ -85,7 +85,7 @@ test.describe('Phase 2: 挖掘小游戏', () => {
   });
 
   test('挖掘游戏力量条应正确显示', async ({ page, aiVision, screenshotHelper }) => {
-    await page.goto('/chapter/chapter-1/gathering');
+    await page.goto('/chapter/chapter-1/stage?stage=1');
     await page.waitForLoadState('networkidle');
 
     const canvas = page.locator('canvas').first();

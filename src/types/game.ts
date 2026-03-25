@@ -18,16 +18,17 @@ export interface DailyStats {
   currencySpent: number;
   casesCompleted: number;
   correctGuesses: number; // 正确猜测次数
+  pursuitsCompleted: number; // 完成的追缉令数
 }
 
 // 方剂追缉令
 export interface FormulaPursuit {
   id: string;
   formulaId: string;
-  targetMedicine: string;
-  progress: number;
-  total: number;
-  reward: number;
+  targetMedicine?: string;
+  progress?: number;
+  total?: number;
+  reward?: number;
   rewards: {
     currency: number;
     experience?: number;
@@ -37,10 +38,12 @@ export interface FormulaPursuit {
     affinityBonus?: number;
   };
   difficulty: 'easy' | 'normal' | 'hard' | 'challenge';
-  requirements: string[];
-  accepted: boolean;
+  requirements?: string[];
+  accepted?: boolean;
   completed: boolean;
-  expiresAt: number;
+  expiresAt: string; // ISO 8601 日期字符串
+  timeLimit?: number; // 小时
+  collectedMedicines?: string[];
 }
 
 // 游戏状态

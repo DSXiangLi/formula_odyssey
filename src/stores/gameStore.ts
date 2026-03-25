@@ -2,8 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type {
   Medicine,
-  RegionType,
   Seed,
+  RegionType,
   Player,
   GameState,
   Formula,
@@ -11,9 +11,9 @@ import type {
   ClinicalCase,
   DailyStats,
   Region,
-  DiagnosisType,
 } from '../types/index';
 import { WuxingType, FourQi, FiveFlavors, Movement } from '../types/enums';
+import { FormulaDifficulty, FormulaRole } from '../types/formula';
 
 // 药灵数据
 import medicineData from '../../design-output/药灵数据配置v2.0.json';
@@ -25,7 +25,7 @@ export const WUXING_REGIONS: Record<WuxingType, Region> = {
     name: '青木林',
     themeColor: '#2E7D32',
     themeColorLight: '#81C784',
-    medicines: [], // 由数据文件填充
+    medicines: [],
     particleType: 'petal',
     zangfu: '肝',
     season: '春',
@@ -91,40 +91,6 @@ const LEGACY_TO_WUXING: Record<string, WuxingType> = {
   cliff: WuxingType.Fire,
 };
 
-// 线索配置
-export const DIAGNOSIS_CONFIG: Record<DiagnosisType, { name: string; cost: number; description: string; requirement: string }> = {
-  wang: {
-    name: '药图',
-    cost: 0,
-    description: '展示药物原植物/饮片图',
-    requirement: '初始解锁',
-  },
-  wen: {
-    name: '四气',
-    cost: 5,
-    description: '寒热温凉',
-    requirement: '初始解锁',
-  },
-  ask: {
-    name: '五味',
-    cost: 10,
-    description: '酸苦甘辛咸 + 毒性',
-    requirement: '收集10味药解锁',
-  },
-  qie: {
-    name: '归经',
-    cost: 15,
-    description: '升降浮沉 + 归经',
-    requirement: '收集20味药解锁',
-  },
-  cha: {
-    name: '功效',
-    cost: 20,
-    description: '功效主治完整信息',
-    requirement: '收集30味药解锁',
-  },
-};
-
 interface GameStore extends GameState {
   // 玩家数据
   player: Player;
@@ -156,11 +122,6 @@ interface GameStore extends GameState {
 
   // 追缉令定时器
   pursuitRefreshTimer: number | null;
-
-  // Actions - 种子收集
-  collectSeed: (seedId: string) => void;
-  examineSeed: (seedId: string, diagnosisType: DiagnosisType) => boolean;
-  guessMedicine: (seedId: string, medicineName: string) => { correct: boolean; reward: number };
 
   // Actions - 亲密度
   addMedicineAffinity: (medicineId: string, amount: number) => void;
@@ -197,37 +158,27 @@ interface GameStore extends GameState {
   setFormulaPursuitOpen: (open: boolean) => void;
   setClinicalCaseOpen: (open: boolean) => void;
   setSelectedMedicine: (medicineId: string | null) => void;
-  setSelectedSeed: (seedId: string | null) => void;
 
   // Getters
   getCollectedCount: () => number;
   getMedicineById: (id: string) => Medicine | undefined;
   getMedicineByName: (name: string) => Medicine | undefined;
-  getSeedsByWuxing: (wuxing: WuxingType) => Seed[];
-  getSeedsByRegion: (region: RegionType) => Seed[]; // 向后兼容
   getCollectedMedicines: () => Medicine[];
   getMedicinesByWuxing: (wuxing: WuxingType) => Medicine[];
   getActivePursuits: () => FormulaPursuit[];
   getUnlockedFormulas: () => Formula[];
-  getDiagnosisUnlocked: (type: DiagnosisType) => boolean;
-  getRegionByWuxing: (wuxing: WuxingType) => Region;
   getFormulaById: (id: string) => Formula | undefined;
   getFormulaProficiency: (formulaId: string) => number;
 
-  // 种子解锁
-  discoverSeeds: (count: number) => number;
-
   // 登录
-  login: () => { isNewDay: boolean; rewards: { seeds: number; currency: number } };
+  login: () => { isNewDay: boolean; rewards: { currency: number } };
 }
 
 // 将旧数据迁移到新格式
 function migrateMedicineData(medicines: any[]): Medicine[] {
   return medicines.map(m => {
-    // 优先使用数据中已有的 wuxing 字段，如果没有则根据旧 region 映射
     const wuxing: WuxingType = m.wuxing || LEGACY_TO_WUXING[m.region] || WuxingType.Earth;
 
-    // 优先使用数据中已有的 fourQi 字段，否则解析 nature 字段
     let fourQi: FourQi = m.fourQi;
     if (!fourQi && m.nature) {
       const natureParts = m.nature.split('，');
@@ -244,7 +195,6 @@ function migrateMedicineData(medicines: any[]): Medicine[] {
     }
     fourQi = fourQi || FourQi.Warm;
 
-    // 优先使用数据中已有的 fiveFlavors 字段，否则解析 nature 字段
     let fiveFlavors: FiveFlavors[] = m.fiveFlavors;
     if ((!fiveFlavors || fiveFlavors.length === 0) && m.nature) {
       const natureParts = m.nature.split('，');
@@ -264,7 +214,6 @@ function migrateMedicineData(medicines: any[]): Medicine[] {
     }
     fiveFlavors = fiveFlavors?.length > 0 ? fiveFlavors : [FiveFlavors.Sweet];
 
-    // 优先使用数据中已有的 movement 字段
     let movement: Movement = m.movement;
     if (!movement) {
       const movementMap: Record<string, Movement> = {
@@ -278,7 +227,6 @@ function migrateMedicineData(medicines: any[]): Medicine[] {
       movement = movementMap[m.category] || Movement.Floating;
     }
 
-    // 优先使用数据中已有的 toxicity 字段，否则解析 nature 字段
     let toxicity: string = m.toxicity;
     if (!toxicity && m.nature) {
       toxicity = '无毒';
@@ -309,48 +257,11 @@ function migrateMedicineData(medicines: any[]): Medicine[] {
       stories: m.stories || [],
       affinity: m.affinity || 0,
       isCollected: m.collected || false,
-      // 旧字段兼容
+      collected: m.collected || false,
       region: m.region,
       nature: m.nature,
     };
   });
-}
-
-// 生成种子数据（v2.0）
-function generateSeeds(medicines: Medicine[]): Seed[] {
-  const seeds: Seed[] = [];
-
-  medicines.forEach((medicine) => {
-    // 每个药灵生成1-2颗种子
-    const seedCount = Math.random() > 0.7 ? 2 : 1;
-    for (let i = 0; i < seedCount; i++) {
-      seeds.push({
-        id: `${medicine.id}_seed_${i}`,
-        medicineId: medicine.id,
-        wuxing: medicine.wuxing,
-        position: {
-          x: Math.random() * 80 + 10, // 10% - 90%
-          y: Math.random() * 60 + 20, // 20% - 80%
-        },
-        isVisible: true,
-        isCollected: false,
-        discovered: false, // 默认未解锁
-        hint: medicine.stories[0],
-        // 线索状态
-        examinedWang: false,
-        examinedWen: false,
-        examinedWenCost: 5,
-        examinedAsk: false,
-        examinedAskCost: 10,
-        examinedQie: false,
-        examinedQieCost: 15,
-        examinedCha: false,
-        examinedChaCost: 20,
-      });
-    }
-  });
-
-  return seeds;
 }
 
 // 生成今日日期字符串
@@ -362,16 +273,17 @@ function getTodayString(): string {
 function createInitialDailyStats(): DailyStats {
   return {
     date: getTodayString(),
-    seedsCollected: 0,
     medicinesCollected: [],
+    seedsCollected: 0,
     currencyEarned: 0,
     currencySpent: 0,
     casesCompleted: 0,
     correctGuesses: 0,
+    pursuitsCompleted: 0,
   };
 }
 
-// 初始化玩家数据（v2.0）
+// 初始化玩家数据（v3.0）
 function createInitialPlayer(): Player {
   const today = getTodayString();
   return {
@@ -379,8 +291,8 @@ function createInitialPlayer(): Player {
     name: '方灵师',
     level: 1,
     experience: 0,
-    currency: 100,           // 初始方灵石
-    reputation: 0,           // 初始声望
+    currency: 100,
+    reputation: 0,
     wuxingAffinity: {
       [WuxingType.Wood]: 0,
       [WuxingType.Fire]: 0,
@@ -401,6 +313,13 @@ function createInitialPlayer(): Player {
     dailyStats: createInitialDailyStats(),
     createdAt: Date.now(),
     lastPlayed: Date.now(),
+    lastLoginDate: today,
+    loginStreak: 0,
+    collectedSeeds: [],
+    completedPursuits: [],
+    activePursuits: [],
+    formulaProficiency: {},
+    unlockedFormulas: [],
   };
 }
 
@@ -415,52 +334,64 @@ const DEFAULT_FORMULAS: Formula[] = [
     name: '麻黄汤',
     pinyin: 'Má Huáng Tāng',
     category: '解表剂',
-    difficulty: 'normal',
+    difficulty: FormulaDifficulty.Normal,
     composition: [
-      { medicineId: 'mahuang', amount: '9g', role: 'jun' },
-      { medicineId: 'guizhi', amount: '6g', role: 'chen' },
-      { medicineId: 'xingren', amount: '9g', role: 'zuo' },
-      { medicineId: 'gancao', amount: '3g', role: 'shi' },
+      { medicineId: 'mahuang', amount: '9g', role: FormulaRole.Jun, name: '麻黄' },
+      { medicineId: 'guizhi', amount: '6g', role: FormulaRole.Chen, name: '桂枝' },
+      { medicineId: 'xingren', amount: '9g', role: FormulaRole.Zuo, name: '杏仁' },
+      { medicineId: 'gancao', amount: '3g', role: FormulaRole.Shi, name: '甘草' },
     ],
     functions: ['发汗解表', '宣肺平喘'],
     indications: ['外感风寒表实证'],
     song: '麻黄汤中用桂枝，杏仁甘草四般施，发热恶寒头项痛，喘而无汗服之宜。',
+    variations: [],
+    contraindications: [],
     proficiency: 0,
+    chapterId: 'chapter-1',
+    isMastered: false,
   },
   {
     id: 'guizhi_tang',
     name: '桂枝汤',
     pinyin: 'Guì Zhī Tāng',
     category: '解表剂',
-    difficulty: 'easy',
+    difficulty: FormulaDifficulty.Easy,
     composition: [
-      { medicineId: 'guizhi', amount: '9g', role: 'jun' },
-      { medicineId: 'baishao', amount: '9g', role: 'chen' },
-      { medicineId: 'shengjiang', amount: '9g', role: 'zuo' },
-      { medicineId: 'dazao', amount: '3枚', role: 'zuo' },
-      { medicineId: 'gancao', amount: '6g', role: 'shi' },
+      { medicineId: 'guizhi', amount: '9g', role: FormulaRole.Jun, name: '桂枝' },
+      { medicineId: 'baishao', amount: '9g', role: FormulaRole.Chen, name: '白芍' },
+      { medicineId: 'shengjiang', amount: '9g', role: FormulaRole.Zuo, name: '生姜' },
+      { medicineId: 'dazao', amount: '3枚', role: FormulaRole.Zuo, name: '大枣' },
+      { medicineId: 'gancao', amount: '6g', role: FormulaRole.Shi, name: '甘草' },
     ],
     functions: ['解肌发表', '调和营卫'],
     indications: ['外感风寒表虚证'],
     song: '桂枝汤治太阳风，芍药甘草姜枣同，解肌发表调营卫，汗出恶风此方功。',
+    variations: [],
+    contraindications: [],
     proficiency: 0,
+    chapterId: 'chapter-1',
+    isMastered: false,
   },
   {
     id: 'sijunzi_tang',
     name: '四君子汤',
     pinyin: 'Sì Jūn Zǐ Tāng',
     category: '补益剂',
-    difficulty: 'easy',
+    difficulty: FormulaDifficulty.Easy,
     composition: [
-      { medicineId: 'renshen', amount: '9g', role: 'jun' },
-      { medicineId: 'baizhu', amount: '9g', role: 'chen' },
-      { medicineId: 'fuling', amount: '9g', role: 'zuo' },
-      { medicineId: 'gancao', amount: '6g', role: 'shi' },
+      { medicineId: 'renshen', amount: '9g', role: FormulaRole.Jun, name: '人参' },
+      { medicineId: 'baizhu', amount: '9g', role: FormulaRole.Chen, name: '白术' },
+      { medicineId: 'fuling', amount: '9g', role: FormulaRole.Zuo, name: '茯苓' },
+      { medicineId: 'gancao', amount: '6g', role: FormulaRole.Shi, name: '甘草' },
     ],
     functions: ['益气健脾'],
     indications: ['脾胃气虚证'],
     song: '四君子汤中和义，参术茯苓甘草比，益以夏陈名六君，祛痰补气阳虚饵。',
+    variations: [],
+    contraindications: [],
     proficiency: 0,
+    chapterId: 'chapter-17',
+    isMastered: false,
   },
 ];
 
@@ -468,27 +399,51 @@ const DEFAULT_FORMULAS: Formula[] = [
 const DEFAULT_CLINICAL_CASES: ClinicalCase[] = [
   {
     id: 'case_001',
+    chapterId: 'chapter-1',
     formulaId: 'mahuang_tang',
-    patientInfo: '张某，男，35岁',
+    patientInfo: {
+      name: '张某',
+      age: 35,
+      gender: 'male',
+    },
     symptoms: ['恶寒发热', '头痛身痛', '无汗而喘', '舌苔薄白'],
-    tongue: '舌苔薄白',
-    pulse: '脉浮紧',
+    tongue: {
+      color: '淡红',
+      coating: '薄白',
+    },
+    pulse: {
+      type: '浮紧',
+      description: '脉浮紧',
+    },
     correctTreatment: '辛温解表',
     correctFormula: '麻黄汤',
     correctJun: '麻黄',
     explanation: '患者恶寒发热、无汗而喘，脉浮紧，为外感风寒表实证，故用麻黄汤发汗解表、宣肺平喘。',
+    difficulty: 'normal',
   },
   {
     id: 'case_002',
+    chapterId: 'chapter-1',
     formulaId: 'guizhi_tang',
-    patientInfo: '李某，女，28岁',
+    patientInfo: {
+      name: '李某',
+      age: 28,
+      gender: 'female',
+    },
     symptoms: ['发热头痛', '汗出恶风', '鼻鸣干呕', '苔白不渴'],
-    tongue: '舌苔薄白',
-    pulse: '脉浮缓',
+    tongue: {
+      color: '淡红',
+      coating: '薄白',
+    },
+    pulse: {
+      type: '浮缓',
+      description: '脉浮缓',
+    },
     correctTreatment: '解肌发表',
     correctFormula: '桂枝汤',
     correctJun: '桂枝',
     explanation: '患者发热汗出、恶风脉缓，为外感风寒表虚证，营卫不和，故用桂枝汤解肌发表、调和营卫。',
+    difficulty: 'easy',
   },
 ];
 
@@ -498,10 +453,10 @@ export const useGameStore = create<GameStore>()(
       // 初始状态
       player: createInitialPlayer(),
       medicines: migrateMedicineData(medicineData.medicines),
-      seeds: [], // 延迟生成
+      seeds: [],
       formulas: DEFAULT_FORMULAS,
       clinicalCases: DEFAULT_CLINICAL_CASES,
-      currentRegion: 'wood',
+      currentRegion: WuxingType.Wood,
       isExploreOpen: false,
       isCollectionOpen: false,
       isMedicineDetailOpen: false,
@@ -510,187 +465,14 @@ export const useGameStore = create<GameStore>()(
       selectedMedicine: null,
       selectedSeed: null,
       currentCase: null,
-
-      // 追缉令定时器
+      unlockedFormulas: [],
+      formulaProficiency: {},
+      activePursuits: [],
+      collectedMedicines: [],
       pursuitRefreshTimer: null,
+      dailyStats: createInitialDailyStats(),
 
-      // 从 player 中派生的状态（方便组件访问）
-      get unlockedFormulas() {
-        return get().player.unlockedFormulas;
-      },
-      get formulaProficiency() {
-        return get().player.formulaProficiency;
-      },
-      get activePursuits() {
-        return get().player.activePursuits;
-      },
-      get collectedMedicines() {
-        return get().player.collectedMedicines;
-      },
-
-      // 收集种子
-      collectSeed: (seedId: string) => {
-        const { seeds, player } = get();
-        const seed = seeds.find(s => s.id === seedId);
-        if (!seed || seed.collected) return;
-
-        // 更新种子状态
-        const updatedSeeds = seeds.map(s =>
-          s.id === seedId ? { ...s, collected: true } : s
-        );
-
-        // 更新玩家数据
-        const isNewMedicine = !player.collectedMedicines.includes(seed.medicineId);
-
-        // 根据五行区域计算奖励
-        let currencyReward = 10;
-        let affinityReward = 10;
-
-        // 水行区域奖励翻倍
-        if (seed.wuxing === 'water') {
-          currencyReward = 20;
-          affinityReward = 20;
-        }
-
-        // 更新追缉令进度（如果该药材是某个追缉令所需）
-        const updatedPursuits = player.activePursuits.map(pursuit => {
-          const formula = get().formulas.find(f => f.id === pursuit.formulaId);
-          if (!formula) return pursuit;
-
-          const neededMedicineIds = formula.composition.map(c => c.medicineId);
-          if (neededMedicineIds.includes(seed.medicineId) && !pursuit.collectedMedicines.includes(seed.medicineId)) {
-            return {
-              ...pursuit,
-              collectedMedicines: [...pursuit.collectedMedicines, seed.medicineId],
-            };
-          }
-          return pursuit;
-        });
-
-        const updatedPlayer = {
-          ...player,
-          collectedSeeds: [...player.collectedSeeds, seedId],
-          collectedMedicines: isNewMedicine
-            ? [...player.collectedMedicines, seed.medicineId]
-            : player.collectedMedicines,
-          medicineAffinity: {
-            ...player.medicineAffinity,
-            [seed.medicineId]: (player.medicineAffinity[seed.medicineId] || 0) + affinityReward,
-          },
-          currency: player.currency + currencyReward,
-          activePursuits: updatedPursuits,
-          dailyStats: {
-            ...player.dailyStats,
-            seedsExplored: player.dailyStats.seedsExplored + 1,
-          },
-        };
-
-        set({ seeds: updatedSeeds, player: updatedPlayer });
-      },
-
-      // 线索探查
-      examineSeed: (seedId: string, diagnosisType: DiagnosisType) => {
-        const { seeds, player } = get();
-        const seed = seeds.find(s => s.id === seedId);
-        if (!seed) return false;
-
-        const config = DIAGNOSIS_CONFIG[diagnosisType];
-        const unlocked = get().getDiagnosisUnlocked(diagnosisType);
-
-        if (!unlocked) return false;
-        if (player.currency < config.cost) return false;
-
-        // 扣除费用
-        const updatedPlayer = {
-          ...player,
-          currency: player.currency - config.cost,
-        };
-
-        // 更新种子探查状态
-        const updatedSeeds = seeds.map(s => {
-          if (s.id !== seedId) return s;
-          const key = `examined${diagnosisType.charAt(0).toUpperCase() + diagnosisType.slice(1)}`;
-          return { ...s, [key]: true };
-        });
-
-        set({ seeds: updatedSeeds, player: updatedPlayer });
-        return true;
-      },
-
-      // 猜测药名
-      guessMedicine: (seedId: string, medicineName: string) => {
-        const { seeds, player, medicines } = get();
-        const seed = seeds.find(s => s.id === seedId);
-        if (!seed) return { correct: false, reward: 0 };
-
-        const medicine = medicines.find(m => m.id === seed.medicineId);
-        if (!medicine) return { correct: false, reward: 0 };
-
-        const correct = medicine.name === medicineName;
-
-        if (correct) {
-          // 计算已使用的线索数
-          let cluesUsed = 0;
-          if (seed.examinedWen) cluesUsed++;
-          if (seed.examinedAsk) cluesUsed += 2;
-          if (seed.examinedQie) cluesUsed += 3;
-          if (seed.examinedCha) cluesUsed += 4;
-
-          // 根据使用线索数计算奖励
-          let reward = 40;
-          let affinityBonus = 5;
-          if (cluesUsed === 0) { reward = 100; affinityBonus = 20; }
-          else if (cluesUsed <= 1) { reward = 80; affinityBonus = 15; }
-          else if (cluesUsed <= 3) { reward = 60; affinityBonus = 10; }
-
-          // 水行奖励翻倍
-          if (seed.wuxing === 'water') {
-            reward *= 2;
-            affinityBonus *= 2;
-          }
-
-          // 更新连续正确次数
-          const newCorrectGuesses = player.dailyStats.correctGuesses + 1;
-          let extraReward = 0;
-          if (newCorrectGuesses === 3) extraReward = 30;
-          if (newCorrectGuesses === 5) extraReward = 60;
-          if (newCorrectGuesses === 10) extraReward = 150;
-
-          // 收集种子
-          get().collectSeed(seedId);
-
-          // 增加亲密度
-          get().addMedicineAffinity(seed.medicineId, affinityBonus);
-
-          // 更新统计
-          set({
-            player: {
-              ...get().player,
-              dailyStats: {
-                ...get().player.dailyStats,
-                correctGuesses: newCorrectGuesses,
-              },
-              currency: get().player.currency + reward + extraReward,
-            },
-          });
-
-          return { correct: true, reward: reward + extraReward };
-        } else {
-          // 猜测失败，重置连续正确
-          set({
-            player: {
-              ...player,
-              dailyStats: {
-                ...player.dailyStats,
-                correctGuesses: 0,
-              },
-            },
-          });
-          return { correct: false, reward: 0 };
-        }
-      },
-
-      // 增加亲密度
+      // Actions - 亲密度
       addMedicineAffinity: (medicineId: string, amount: number) => {
         const { player } = get();
         set({
@@ -767,18 +549,15 @@ export const useGameStore = create<GameStore>()(
         const pursuit = player.activePursuits.find(p => p.id === pursuitId);
         if (!pursuit || pursuit.completed) return;
 
-        // 更新追缉令状态
         const updatedPursuits = player.activePursuits.map(p =>
           p.id === pursuitId ? { ...p, completed: true } : p
         );
 
-        // 解锁方剂
         const unlockedFormulas = [...player.unlockedFormulas];
         if (!unlockedFormulas.includes(pursuit.formulaId)) {
           unlockedFormulas.push(pursuit.formulaId);
         }
 
-        // 发放奖励
         const updatedPlayer = {
           ...player,
           currency: player.currency + pursuit.rewards.currency,
@@ -831,15 +610,11 @@ export const useGameStore = create<GameStore>()(
         const { player, formulas } = get();
         const today = getTodayString();
 
-        // 如果已经生成过今天的追缉令，不重复生成
         if (player.activePursuits.some(p => p.expiresAt.startsWith(today))) {
           return;
         }
 
-        // 清除过期的追缉令
         const activePursuits: FormulaPursuit[] = [];
-
-        // 随机选择方剂生成追缉令
         const shuffled = [...formulas].sort(() => Math.random() - 0.5);
         const difficulties: ('easy' | 'normal' | 'hard' | 'challenge')[] = ['easy', 'normal', 'normal', 'hard', 'challenge'];
 
@@ -879,17 +654,14 @@ export const useGameStore = create<GameStore>()(
         const { player, formulas } = get();
         const now = Date.now();
 
-        // 保留已接受且未完成的追缉令（有进度但未完成）
         const acceptedPursuits = player.activePursuits.filter(p =>
           p.collectedMedicines.length > 0 && !p.completed
         );
 
-        // 如果不是强制刷新且已有未接受的追缉令，不生成新的
         if (!force && player.activePursuits.some(p => p.collectedMedicines.length === 0 && !p.completed)) {
           return;
         }
 
-        // 生成新的追缉令（替换未接受的）
         const newPursuits: FormulaPursuit[] = [];
         const shuffled = [...formulas].sort(() => Math.random() - 0.5);
         const difficulties: ('easy' | 'normal' | 'hard' | 'challenge')[] = ['easy', 'normal', 'normal', 'hard', 'challenge'];
@@ -928,12 +700,10 @@ export const useGameStore = create<GameStore>()(
       // 启动追缉令定时器（每小时刷新）
       startPursuitRefreshTimer: () => {
         const { pursuitRefreshTimer } = get();
-        // 清除旧定时器
         if (pursuitRefreshTimer) {
           clearInterval(pursuitRefreshTimer);
         }
 
-        // 创建新定时器，每小时刷新一次
         const timer = window.setInterval(() => {
           get().generatePursuits(true);
         }, 60 * 60 * 1000);
@@ -1026,11 +796,6 @@ export const useGameStore = create<GameStore>()(
         set({ selectedMedicine: medicineId });
       },
 
-      // 设置选中种子
-      setSelectedSeed: (seedId: string | null) => {
-        set({ selectedSeed: seedId });
-      },
-
       // 获取收集数量
       getCollectedCount: () => {
         const { player } = get();
@@ -1047,17 +812,6 @@ export const useGameStore = create<GameStore>()(
       getMedicineByName: (name: string) => {
         const { medicines } = get();
         return medicines.find(m => m.name === name);
-      },
-
-      // 获取五行区域的种子
-      getSeedsByWuxing: (wuxing: WuxingType) => {
-        const { seeds } = get();
-        return seeds.filter(s => s.wuxing === wuxing);
-      },
-
-      // 获取区域种子（向后兼容）
-      getSeedsByRegion: (region: RegionType) => {
-        return get().getSeedsByWuxing(region as WuxingType);
       },
 
       // 获取已收集药灵
@@ -1090,77 +844,20 @@ export const useGameStore = create<GameStore>()(
         return formulas.find(f => f.id === id);
       },
 
-      // 获取线索解锁状态
-      getDiagnosisUnlocked: (type: DiagnosisType) => {
-        const { player } = get();
-        const collectedCount = player.collectedMedicines.length;
-
-        switch (type) {
-          case 'wang':
-            return true;
-          case 'wen':
-            return true;
-          case 'ask':
-            return collectedCount >= 10;
-          case 'qie':
-            return collectedCount >= 20;
-          case 'cha':
-            return collectedCount >= 30;
-          default:
-            return false;
-        }
-      },
-
-      // 获取五行区域配置
-      getRegionByWuxing: (wuxing: WuxingType) => {
-        return WUXING_REGIONS[wuxing];
-      },
-
       // 获取方剂熟练度
       getFormulaProficiency: (formulaId: string) => {
         const { player } = get();
         return player.formulaProficiency[formulaId] || 0;
       },
 
-      // 解锁种子（分批显示）
-      discoverSeeds: (count: number) => {
-        const { seeds } = get();
-        const undiscovered = seeds.filter(s => !s.discovered && !s.collected);
-
-        // 随机打乱未解锁的种子
-        const shuffled = [...undiscovered].sort(() => Math.random() - 0.5);
-        const toDiscover = shuffled.slice(0, count);
-
-        const updatedSeeds = seeds.map(s =>
-          toDiscover.find(td => td.id === s.id)
-            ? { ...s, discovered: true }
-            : s
-        );
-
-        set({ seeds: updatedSeeds });
-        return toDiscover.length;
-      },
-
-      // 登录处理
+      // 登录处理（v3.0 简化版，移除 seed 系统）
       login: () => {
         const { player } = get();
         const today = getTodayString();
 
-        // 初始化种子（如果尚未生成）
-        if (get().seeds.length === 0) {
-          set({ seeds: generateSeeds(get().medicines) });
-        }
-
-        // 首次登录：解锁初始种子（2-3个）
-        const discoveredCount = get().seeds.filter(s => s.discovered).length;
-        if (discoveredCount === 0) {
-          const initialCount = Math.floor(Math.random() * 2) + 2; // 2-3个
-          get().discoverSeeds(initialCount);
-        }
-
         // 检查是否是新的一天
         if (player.lastLoginDate === today) {
-          return { isNewDay: false, rewards: { seeds: 0, currency: 0 } };
+          return { isNewDay: false, rewards: { currency: 0 } };
         }
 
         // 检查是否连续登录
@@ -1169,9 +866,7 @@ export const useGameStore = create<GameStore>()(
         const diffDays = Math.floor((todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
         const newStreak = diffDays === 1 ? player.loginStreak + 1 : 1;
 
-        // 每日奖励：解锁新种子
-        const seedRewards = Math.floor(Math.random() * 2) + 2; // 2-3个
-        const discovered = get().discoverSeeds(seedRewards);
+        // 每日奖励
         const currencyRewards = 50 + (newStreak >= 3 ? 20 : 0);
 
         // 重置每日统计
@@ -1195,21 +890,13 @@ export const useGameStore = create<GameStore>()(
 
         return {
           isNewDay: true,
-          rewards: { seeds: discovered, currency: currencyRewards },
+          rewards: { currency: currencyRewards },
         };
       },
     }),
     {
-      name: 'fangling-valley-v2-storage',
-      partialize: (state) => ({ player: state.player, seeds: state.seeds }),
-      onRehydrateStorage: () => {
-        return (state) => {
-          // 存储恢复后生成种子（如果为空）
-          if (state && state.seeds.length === 0) {
-            state.seeds = generateSeeds(state.medicines);
-          }
-        };
-      },
+      name: 'fangling-valley-v3-storage',
+      partialize: (state) => ({ player: state.player }),
     }
   )
 );

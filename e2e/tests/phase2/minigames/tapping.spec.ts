@@ -10,7 +10,7 @@ test.describe('Phase 2: 敲击小游戏', () => {
   });
 
   test('敲击小游戏应显示节奏指示器', async ({ page, aiVision, screenshotHelper }) => {
-    await page.goto('/chapter/chapter-1/gathering');
+    await page.goto('/chapter/chapter-1/stage?stage=1');
     await page.waitForLoadState('networkidle');
 
     // 尝试触发敲击游戏
@@ -30,7 +30,7 @@ test.describe('Phase 2: 敲击小游戏', () => {
   });
 
   test('敲击游戏应支持连击系统', async ({ page }) => {
-    await page.goto('/chapter/chapter-1/gathering');
+    await page.goto('/chapter/chapter-1/stage?stage=1');
     await page.waitForLoadState('networkidle');
 
     const canvas = page.locator('canvas').first();
@@ -47,7 +47,7 @@ test.describe('Phase 2: 敲击小游戏', () => {
   });
 
   test('敲击游戏视觉元素验收', async ({ page, aiVision, screenshotHelper }) => {
-    await page.goto('/chapter/chapter-1/gathering');
+    await page.goto('/chapter/chapter-1/stage?stage=1');
     await page.waitForLoadState('networkidle');
 
     const canvas = page.locator('canvas').first();

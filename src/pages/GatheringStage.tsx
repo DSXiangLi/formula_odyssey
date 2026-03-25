@@ -3,21 +3,23 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useChapterStore } from '../stores/chapterStore';
 import { usePlayerStore } from '../stores/playerStore';
+import { useMapStore } from '../stores/mapStore';
 import { MapGenerator } from '../systems/map/MapGenerator';
 import { GameMap, Tile, Position } from '../systems/map/types';
 import { IsometricMap } from '../components/map/IsometricMap';
 import { DiggingMinigame } from '../components/minigames/DiggingMinigame';
-import { TappingMinigame } from '../components/minigames/TappingMinigame';
-import { LassoMinigame } from '../components/minigames/LassoMinigame';
+import TappingMinigame from '../components/minigames/TappingMinigame';
+import LassoMinigame from '../components/minigames/LassoMinigame';
 import { getChapterById } from '../data/chapters';
 import { CollectionType, WuxingType } from '../types';
 import { Medicine } from '../types/medicine';
 import { DiggingResult } from '../systems/minigames/DiggingGame';
 import { TappingResult } from '../systems/minigames/TappingGame';
 import { LassoResult } from '../systems/minigames/LassoGame';
+import type { StageProps, GatheringResult } from '../types/stage';
 
 // Medicine data import
-import medicineData from '../../design-output/药灵数据配置.json';
+import medicineData from '../../design-output/药灵数据配置v2.0.json';
 
 interface CollectedMedicine {
   medicineId: string;
@@ -25,13 +27,22 @@ interface CollectedMedicine {
   amount: number;
 }
 
-export const GatheringStage: React.FC = () => {
-  const { chapterId } = useParams<{ chapterId: string }>();
+export const GatheringStage: React.FC<StageProps> = ({
+  chapterId: propChapterId,
+  onComplete,
+  onExit,
+  initialData
+}) => {
+  const { chapterId: routeChapterId } = useParams<{ chapterId: string }>();
   const navigate = useNavigate();
+
+  // 优先使用 propChapterId（StageManager 传入），否则使用路由参数
+  const chapterId = propChapterId || routeChapterId;
 
   // Stores
   const chapterStore = useChapterStore();
   const playerStore = usePlayerStore();
+  const mapStore = useMapStore();
 
   // Local state
   const [gameMap, setGameMap] = useState<GameMap | null>(null);
@@ -60,7 +71,8 @@ export const GatheringStage: React.FC = () => {
     if (!chapter) return [];
     return chapter.medicines
       .map(name => medicineData.medicines.find((m: any) => m.name === name))
-      .filter(Boolean) as Medicine[];
+      .filter((m): m is NonNullable<typeof m> => m != null)
+      .map(m => ({ ...m, isCollected: (m as any).isCollected ?? (m as any).collected ?? false })) as Medicine[];
   }, [chapter]);
 
   // Calculate progress
@@ -98,6 +110,20 @@ export const GatheringStage: React.FC = () => {
     const newMap = generator.generate(mapConfig);
     setGameMap(newMap);
     setPlayerPosition(newMap.playerStart);
+
+    // Save to mapStore for persistence
+    mapStore.setMapData(
+      newMap.tiles.flat().map(tile => ({
+        position: tile.position,
+        medicine: tile.medicine,
+        discoveryState: tile.discoveryState,
+      })),
+      newMap.size
+    );
+    mapStore.setPlayerPosition(newMap.playerStart);
+    if (chapter) {
+      mapStore.setCurrentChapter(chapterId!, chapter.wuxing);
+    }
 
     // Initialize chapter progress if needed
     chapterStore.setCurrentChapter(chapterId);
@@ -178,8 +204,9 @@ export const GatheringStage: React.FC = () => {
       );
 
       if (medicine) {
+        const medWithCollected = { ...medicine, collected: medicine.collected ?? false };
         setCurrentMedicine({
-          medicine,
+          medicine: medWithCollected as Medicine,
           rarity: tile.medicine.rarity,
         });
         setSelectedTile(tile);
@@ -193,6 +220,7 @@ export const GatheringStage: React.FC = () => {
     if (!gameMap) return;
 
     setPlayerPosition(newPosition);
+    mapStore.setPlayerPosition(newPosition);
 
     // Mark tile as visited and explored
     const updatedTiles = [...gameMap.tiles];
@@ -334,10 +362,34 @@ export const GatheringStage: React.FC = () => {
 
       showNotification('采集阶段完成！获得 100 方灵石奖励');
 
-      // Navigate back to chapter entry
-      setTimeout(() => {
-        navigate(`/chapter/${chapterId}`);
-      }, 1500);
+      // 调用 onComplete 回调通知 StageManager
+      const result: GatheringResult = {
+        medicines: collectedMedicines.map(m => m.medicineId),
+        quality: {}, // 可以扩展以支持品质
+        exploredTiles: gameMap?.tiles.flat().filter(t => t.discoveryState === 'explored').length || 0,
+      };
+
+      // 如果有 onComplete 回调，使用它；否则使用旧的路由导航
+      if (onComplete) {
+        setTimeout(() => {
+          onComplete(result);
+        }, 1500);
+      } else {
+        // Navigate back to chapter entry (向后兼容)
+        setTimeout(() => {
+          navigate(`/chapter/${chapterId}`);
+        }, 1500);
+      }
+    }
+  };
+
+  // 退出采集阶段
+  const handleExit = () => {
+    if (onExit) {
+      onExit();
+    } else {
+      // 向后兼容：直接导航
+      navigate(`/chapter/${chapterId}`);
     }
   };
 
@@ -370,10 +422,10 @@ export const GatheringStage: React.FC = () => {
         <div className="bg-white rounded-xl shadow-lg p-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
-              onClick={() => navigate(`/chapter/${chapterId}`)}
+              onClick={handleExit}
               className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 transition-colors"
             >
-              返回
+              退出采药
             </button>
             <div>
               <h1 className="text-xl font-bold text-gray-800">{chapter.title}</h1>
@@ -468,13 +520,24 @@ export const GatheringStage: React.FC = () => {
 
         {/* Center - Map */}
         <div className="lg:col-span-3">
-          <div className="bg-white rounded-xl shadow-lg p-4">
+          <div
+            className="rounded-xl shadow-lg p-4"
+            style={{
+              background: chapter?.wuxing === WuxingType.Wood ? 'linear-gradient(135deg, #C8E6C9 0%, #A5D6A7 100%)' :
+                         chapter?.wuxing === WuxingType.Fire ? 'linear-gradient(135deg, #FFCDD2 0%, #EF9A9A 100%)' :
+                         chapter?.wuxing === WuxingType.Earth ? 'linear-gradient(135deg, #FFECB3 0%, #FFE082 100%)' :
+                         chapter?.wuxing === WuxingType.Metal ? 'linear-gradient(135deg, #CFD8DC 0%, #B0BEC5 100%)' :
+                         chapter?.wuxing === WuxingType.Water ? 'linear-gradient(135deg, #BBDEFB 0%, #90CAF9 100%)' :
+                         '#f9fafb'
+            }}
+          >
             <IsometricMap
               map={gameMap}
               playerPosition={playerPosition}
               onTileClick={handleTileClick}
               tileWidth={64}
               tileHeight={32}
+              wuxing={chapter?.wuxing}
             />
           </div>
         </div>

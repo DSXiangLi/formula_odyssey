@@ -42,6 +42,16 @@ export const PlayerSchema = z.object({
   exploreCount: z.number().default(0),
   maxExploreCount: z.number().default(10),
   lastExploreReset: z.number().default(0),
+  // 方剂相关
+  unlockedFormulas: z.array(z.string()).default([]),
+  formulaProficiency: z.record(z.string(), z.number()).default({}),
+  activePursuits: z.array(z.any()).default([]),
+  completedPursuits: z.array(z.string()).default([]),
+  // 登录相关
+  lastLoginDate: z.string().default(''),
+  loginStreak: z.number().default(0),
+  // 种子相关
+  collectedSeeds: z.array(z.string()).default([]),
   // 每日统计
   dailyStats: z.object({
     date: z.string().default(() => new Date().toISOString().split('T')[0]),
@@ -51,7 +61,17 @@ export const PlayerSchema = z.object({
     currencySpent: z.number().default(0),
     casesCompleted: z.number().default(0),
     correctGuesses: z.number().default(0),
-  }).default({}),
+    pursuitsCompleted: z.number().default(0),
+  }).default(() => ({
+    date: new Date().toISOString().split('T')[0],
+    seedsCollected: 0,
+    medicinesCollected: [],
+    currencyEarned: 0,
+    currencySpent: 0,
+    casesCompleted: 0,
+    correctGuesses: 0,
+    pursuitsCompleted: 0,
+  })),
   createdAt: z.number(),
   lastPlayed: z.number(),
 });

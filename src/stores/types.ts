@@ -4,10 +4,10 @@
 import type {
   Medicine,
   RegionType,
-  WuxingType,
   Formula,
   ClinicalCase,
 } from '../types/index';
+import { WuxingType } from '../types/enums';
 
 // ==================== v3.0 章节系统 ====================
 
@@ -411,7 +411,7 @@ export const DEFAULT_CHAPTERS: Chapter[] = [
     bossCase: {} as ClinicalCase, // 占位，实际从数据文件加载
     rewardSkill: 'exterior_master',
     unlockCondition: {},
-    wuxing: 'wood',
+    wuxing: WuxingType.Wood,
   },
   {
     id: 'chapter_02',
@@ -424,7 +424,7 @@ export const DEFAULT_CHAPTERS: Chapter[] = [
     bossCase: {} as ClinicalCase,
     rewardSkill: 'heat_expert',
     unlockCondition: { completedChapters: ['chapter_01'] },
-    wuxing: 'fire',
+    wuxing: WuxingType.Fire,
   },
   // TODO: 添加第3-20章数据
 ];
