@@ -441,7 +441,7 @@ export class BattleEngine {
       }
 
       // Prefix match for pinyin input
-      if (enemy.targetPinyin.startsWith(input)) {
+      if (enemy.targetPinyin.indexOf(input) === 0) {
         return { type: 'prefix_match', progress: input.length / enemy.targetPinyin.length };
       }
     }
@@ -468,7 +468,7 @@ export class BattleEngine {
   }
 
   useSkill(skillId: string): boolean {
-    const skill = this.state.skills.find(s => s.id === skillId);
+    const skill = this.state.skills.filter(s => s.id === skillId)[0];
     if (!skill || skill.currentCooldown > 0) {
       return false;
     }
