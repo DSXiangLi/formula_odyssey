@@ -7,6 +7,7 @@ interface PlayerState extends Player {
   // Actions
   setName: (name: string) => void;
   addExperience: (amount: number) => void;
+  addReputation: (amount: number) => void;
   addCurrency: (amount: number) => void;
   unlockChapter: (chapterId: string) => void;
   completeChapter: (chapterId: string) => void;
@@ -57,6 +58,11 @@ export const usePlayerStore = create<PlayerState>()(
             if (newLevel > state.level) {
               state.level = newLevel;
             }
+          }),
+
+        addReputation: (amount) =>
+          set((state) => {
+            state.reputation = Math.max(0, state.reputation + amount);
           }),
 
         addCurrency: (amount) =>

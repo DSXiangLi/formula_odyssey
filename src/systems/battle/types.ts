@@ -108,10 +108,27 @@ export interface BattleResult {
   totalQuestions: number;
 }
 
+// Minimal medicine interface for battle
+export interface BattleMedicine {
+  id: string;
+  name: string;
+  pinyin: string;
+  fourQi: string;
+  fiveFlavors: string[];
+  functions: string[];
+}
+
+// Minimal formula interface for battle
+export interface BattleFormula {
+  id: string;
+  name: string;
+  pinyin?: string;
+}
+
 export interface BattleEngineConfig {
   chapterId: string;
-  medicines: Medicine[];
-  formulas: Formula[];
+  medicines: BattleMedicine[];
+  formulas: BattleFormula[];
   onStateChange?: (state: BattleState) => void;
   onBattleEnd?: (result: BattleResult) => void;
 }

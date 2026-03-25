@@ -9,8 +9,9 @@ import {
   TargetTextType,
   Skill,
   InputResult,
+  BattleMedicine,
+  BattleFormula,
 } from './types';
-import { Medicine, Formula } from '../../types';
 
 export class BattleEngine {
   private state: BattleState;
@@ -107,12 +108,14 @@ export class BattleEngine {
 
     // Generate property questions
     this.config.medicines.forEach((medicine, index) => {
+      const nature = (medicine as any).fourQi || (medicine as any).nature || '';
+      const flavors = (medicine as any).fiveFlavors || [];
       questions.push({
         id: `prop_${index}`,
         type: 'input',
         question: `${medicine.name}的四气五味是什么？`,
-        correctAnswer: `${medicine.fourQi}${medicine.fiveFlavors.join('')}`,
-        hint: `提示：${medicine.fourQi}、${medicine.fiveFlavors.join('、')}`,
+        correctAnswer: `${nature}${flavors.join('')}`,
+        hint: `提示：${nature}、${flavors.join('、')}`,
         knowledgeType: 'properties',
       });
     });
@@ -300,26 +303,27 @@ export class BattleEngine {
       }
       case 'formula': {
         const formula = this.getRandomFormula();
+        const pinyin = formula.pinyin || formula.name;
         const question: Question = {
           id: `target_${Date.now()}`,
           type: 'input',
           question: `这个方剂的名称是？`,
           correctAnswer: formula.name,
-          hint: formula.pinyin,
+          hint: pinyin,
           knowledgeType: 'formula',
         };
-        return { text: formula.name, pinyin: formula.pinyin, question };
+        return { text: formula.name, pinyin, question };
       }
       default:
         return { text: '测试', pinyin: 'ce shi', question: this.questions[0] };
     }
   }
 
-  private getRandomMedicine(): Medicine {
+  private getRandomMedicine(): BattleMedicine {
     return this.config.medicines[Math.floor(Math.random() * this.config.medicines.length)];
   }
 
-  private getRandomFormula(): Formula {
+  private getRandomFormula(): BattleFormula {
     return this.config.formulas[Math.floor(Math.random() * this.config.formulas.length)];
   }
 

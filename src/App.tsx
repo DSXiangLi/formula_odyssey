@@ -2,7 +2,8 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ChapterSelect from './pages/ChapterSelect';
 import ChapterEntry from './pages/ChapterEntry';
-import { GatheringStage } from './pages/GatheringStage';
+import StageManager from './pages/StageManager';
+import BattleStage from './pages/BattleStage';
 
 const App: React.FC = () => {
   return (
@@ -10,7 +11,10 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<ChapterSelect />} />
         <Route path="/chapter/:chapterId" element={<ChapterEntry />} />
-        <Route path="/chapter/:chapterId/gathering" element={<GatheringStage />} />
+        {/* 阶段管理路由 - v3.0 新架构 */}
+        <Route path="/chapter/:chapterId/stage" element={<StageManager />} />
+        {/* 战斗关卡路由 */}
+        <Route path="/chapter/:chapterId/battle" element={<BattleStage />} />
       </Routes>
     </BrowserRouter>
   );
