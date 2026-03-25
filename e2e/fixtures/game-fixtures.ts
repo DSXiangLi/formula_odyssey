@@ -4,6 +4,7 @@ import { ScreenshotHelper } from '../helpers/screenshot';
 import { MapHelper } from '../helpers/map-helper';
 import { MinigameHelper } from '../helpers/minigame-helper';
 import { GameStateValidator } from '../helpers/game-state';
+import { BattleHelper } from '../helpers/battle-helper';
 
 export const test = base.extend<{
   aiVision: AIVisionService;
@@ -11,6 +12,7 @@ export const test = base.extend<{
   mapHelper: MapHelper;
   minigameHelper: MinigameHelper;
   gameStateValidator: GameStateValidator;
+  battleHelper: BattleHelper;
 }>({
   aiVision: async ({}, use) => {
     const service = new AIVisionService();
@@ -35,6 +37,11 @@ export const test = base.extend<{
   gameStateValidator: async ({ page }, use) => {
     const validator = new GameStateValidator(page);
     await use(validator);
+  },
+
+  battleHelper: async ({ page }, use) => {
+    const helper = new BattleHelper(page);
+    await use(helper);
   },
 });
 
