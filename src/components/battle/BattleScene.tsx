@@ -169,14 +169,14 @@ const BattleScene: React.FC<BattleSceneProps> = ({
   const phaseDisplay = getPhaseDisplay();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden">
+    <div data-testid="battle-scene" className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white overflow-hidden">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-md border-b border-white/10">
+      <header data-testid="battle-header" className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-md border-b border-white/10">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div>
               <h1 className="text-lg font-bold">药灵守护战</h1>
-              <p className="text-xs text-white/60">
+              <p data-testid="wave-indicator" className="text-xs text-white/60">
                 第 {state.currentWave || 1} 波 / {state.totalWaves} 波 - {getWaveName(state.currentWave)}
               </p>
             </div>
@@ -184,7 +184,7 @@ const BattleScene: React.FC<BattleSceneProps> = ({
 
           <div className="flex items-center gap-6">
             {/* Health */}
-            <div className="flex items-center gap-2">
+            <div data-testid="health-bar" className="flex items-center gap-2">
               <span className="text-red-400">❤️</span>
               <div className="w-32 h-2 bg-gray-700 rounded-full overflow-hidden">
                 <motion.div
@@ -200,7 +200,7 @@ const BattleScene: React.FC<BattleSceneProps> = ({
             </div>
 
             {/* Score */}
-            <div className="text-right">
+            <div data-testid="score-display" className="text-right">
               <p className="text-xs text-white/60">得分</p>
               <p className="text-lg font-bold font-mono">{state.score.toLocaleString()}</p>
             </div>
@@ -209,6 +209,7 @@ const BattleScene: React.FC<BattleSceneProps> = ({
             <AnimatePresence>
               {state.combo > 1 && (
                 <motion.div
+                  data-testid="combo-display"
                   initial={{ scale: 0, rotate: -10 }}
                   animate={{ scale: 1, rotate: 0 }}
                   exit={{ scale: 0, rotate: 10 }}
@@ -250,7 +251,7 @@ const BattleScene: React.FC<BattleSceneProps> = ({
         </AnimatePresence>
 
         {/* Enemy Field */}
-        <div className="flex-1 relative min-h-[400px]">
+        <div data-testid="enemy-field" className="flex-1 relative min-h-[400px]">
           {/* Background grid */}
           <div className="absolute inset-0 opacity-10">
             <div
@@ -269,6 +270,7 @@ const BattleScene: React.FC<BattleSceneProps> = ({
           <div className="relative h-full max-w-4xl mx-auto">
             {state.enemies.map((enemy) => (
               <motion.div
+                data-testid="enemy"
                 key={enemy.id}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{
@@ -286,7 +288,7 @@ const BattleScene: React.FC<BattleSceneProps> = ({
                   }`}
                 >
                   {/* Target text */}
-                  <div className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                  <div data-testid="enemy-target-text" className="absolute -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap">
                     <div className="bg-black/70 px-3 py-1 rounded-lg text-sm">
                       {enemy.targetText}
                     </div>
@@ -341,6 +343,7 @@ const BattleScene: React.FC<BattleSceneProps> = ({
           <div className="max-w-md mx-auto">
             <div className="relative">
               <input
+                data-testid="battle-input"
                 ref={inputRef}
                 type="text"
                 value={input}

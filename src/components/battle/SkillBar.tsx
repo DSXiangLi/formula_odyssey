@@ -163,21 +163,22 @@ export default function SkillBar({ skills, onUseSkill, disabled = false }: Skill
   );
 
   return (
-    <div className="flex items-center gap-4 p-4 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg">
+    <div data-testid="skill-bar" className="flex items-center gap-4 p-4 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg">
       {/* Label */}
       <div className="flex flex-col items-center mr-2">
         <span className="text-sm font-bold text-gray-700">技能</span>
         <span className="text-xs text-gray-500">SKILLS</span>
       </div>
-      
+
       {/* Divider */}
       <div className="w-px h-12 bg-gray-300" />
-      
+
       {/* Skill Buttons */}
       <div className="flex gap-3">
         {skills.map((skill, index) => (
           <motion.div
             key={skill.id}
+            data-testid={`skill-${skill.id}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
