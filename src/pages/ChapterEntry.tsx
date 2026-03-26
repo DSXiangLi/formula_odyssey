@@ -5,6 +5,11 @@ import { useGameStore } from '../stores/gameStore';
 import { chapters } from '../data/chapters';
 import ValleyScene from '../components/scene/ValleyScene';
 import { WuxingType } from '../types';
+import { DialogueBox } from '../components/mentor/DialogueBox';
+import { QuestionCard } from '../components/mentor/QuestionCard';
+import { MentorAvatar } from '../components/mentor/MentorAvatar';
+import { aiMentor, MentorMessage, MentorContext } from '../services/ai/AIMentorService';
+import { Question, questionService } from '../services/ai/QuestionService';
 
 const wuxingColors: Record<WuxingType, { primary: string; light: string; gradient: string }> = {
   wood: { primary: '#2E7D32', light: '#81C784', gradient: 'from-green-800 to-green-600' },
@@ -30,23 +35,130 @@ const wuxingNames: Record<WuxingType, string> = {
   water: '水',
 };
 
+const wuxingTypeMap: Record<WuxingType, 'wood' | 'fire' | 'earth' | 'metal' | 'water'> = {
+  wood: 'wood',
+  fire: 'fire',
+  earth: 'earth',
+  metal: 'metal',
+  water: 'water',
+};
+
+// 阶段配置
+const STAGES = [
+  { id: 'intro', type: 'intro', title: '师导入门', description: '青木先生讲解本章学习目标', icon: '👨‍⚕️' },
+  { id: 'gathering', type: 'gathering', title: '山谷采药', description: '探索山谷，采集4味药材', icon: '🌿' },
+  { id: 'battle', type: 'battle', title: '药灵守护', description: '通过战斗巩固药材知识', icon: '⚔️' },
+  { id: 'formula', type: 'formula', title: '方剂学习', description: '学习本章核心方剂', icon: '📜' },
+  { id: 'clinical', type: 'clinical', title: '临床考核', description: '辨证施治实战演练', icon: '🏥' },
+  { id: 'openworld', type: 'openworld', title: '开放世界', description: '自由探索已解锁区域', icon: '🌍' },
+];
+
 const ChapterEntry: React.FC = () => {
   const { chapterId } = useParams<{ chapterId: string }>();
   const navigate = useNavigate();
-  const { player, setCurrentRegion, currentRegion } = useGameStore();
-  const [activeTab, setActiveTab] = useState<'scene' | 'medicines' | 'formulas'>('scene');
+  const { player, setCurrentRegion } = useGameStore();
+  const [activeTab, setActiveTab] = useState<'scene' | 'medicines' | 'formulas' | 'mentor'>('mentor');
   const [isLoading, setIsLoading] = useState(true);
+
+  // AI Mentor states
+  const [messages, setMessages] = useState<MentorMessage[]>([]);
+  const [currentStage, setCurrentStage] = useState(0);
+  const [question, setQuestion] = useState<Question | null>(null);
+  const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const [greeted, setGreeted] = useState(false);
 
   const chapter = chapters.find(c => c.id === chapterId);
 
   useEffect(() => {
     if (chapter) {
       setCurrentRegion(chapter.wuxing);
-      // 模拟加载延迟确保场景正确渲染
       const timer = setTimeout(() => setIsLoading(false), 500);
       return () => clearTimeout(timer);
     }
   }, [chapter, setCurrentRegion]);
+
+  // Generate greeting when entering mentor tab
+  useEffect(() => {
+    if (chapter && activeTab === 'mentor' && !greeted) {
+      generateGreeting();
+      setGreeted(true);
+    }
+  }, [chapter, activeTab, greeted]);
+
+  const generateGreeting = async () => {
+    if (!chapter) return;
+
+    setIsLoadingAI(true);
+    const context: MentorContext = {
+      playerName: player.name || '弟子',
+      chapterId: chapter.id,
+      chapterTitle: chapter.title,
+      collectedMedicines: [],
+      knownMedicineInfo: {},
+      stage: 'intro',
+    };
+
+    try {
+      const response = await aiMentor.generateResponse(context, 'greeting');
+      setMessages([response]);
+    } catch (error) {
+      console.error('Failed to generate greeting:', error);
+    } finally {
+      setIsLoadingAI(false);
+    }
+  };
+
+  const handleSendMessage = async (content: string) => {
+    // Add student message
+    const studentMsg: MentorMessage = {
+      id: `student_${Date.now()}`,
+      role: 'student',
+      content,
+      timestamp: Date.now(),
+    };
+    setMessages(prev => [...prev, studentMsg]);
+
+    // Generate mentor response
+    if (!chapter) return;
+
+    setIsLoadingAI(true);
+    const context: MentorContext = {
+      playerName: player.name || '弟子',
+      chapterId: chapter.id,
+      chapterTitle: chapter.title,
+      collectedMedicines: [],
+      knownMedicineInfo: {},
+      stage: 'guiding',
+    };
+
+    try {
+      const response = await aiMentor.generateResponse(context, 'guide');
+      setMessages(prev => [...prev, response]);
+    } catch (error) {
+      console.error('Failed to generate response:', error);
+    } finally {
+      setIsLoadingAI(false);
+    }
+  };
+
+  const handleStartStage = (stageId: string) => {
+    switch (stageId) {
+      case 'gathering':
+        navigate(`/chapter/${chapterId}/gathering`);
+        break;
+      case 'battle':
+        navigate(`/chapter/${chapterId}/battle`);
+        break;
+      case 'formula':
+        navigate(`/chapter/${chapterId}/formula`);
+        break;
+      case 'clinical':
+        navigate(`/chapter/${chapterId}/clinical`);
+        break;
+      default:
+        break;
+    }
+  };
 
   if (!chapter) {
     return (
@@ -66,6 +178,7 @@ const ChapterEntry: React.FC = () => {
 
   const colors = wuxingColors[chapter.wuxing];
   const isLocked = !player.unlockedChapters.includes(chapter.id);
+  const wuxingType = wuxingTypeMap[chapter.wuxing];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50">
@@ -106,6 +219,7 @@ const ChapterEntry: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 py-4">
         <div className="flex gap-2 bg-white/60 backdrop-blur-sm rounded-xl p-2">
           {[
+            { key: 'mentor', label: '青木导师', icon: '👨‍⚕️' },
             { key: 'scene', label: '山谷场景', icon: '🌄' },
             { key: 'medicines', label: '本章药材', icon: '🌿' },
             { key: 'formulas', label: '本章方剂', icon: '📜' },
@@ -128,6 +242,74 @@ const ChapterEntry: React.FC = () => {
 
       {/* 内容区域 */}
       <main className="max-w-7xl mx-auto px-4 pb-8">
+        {activeTab === 'mentor' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+          >
+            {/* Left: Mentor Dialogue */}
+            <div>
+              <div className="flex items-center gap-4 mb-4">
+                <MentorAvatar expression="happy" wuxing={wuxingType} size="lg" />
+                <div>
+                  <h2 className="font-bold text-xl">青木先生</h2>
+                  <p className="text-sm text-gray-600">你的中医导师</p>
+                </div>
+              </div>
+
+              <DialogueBox
+                messages={messages}
+                wuxing={wuxingType}
+                onSendMessage={handleSendMessage}
+                isLoading={isLoadingAI}
+              />
+            </div>
+
+            {/* Right: Stage Navigation */}
+            <div className="space-y-4">
+              <h3 className="font-bold text-lg">本章流程</h3>
+
+              {STAGES.map((stage, index) => (
+                <motion.div
+                  key={stage.id}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`p-4 rounded-lg border-2 ${
+                    index === currentStage
+                      ? 'border-blue-500 bg-blue-50'
+                      : index < currentStage
+                      ? 'border-green-500 bg-green-50'
+                      : 'border-gray-200 bg-white'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{stage.icon}</span>
+                      <div>
+                        <h4 className="font-medium">{stage.title}</h4>
+                        <p className="text-sm text-gray-600">{stage.description}</p>
+                      </div>
+                    </div>
+                    {index === currentStage && (
+                      <button
+                        onClick={() => handleStartStage(stage.id)}
+                        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                      >
+                        开始
+                      </button>
+                    )}
+                    {index < currentStage && (
+                      <span className="text-green-600 font-medium">✓ 已完成</span>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
         {activeTab === 'scene' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
