@@ -37,5 +37,10 @@ export { LRUCache, AICacheManager, aiCache } from './cache';
 // AI服务导出
 export { AIService, aiService } from './aiService';
 
+// Phase 4新增服务
+export { AIMentorService, aiMentor, type MentorMessage, type MentorContext } from './AIMentorService';
+export { QuestionService, questionService, type Question } from './QuestionService';
+export { StreamingService, streamingService, useStreaming } from './StreamingService';
+
 // 默认导出
 export { AIService as default } from './aiService';
