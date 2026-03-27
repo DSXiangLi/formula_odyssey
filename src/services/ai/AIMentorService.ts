@@ -3,8 +3,7 @@
  * 药灵山谷v3.0 AI导师服务 - 青木先生对话系统
  */
 
-import { aiCache } from './cache';
-import { Medicine } from '../../types';
+import { aiCache, AICacheManager } from './cache';
 
 export interface MentorMessage {
   id: string;
@@ -47,7 +46,7 @@ export class AIMentorService {
     messageType: 'greeting' | 'guide' | 'encouragement' | 'correction',
     onStream?: (chunk: string) => void
   ): Promise<MentorMessage> {
-    const cacheKey = aiCache.generateValidationKey(
+    const cacheKey = AICacheManager.generateValidationKey(
       JSON.stringify(context),
       messageType
     );

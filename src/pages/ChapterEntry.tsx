@@ -6,10 +6,8 @@ import { chapters } from '../data/chapters';
 import ValleyScene from '../components/scene/ValleyScene';
 import { WuxingType } from '../types';
 import { DialogueBox } from '../components/mentor/DialogueBox';
-import { QuestionCard } from '../components/mentor/QuestionCard';
 import { MentorAvatar } from '../components/mentor/MentorAvatar';
 import { aiMentor, MentorMessage, MentorContext } from '../services/ai/AIMentorService';
-import { Question, questionService } from '../services/ai/QuestionService';
 
 const wuxingColors: Record<WuxingType, { primary: string; light: string; gradient: string }> = {
   wood: { primary: '#2E7D32', light: '#81C784', gradient: 'from-green-800 to-green-600' },
@@ -62,8 +60,7 @@ const ChapterEntry: React.FC = () => {
 
   // AI Mentor states
   const [messages, setMessages] = useState<MentorMessage[]>([]);
-  const [currentStage, setCurrentStage] = useState(0);
-  const [question, setQuestion] = useState<Question | null>(null);
+  const [currentStage] = useState(0);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
   const [greeted, setGreeted] = useState(false);
 

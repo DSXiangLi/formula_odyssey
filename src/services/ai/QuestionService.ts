@@ -3,7 +3,7 @@
  * 药灵山谷v3.0 智能出题服务
  */
 
-import { aiCache } from './cache';
+import { AICacheManager } from './cache';
 import { Medicine } from '../../types';
 
 export interface Question {
@@ -22,9 +22,9 @@ export class QuestionService {
   async generateQuestion(
     medicines: Medicine[],
     difficulty: number,
-    questionType: 'name' | 'properties' | 'effects' | 'clinical' = 'multiple_choice'
+    questionType: 'name' | 'properties' | 'effects' | 'clinical' = 'name'
   ): Promise<Question> {
-    const cacheKey = aiCache.generateValidationKey(
+    const cacheKey = AICacheManager.generateValidationKey(
       medicines.map(m => m.id).join(','),
       JSON.stringify({ difficulty, type: questionType })
     );
