@@ -27,7 +27,7 @@ test.describe('Phase 4: AI导师系统端到端测试', () => {
       };
 
       const simulator = new AIStudentSimulator(profile);
-      simulator.setOfflineMode(true); // 使用离线模式避免API调用
+      // 使用真实API调用进行AI评估 // 使用离线模式避免API调用
 
       const transcript = await simulator.simulateConversation(3, 'greeting');
 
@@ -58,7 +58,7 @@ test.describe('Phase 4: AI导师系统端到端测试', () => {
       };
 
       const simulator = new AIStudentSimulator(profile);
-      simulator.setOfflineMode(true);
+      // 注意：使用真实API调用进行AI评估
 
       const transcript = await simulator.simulateConversation(5, 'greeting');
 
@@ -89,7 +89,7 @@ test.describe('Phase 4: AI导师系统端到端测试', () => {
       };
 
       const simulator = new AIStudentSimulator(profile);
-      simulator.setOfflineMode(true);
+      // 使用真实API调用进行AI评估
 
       const transcript = await simulator.simulateConversation(5, 'socratic');
 
@@ -123,7 +123,7 @@ test.describe('Phase 4: AI导师系统端到端测试', () => {
       };
 
       const simulator = new AIStudentSimulator(profile);
-      simulator.setOfflineMode(true);
+      // 使用真实API调用进行AI评估
 
       const transcript = await simulator.simulateConversation(4, 'socratic');
 
@@ -150,7 +150,7 @@ test.describe('Phase 4: AI导师系统端到端测试', () => {
       };
 
       const simulator = new AIStudentSimulator(profile);
-      simulator.setOfflineMode(true);
+      // 使用真实API调用进行AI评估
 
       const transcript = await simulator.simulateConversation(5, 'greeting');
 
@@ -181,7 +181,7 @@ test.describe('Phase 4: AI导师系统端到端测试', () => {
       };
 
       const simulator = new AIStudentSimulator(profile);
-      simulator.setOfflineMode(true);
+      // 使用真实API调用进行AI评估
 
       const transcript = await simulator.simulateConversation(5, 'greeting');
 
@@ -229,7 +229,7 @@ test.describe('Phase 4: AI导师系统端到端测试', () => {
         };
 
         const simulator = new AIStudentSimulator(profile);
-        simulator.setOfflineMode(true);
+        // 使用真实API调用进行AI评估
 
         const transcript = await simulator.simulateConversation(4, 'greeting');
 
@@ -276,7 +276,7 @@ test.describe('Phase 4：评估报告汇总', () => {
         };
 
         const simulator = new AIStudentSimulator(profile);
-        simulator.setOfflineMode(true);
+        // 使用真实API调用进行AI评估
 
         const transcript = await simulator.simulateConversation(5, scenario as any);
         const evaluation = await evaluationService.evaluateConversation(transcript, {

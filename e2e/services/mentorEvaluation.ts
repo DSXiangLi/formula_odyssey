@@ -43,9 +43,9 @@ export class AIMentorEvaluationService {
   private modelName: string;
 
   constructor() {
-    this.apiKey = process.env.GLM_EVAL_KEY || process.env.VITE_GLM_API_KEY || '';
-    this.baseURL = process.env.GLM_EVAL_URL || 'https://api.glm.cn/v1';
-    this.modelName = process.env.GLM_EVAL_MODEL || 'glm-4';
+    this.apiKey = (process.env.GLM_EVAL_KEY || process.env.VITE_GLM_API_KEY || '').replace(/^"|"$/g, '');
+    this.baseURL = (process.env.GLM_EVAL_URL || 'https://api.glm.cn/v1').replace(/^"|"$/g, '');
+    this.modelName = (process.env.GLM_EVAL_MODEL || 'glm-4').replace(/^"|"$/g, '');
   }
 
   /**
