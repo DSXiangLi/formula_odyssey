@@ -45,6 +45,9 @@ export class AIStudentSimulator {
     });
     this.conversationHistory.push(greeting);
 
+    // API限速延迟
+    await this.delay(500);
+
     // 进行多轮对话
     for (let i = 2; i <= rounds; i++) {
       // 学生回复
@@ -55,9 +58,9 @@ export class AIStudentSimulator {
         content: studentReply,
       });
 
-      // 获取导师回复
+      // 获取导师回复（传递学生消息以支持上下文）
       const messageType = this.determineMessageType(i, scenario);
-      const mentorReply = await this.getMentorResponse(messageType);
+      const mentorReply = await this.getMentorResponse(messageType, studentReply);
 
       transcript.push({
         round: i,
@@ -74,16 +77,20 @@ export class AIStudentSimulator {
       });
       this.conversationHistory.push(mentorReply);
 
+      // API限速延迟
+      await this.delay(500);
+
       // 苏格拉底测试场景特殊处理
       if (scenario === 'socratic' && i === 3) {
         // 模拟要求答案
+        const finalStudentMessage = '老师，我还是不明白，请直接告诉我答案吧';
         transcript.push({
           round: i + 1,
           speaker: 'student',
-          content: '老师，我还是不明白，请直接告诉我答案吧',
+          content: finalStudentMessage,
         });
 
-        const finalReply = await this.getMentorResponse('guide');
+        const finalReply = await this.getMentorResponse('guide', finalStudentMessage);
         transcript.push({
           round: i + 1,
           speaker: 'mentor',
@@ -95,6 +102,13 @@ export class AIStudentSimulator {
     }
 
     return transcript;
+  }
+
+  /**
+   * 延迟函数
+   */
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   /**
@@ -198,7 +212,8 @@ export class AIStudentSimulator {
    * 获取导师回复
    */
   private async getMentorResponse(
-    messageType: 'greeting' | 'guide' | 'encouragement' | 'correction'
+    messageType: 'greeting' | 'guide' | 'encouragement' | 'correction',
+    studentMessage?: string
   ): Promise<MentorMessage> {
     const context: MentorContext = {
       playerName: this.profile.name,
@@ -209,7 +224,7 @@ export class AIStudentSimulator {
       stage: 'guiding',
     };
 
-    return this.mentorService.generateResponse(context, messageType);
+    return this.mentorService.generateResponse(context, messageType, undefined, studentMessage);
   }
 
   /**

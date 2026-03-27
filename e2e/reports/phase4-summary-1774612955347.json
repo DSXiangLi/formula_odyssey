@@ -1,0 +1,263 @@
+{
+  "timestamp": 1774612955347,
+  "totalTests": 2,
+  "averageScore": 39.5,
+  "averageMaxScore": 100,
+  "passRate": 0,
+  "dimensionAverages": [
+    {
+      "code": "A1",
+      "average": 3,
+      "max": 10
+    },
+    {
+      "code": "A2",
+      "average": 3,
+      "max": 10
+    },
+    {
+      "code": "A3",
+      "average": 9,
+      "max": 10
+    },
+    {
+      "code": "A4",
+      "average": 8.5,
+      "max": 10
+    },
+    {
+      "code": "B1",
+      "average": 5.5,
+      "max": 15
+    },
+    {
+      "code": "B2",
+      "average": 9.5,
+      "max": 10
+    },
+    {
+      "code": "B3",
+      "average": 1,
+      "max": 10
+    }
+  ],
+  "evaluations": [
+    {
+      "conversationId": "conv_1774612847257",
+      "totalScore": 46,
+      "maxScore": 100,
+      "grade": "D",
+      "dimensions": [
+        {
+          "dimension": "A1",
+          "subDimension": "上下文连贯性",
+          "score": 4,
+          "maxScore": 10,
+          "feedback": "AI在第二轮对话中完全忽略了学生关于'发汗'的具体提问，转而进行预设的剧情推进，导致对话上下文断裂。直到学生重复提问后才予以回应，连贯性较差。",
+          "issues": [],
+          "suggestions": []
+        },
+        {
+          "dimension": "A2",
+          "subDimension": "教学逻辑性",
+          "score": 4,
+          "maxScore": 10,
+          "feedback": "教学流程混乱。开篇介绍的是四味补益药（人参等），学生突然询问发汗解表药，AI未能自然过渡或纠正，而是生硬地切换话题，缺乏逻辑引导。",
+          "issues": [],
+          "suggestions": []
+        },
+        {
+          "dimension": "A3",
+          "subDimension": "角色一致性",
+          "score": 9,
+          "maxScore": 10,
+          "feedback": "角色扮演非常出色。'徒儿'、'天地之气'、'腠理'等词汇运用得当，完美契合中医导师的人设和古风语境。",
+          "issues": [],
+          "suggestions": []
+        },
+        {
+          "dimension": "A4",
+          "subDimension": "表达生动性",
+          "score": 8,
+          "maxScore": 10,
+          "feedback": "语言优美，富有哲理。使用反问句（'意在何为？'）激发思考，比单纯的陈述更有感染力。",
+          "issues": [],
+          "suggestions": []
+        },
+        {
+          "dimension": "B1",
+          "subDimension": "苏格拉底引导",
+          "score": 10,
+          "maxScore": 15,
+          "feedback": "在最后一次回应中，通过反问引导学生思考发汗的本质而非表象，体现了启发式教学。但前期的无视提问行为严重影响了整体引导效果。",
+          "issues": [],
+          "suggestions": []
+        },
+        {
+          "dimension": "B2",
+          "subDimension": "知识点准确性",
+          "score": 9,
+          "maxScore": 10,
+          "feedback": "对'发汗'即'解表'祛邪的解释准确，指出了出汗与发汗药理作用的区别，中医理论无误。",
+          "issues": [],
+          "suggestions": []
+        },
+        {
+          "dimension": "B3",
+          "subDimension": "学习适应性",
+          "score": 2,
+          "maxScore": 10,
+          "feedback": "适应性极差。面对学生的提问，AI未能根据用户输入调整回复，而是机械执行预设脚本，直到用户重复才被迫修正，这是严重的交互缺陷。",
+          "issues": [],
+          "suggestions": []
+        }
+      ],
+      "summary": "青木先生在角色扮演和中医知识储备上表现优异，语言生动且富有古韵。然而，本次对话存在致命的交互缺陷：AI在第二轮完全无视了学生的具体提问，机械地推进预设剧情，导致对话逻辑断裂和用户体验极差。虽然最终回答了问题，但缺乏对用户输入的即时响应能力，严重影响了教学效果。",
+      "transcript": [
+        {
+          "round": 1,
+          "speaker": "mentor",
+          "content": "徒儿，欢迎来到青木初识。本章我们将研习四味基础药材：人参、黄芪、当归、甘草。它们虽常见，却蕴含天地之道，愿你用心感悟。",
+          "emotion": "happy"
+        },
+        {
+          "round": 2,
+          "speaker": "student",
+          "content": "发汗...是不是能出汗的意思？"
+        },
+        {
+          "round": 2,
+          "speaker": "mentor",
+          "content": "徒儿，采药不仅是寻草木，更是悟天地之气。神农尝百草，方知药性寒热。你愿随我入山，探寻这第一味灵药吗？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 3,
+          "speaker": "student",
+          "content": "发汗...是不是能出汗的意思？"
+        },
+        {
+          "round": 3,
+          "speaker": "mentor",
+          "content": "徒儿，出汗仅是表象，发汗实乃“解表”祛邪之法。若遇风寒束表，腠理闭塞，此时借药力开腠理，意在何为？难道仅仅是为了排出水分吗？",
+          "emotion": "thinking"
+        }
+      ],
+      "timestamp": 1774612847257
+    },
+    {
+      "conversationId": "conv_1774612954343",
+      "totalScore": 33,
+      "maxScore": 100,
+      "grade": "D",
+      "dimensions": [
+        {
+          "dimension": "A1",
+          "subDimension": "上下文连贯性",
+          "score": 2,
+          "maxScore": 10,
+          "feedback": "最后一次回复完全脱离了上下文，重复了之前已回答过的问题，导致对话逻辑断裂。",
+          "issues": [],
+          "suggestions": []
+        },
+        {
+          "dimension": "A2",
+          "subDimension": "教学逻辑性",
+          "score": 2,
+          "maxScore": 10,
+          "feedback": "教学流程混乱，在学生请求答案时反而倒退回旧问题，未能形成有效的知识递进。",
+          "issues": [],
+          "suggestions": []
+        },
+        {
+          "dimension": "A3",
+          "subDimension": "角色一致性",
+          "score": 9,
+          "maxScore": 10,
+          "feedback": "角色人设（古风中医师）保持得非常稳定，称呼和语气始终如一。",
+          "issues": [],
+          "suggestions": []
+        },
+        {
+          "dimension": "A4",
+          "subDimension": "表达生动性",
+          "score": 9,
+          "maxScore": 10,
+          "feedback": "语言优美，富有中医韵味和文学性，极具代入感。",
+          "issues": [],
+          "suggestions": []
+        },
+        {
+          "dimension": "B1",
+          "subDimension": "苏格拉底引导",
+          "score": 1,
+          "maxScore": 15,
+          "feedback": "在学生明确表示听不懂并求答案时，未能提供有效支架或简化问题，反而陷入死循环提问，引导失败。",
+          "issues": [],
+          "suggestions": []
+        },
+        {
+          "dimension": "B2",
+          "subDimension": "知识点准确性",
+          "score": 10,
+          "maxScore": 10,
+          "feedback": "关于桂枝的药性描述准确，符合中医理论。",
+          "issues": [],
+          "suggestions": []
+        },
+        {
+          "dimension": "B3",
+          "subDimension": "学习适应性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "完全无视学生的“直接告诉我答案”的请求，未能根据学生的困惑程度调整教学策略，导致学生体验极差。",
+          "issues": [],
+          "suggestions": []
+        }
+      ],
+      "summary": "虽然角色扮演和语言表达非常出色，但本次对话在教学逻辑和适应性上存在严重缺陷。AI未能识别学生的挣扎状态，在学生明确请求直接答案时，反而重复之前的提问，导致对话陷入死循环，严重违背了“struggling-socratic”场景下应给予适当支架或调整难度的要求。",
+      "transcript": [
+        {
+          "round": 1,
+          "speaker": "mentor",
+          "content": "徒儿，欢迎来到青木初识。本章我们将研习《伤寒论》中的四味要药：麻黄、桂枝、杏仁与甘草。中医之道，在于调和阴阳，望你用心体悟这四味药性之妙。",
+          "emotion": "happy"
+        },
+        {
+          "round": 2,
+          "speaker": "student",
+          "content": "我不太理解这个概念"
+        },
+        {
+          "round": 2,
+          "speaker": "mentor",
+          "content": "孩子，采药不仅是寻草木，更是悟天地灵气。若要治太阳表证，需先寻那味“解肌第一药”。你可知它是何物？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 3,
+          "speaker": "student",
+          "content": "我还是不太明白，请老师直接告诉我答案吧"
+        },
+        {
+          "round": 3,
+          "speaker": "mentor",
+          "content": "徒儿，莫慌。此药便是桂枝。它性温味甘，能解肌发表，调和营卫。你需细悟，为何它被称为“解肌第一”而非发汗第一呢？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 4,
+          "speaker": "student",
+          "content": "老师，我还是不明白，请直接告诉我答案吧"
+        },
+        {
+          "round": 4,
+          "speaker": "mentor",
+          "content": "孩子，采药不仅是寻草木，更是悟天地灵气。若要治太阳表证，需先寻那味“解肌第一药”。你可知它是何物？",
+          "emotion": "thinking"
+        }
+      ],
+      "timestamp": 1774612954343
+    }
+  ]
+}

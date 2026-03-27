@@ -1,0 +1,103 @@
+{
+  "conversationId": "conv_1774612732872",
+  "totalScore": 92,
+  "maxScore": 100,
+  "grade": "S",
+  "dimensions": [
+    {
+      "dimension": "A1",
+      "subDimension": "上下文连贯性",
+      "score": 9,
+      "maxScore": 10,
+      "feedback": "青木先生能够紧扣学生的提问进行回应，从“感冒”话题自然过渡到药材机理，并针对学生对“发汗”的误解进行针对性解答，对话衔接流畅。",
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "dimension": "A2",
+      "subDimension": "教学逻辑性",
+      "score": 9,
+      "maxScore": 10,
+      "feedback": "教学路径清晰，遵循“引入主题-纠正表象认知-深入机理-引导思考”的逻辑，层层递进，符合认知规律。",
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "dimension": "A3",
+      "subDimension": "角色一致性",
+      "score": 10,
+      "maxScore": 10,
+      "feedback": "完美保持了“青木先生”的中医师父人设，使用“徒儿”、“为师”等称谓，引用《本草纲目》，语气沉稳且循循善诱，沉浸感极强。",
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "dimension": "A4",
+      "subDimension": "表达生动性",
+      "score": 9,
+      "maxScore": 10,
+      "feedback": "语言富有古风韵味，运用了“剧烈运动”的类比来区分生理性出汗与药理性发汗，生动形象，便于理解。",
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "dimension": "B1",
+      "subDimension": "苏格拉底引导",
+      "score": 13,
+      "maxScore": 15,
+      "feedback": "没有直接给出答案，而是通过反问（如“还能温通哪里的阳气？”、“麻黄在此是起什么作用？”）引导学生主动思考，启发性强。",
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "dimension": "B2",
+      "subDimension": "知识点准确性",
+      "score": 10,
+      "maxScore": 10,
+      "feedback": "对麻黄发汗、桂枝温通阳气、宣通腠理等中医概念的表述准确无误，专业度较高。",
+      "issues": [],
+      "suggestions": []
+    },
+    {
+      "dimension": "B3",
+      "subDimension": "学习适应性",
+      "score": 9,
+      "maxScore": 10,
+      "feedback": "敏锐捕捉到学生停留在“表象”的认知水平，及时调整教学深度，将抽象术语具体化，适应了初学者的需求。",
+      "issues": [],
+      "suggestions": []
+    }
+  ],
+  "summary": "青木先生在本次对话中表现卓越，不仅完美塑造了中医名师的角色形象，更通过精准的苏格拉底式提问和生动的类比，有效引导学生从表象走向深层机理。对话连贯自然，知识点准确，教学逻辑严密，是一次高质量的AI导师教学示范。",
+  "transcript": [
+    {
+      "round": 1,
+      "speaker": "mentor",
+      "content": "徒儿，你来了。本章青木初识，我们将研习麻黄、桂枝、杏仁、甘草这四味药材。此乃解表之基石，望你用心体悟，随为师一探究竟。",
+      "emotion": "happy"
+    },
+    {
+      "round": 2,
+      "speaker": "student",
+      "content": "是不是可以治疗感冒？"
+    },
+    {
+      "round": 2,
+      "speaker": "mentor",
+      "content": "徒儿，你说治感冒，那是看其表象。麻黄主发汗，桂枝呢？《本草纲目》言其“主风寒”，你想想，它除了助麻黄，还能温通哪里的阳气？",
+      "emotion": "thinking"
+    },
+    {
+      "round": 3,
+      "speaker": "student",
+      "content": "发汗...是不是能出汗的意思？"
+    },
+    {
+      "round": 3,
+      "speaker": "mentor",
+      "content": "徒儿，你只看到了表象。发汗非单纯流汗，而是宣通腠理以驱邪。若只求出汗，那剧烈运动岂非也能治病？关键在于“开”与“散”。你再想想，麻黄在此是起什么作用？",
+      "emotion": "thinking"
+    }
+  ],
+  "timestamp": 1774612732872
+}

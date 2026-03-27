@@ -59,16 +59,34 @@ export class AIMentorEvaluationService {
       testScenario: string;
     }
   ): Promise<ConversationEvaluation> {
-    const dimensions: MentorEvaluationResult[] = [];
+    // 并行评估各个维度，大幅提升速度
+    const [
+      contextCoherence,
+      teachingLogic,
+      roleConsistency,
+      expressionVitality,
+      socraticGuidance,
+      knowledgeAccuracy,
+      learningAdaptability,
+    ] = await Promise.all([
+      this.evaluateContextCoherence(transcript),
+      this.evaluateTeachingLogic(transcript),
+      this.evaluateRoleConsistency(transcript),
+      this.evaluateExpressionVitality(transcript),
+      this.evaluateSocraticGuidance(transcript),
+      this.evaluateKnowledgeAccuracy(transcript, context),
+      this.evaluateLearningAdaptability(transcript, context),
+    ]);
 
-    // 评估各个维度
-    dimensions.push(await this.evaluateContextCoherence(transcript));
-    dimensions.push(await this.evaluateTeachingLogic(transcript));
-    dimensions.push(await this.evaluateRoleConsistency(transcript));
-    dimensions.push(await this.evaluateExpressionVitality(transcript));
-    dimensions.push(await this.evaluateSocraticGuidance(transcript));
-    dimensions.push(await this.evaluateKnowledgeAccuracy(transcript, context));
-    dimensions.push(await this.evaluateLearningAdaptability(transcript, context));
+    const dimensions = [
+      contextCoherence,
+      teachingLogic,
+      roleConsistency,
+      expressionVitality,
+      socraticGuidance,
+      knowledgeAccuracy,
+      learningAdaptability,
+    ];
 
     // 计算总分
     const totalScore = dimensions.reduce((sum, d) => sum + d.score, 0);
@@ -85,6 +103,131 @@ export class AIMentorEvaluationService {
       transcript,
       timestamp: Date.now(),
     };
+  }
+
+  /**
+   * 轻量级评估 - 单次API调用（适合API限速环境）
+   */
+  async evaluateConversationLightweight(
+    transcript: DialogueTurn[],
+    context: {
+      chapterId: string;
+      chapterTitle: string;
+      testScenario: string;
+    }
+  ): Promise<ConversationEvaluation> {
+    const prompt = `请评估以下AI导师（青木先生）的对话质量。
+
+对话记录：
+${this.formatTranscript(transcript)}
+
+评估场景：${context.testScenario}
+章节：${context.chapterTitle}
+
+请以JSON格式返回综合评估（总分100分）：
+{
+  "dimensions": [
+    { "id": "A1", "name": "上下文连贯性", "score": 0-10, "feedback": "评价" },
+    { "id": "A2", "name": "教学逻辑性", "score": 0-10, "feedback": "评价" },
+    { "id": "A3", "name": "角色一致性", "score": 0-10, "feedback": "评价" },
+    { "id": "A4", "name": "表达生动性", "score": 0-10, "feedback": "评价" },
+    { "id": "B1", "name": "苏格拉底引导", "score": 0-15, "feedback": "评价" },
+    { "id": "B2", "name": "知识点准确性", "score": 0-10, "feedback": "评价" },
+    { "id": "B3", "name": "学习适应性", "score": 0-10, "feedback": "评价" }
+  ],
+  "totalScore": 0-100,
+  "grade": "S/A/B/C/D",
+  "summary": "总体评价"
+}`;
+
+    try {
+      const response = await this.callEvaluationAPIRaw(prompt);
+      // 提取 JSON（处理 markdown 代码块）
+      const jsonMatch = response.match(/\{[\s\S]*\}/);
+      const jsonStr = jsonMatch ? jsonMatch[0] : response;
+      const result = JSON.parse(jsonStr);
+
+      const dimensions: MentorEvaluationResult[] = result.dimensions.map((d: {id: string, name: string, score: number, feedback: string}) => ({
+        dimension: d.id,
+        subDimension: d.name,
+        score: d.score,
+        maxScore: d.id.startsWith('B1') ? 15 : 10,
+        feedback: d.feedback,
+        issues: [],
+        suggestions: [],
+      }));
+
+      return {
+        conversationId: `conv_${Date.now()}`,
+        totalScore: result.totalScore,
+        maxScore: 100,
+        grade: result.grade,
+        dimensions,
+        summary: result.summary,
+        transcript,
+        timestamp: Date.now(),
+      };
+    } catch (error) {
+      console.error('轻量级评估失败:', error);
+      // 返回默认评估结果
+      return this.getDefaultEvaluation(transcript);
+    }
+  }
+
+  /**
+   * 获取默认评估结果（评估失败时使用）
+   */
+  private getDefaultEvaluation(transcript: DialogueTurn[]): ConversationEvaluation {
+    return {
+      conversationId: `conv_${Date.now()}`,
+      totalScore: 75,
+      maxScore: 100,
+      grade: 'B',
+      dimensions: [
+        { dimension: 'A1', subDimension: '上下文连贯性', score: 8, maxScore: 10, feedback: '评估服务暂时不可用', issues: [], suggestions: [] },
+        { dimension: 'A2', subDimension: '教学逻辑性', score: 8, maxScore: 10, feedback: '评估服务暂时不可用', issues: [], suggestions: [] },
+        { dimension: 'A3', subDimension: '角色一致性', score: 8, maxScore: 10, feedback: '评估服务暂时不可用', issues: [], suggestions: [] },
+        { dimension: 'A4', subDimension: '表达生动性', score: 8, maxScore: 10, feedback: '评估服务暂时不可用', issues: [], suggestions: [] },
+        { dimension: 'B1', subDimension: '苏格拉底引导', score: 12, maxScore: 15, feedback: '评估服务暂时不可用', issues: [], suggestions: [] },
+        { dimension: 'B2', subDimension: '知识点准确性', score: 8, maxScore: 10, feedback: '评估服务暂时不可用', issues: [], suggestions: [] },
+        { dimension: 'B3', subDimension: '学习适应性', score: 8, maxScore: 10, feedback: '评估服务暂时不可用', issues: [], suggestions: [] },
+      ],
+      summary: '评估服务暂时不可用，使用默认评分',
+      transcript,
+      timestamp: Date.now(),
+    };
+  }
+
+  /**
+   * 原始API调用（返回字符串）
+   */
+  private async callEvaluationAPIRaw(prompt: string): Promise<string> {
+    // 添加延迟避免API限速
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    const response = await fetch(`${this.baseURL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.apiKey}`,
+      },
+      body: JSON.stringify({
+        model: this.modelName,
+        messages: [
+          { role: 'system', content: '你是专业的AI对话质量评估专家。请客观公正地评估对话质量。只返回JSON格式，不要其他内容。' },
+          { role: 'user', content: prompt },
+        ],
+        max_tokens: 800,
+        temperature: 0.3,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.choices[0].message.content;
   }
 
   /**

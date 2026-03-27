@@ -14,6 +14,8 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: 'list',
+  // Phase 4 AI测试需要更长的超时时间（每次API调用约30-60秒）
+  timeout: 300000, // 5分钟超时
   use: {
     baseURL: process.env.BASE_URL || 'http://localhost:3000',
     trace: 'on-first-retry',
