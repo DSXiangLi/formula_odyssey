@@ -105,16 +105,23 @@ test.describe('Phase 3: 药灵守护战斗系统', () => {
       await battleHelper.waitForBattleLoad();
       await battleHelper.waitForEnemies();
 
+      // 等待输入框可用（非disabled）
+      const input = page.locator('[data-testid="battle-input"]');
+      await input.waitFor({ state: 'visible' });
+      await page.waitForFunction(() => {
+        const input = document.querySelector('[data-testid="battle-input"]') as HTMLInputElement;
+        return input && !input.disabled;
+      }, { timeout: 10000 });
+
       const targetText = await battleHelper.getFirstEnemyTarget();
       const initialEnemyCount = await battleHelper.getEnemyCount();
 
       // 输入正确答案
       await battleHelper.typeAnswer(targetText);
       await screenshotHelper.capture(page, 'battle-input-chinese');
-      await battleHelper.submitAnswer();
 
       // 验证敌人被击败
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(1000);
       const newEnemyCount = await battleHelper.getEnemyCount();
       expect(newEnemyCount).toBeLessThan(initialEnemyCount);
 
@@ -128,16 +135,22 @@ test.describe('Phase 3: 药灵守护战斗系统', () => {
       await battleHelper.waitForBattleLoad();
       await battleHelper.waitForEnemies();
 
-      const targetText = await battleHelper.getFirstEnemyTarget();
-      // 模拟拼音输入（使用简单的拼音转换）
-      const pinyin = targetText; // 实际应转换为拼音
+      // 等待输入框可用
+      await page.waitForFunction(() => {
+        const input = document.querySelector('[data-testid="battle-input"]') as HTMLInputElement;
+        return input && !input.disabled;
+      }, { timeout: 10000 });
+
+      const pinyin = await battleHelper.getFirstEnemyPinyin();
+      const initialEnemyCount = await battleHelper.getEnemyCount();
 
       // 输入拼音
       await battleHelper.typeAnswer(pinyin);
-      await battleHelper.submitAnswer();
 
-      // 验证效果（拼音匹配应同样有效）
-      await page.waitForTimeout(500);
+      // 验证敌人被击败
+      await page.waitForTimeout(1000);
+      const newEnemyCount = await battleHelper.getEnemyCount();
+      expect(newEnemyCount).toBeLessThan(initialEnemyCount);
     });
 
     test('错误输入应允许重新输入', async ({ page }) => {

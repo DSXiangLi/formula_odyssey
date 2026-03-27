@@ -8,6 +8,8 @@ interface LassoMinigameProps {
   onCancel: () => void;
 }
 
+const LASSO_START_Y = 0.8; // 套索起始Y位置（屏幕百分比）
+
 export default function LassoMinigame({ rarity, onComplete, onCancel }: LassoMinigameProps) {
   const gameRef = useRef<LassoGame | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);

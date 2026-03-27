@@ -22,18 +22,19 @@ test.describe('Phase 2: 山谷采药完整流程', () => {
     await expect(chapter1).toBeVisible();
     await chapter1.click();
 
-    // 验证进入采集关卡
-    await page.waitForURL(/chapter\/chapter-1/);
-    await screenshotHelper.capture(page, 'enter-gathering');
+    // 验证进入章节入口
+    await page.waitForURL(/chapter\/chapter-1$/);
+    await screenshotHelper.capture(page, 'chapter-entry');
 
-    // 如果进入了章节入口页面，点击探索按钮
-    const exploreButton = page.locator('button:has-text("探索"), [data-testid="explore-button"]').first();
-    if (await exploreButton.isVisible().catch(() => false)) {
-      await exploreButton.click();
-      await page.waitForURL(/gathering/);
+    // 点击"开始本章"按钮进入StageManager
+    const startButton = page.locator('button:has-text("开始本章"), [data-testid="start-chapter-button"]').first();
+    if (await startButton.isVisible().catch(() => false)) {
+      await startButton.click();
+      await page.waitForURL(/chapter\/chapter-1\/stage/);
     }
 
-    // 验证地图显示
+    // 验证进入GatheringStage（阶段2）
+    await page.waitForTimeout(2000);
     const hasMap = await mapHelper.verifyMapElements();
     expect(hasMap).toBe(true);
   });
@@ -42,8 +43,8 @@ test.describe('Phase 2: 山谷采药完整流程', () => {
     // 初始化状态
     await gameStateValidator.clearAllData();
 
-    // 进入采集
-    await page.goto('/chapter/chapter-1/gathering');
+    // 进入采集关卡（通过StageManager，stage=1直接进入山谷采药）
+    await page.goto('/chapter/chapter-1/stage?stage=1');
     await page.waitForLoadState('networkidle');
     await mapHelper.waitForMapRender();
 
@@ -78,7 +79,7 @@ test.describe('Phase 2: 山谷采药完整流程', () => {
 
   test('采集状态应正确保存到localStorage', async ({ page, gameStateValidator }) => {
     // 执行采集
-    await page.goto('/chapter/chapter-1/gathering');
+    await page.goto('/chapter/chapter-1/stage?stage=1');
     await page.waitForLoadState('networkidle');
     await mapHelper.waitForMapRender();
 
@@ -103,7 +104,7 @@ test.describe('Phase 2: 山谷采药完整流程', () => {
   });
 
   test('AI验收：完整采集流程视觉一致性', async ({ page, aiVision, screenshotHelper }) => {
-    await page.goto('/chapter/chapter-1/gathering');
+    await page.goto('/chapter/chapter-1/stage?stage=1');
     await page.waitForLoadState('networkidle');
     await mapHelper.waitForMapRender();
 
@@ -117,7 +118,7 @@ test.describe('Phase 2: 山谷采药完整流程', () => {
   test('性能：地图加载应在3秒内完成', async ({ page }) => {
     const startTime = Date.now();
 
-    await page.goto('/chapter/chapter-1/gathering');
+    await page.goto('/chapter/chapter-1/stage?stage=1');
     await mapHelper.waitForMapRender();
 
     const loadTime = Date.now() - startTime;
@@ -125,7 +126,7 @@ test.describe('Phase 2: 山谷采药完整流程', () => {
   });
 
   test('玩家应能在地图上自由移动', async ({ page }) => {
-    await page.goto('/chapter/chapter-1/gathering');
+    await page.goto('/chapter/chapter-1/stage?stage=1');
     await page.waitForLoadState('networkidle');
     await mapHelper.waitForMapRender();
 
@@ -153,7 +154,7 @@ test.describe('Phase 2: 山谷采药完整流程', () => {
     ];
 
     for (const chapter of chapters) {
-      await page.goto(`/chapter/${chapter.id}/gathering`);
+      await page.goto(`/chapter/${chapter.id}/stage?stage=1`);
       await page.waitForLoadState('networkidle');
       await mapHelper.waitForMapRender();
 

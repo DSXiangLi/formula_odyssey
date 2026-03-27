@@ -292,6 +292,9 @@ const BattleScene: React.FC<BattleSceneProps> = ({
                     <div className="bg-black/70 px-3 py-1 rounded-lg text-sm">
                       {enemy.targetText}
                     </div>
+                    <div data-testid="enemy-pinyin" className="hidden">
+                      {enemy.targetPinyin}
+                    </div>
                     {input && enemy.targetPinyin.startsWith(input.toLowerCase()) && (
                       <div className="text-xs text-center text-green-400 mt-1">
                         {enemy.targetPinyin}

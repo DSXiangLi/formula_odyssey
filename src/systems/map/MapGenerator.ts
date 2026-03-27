@@ -150,32 +150,48 @@ export class MapGenerator {
 
   /**
    * 生成地形
-   * 使用 Simplex Noise 生成自然的地形分布
+   * 使用 Simplex Noise 生成自然的地形分布，根据五行偏好强化主题
    */
   private generateTerrain(): void {
     const preferences = WUXING_TERRAIN_PREFERENCE[this.config.wuxing];
     const size = this.config.size;
 
+    // 根据五行设置主导地形和次要地形
+    const primaryTerrain = preferences[0];
+    const secondaryTerrain = preferences[1] || 'plains';
+
     for (let y = 0; y < size; y++) {
       for (let x = 0; x < size; x++) {
         // 使用多层噪声生成更自然的地形
-        const noiseValue = this.noise.fractal2D(x * 0.1, y * 0.1, 4, 0.5, 2.0);
+        const noiseValue = this.noise.fractal2D(x * 0.15, y * 0.15, 3, 0.5, 2.0);
 
         // 根据噪声值和五行偏好选择地形
-        let terrain: TerrainType = 'plains';
+        let terrain: TerrainType;
 
-        if (noiseValue > 0.6) {
-          terrain = preferences.includes('mountain') ? 'mountain' : 'forest';
-        } else if (noiseValue > 0.3) {
-          terrain = preferences.includes('forest') ? 'forest' : 'plains';
-        } else if (noiseValue > 0.1) {
-          terrain = 'plains';
-        } else if (noiseValue > -0.3) {
-          terrain = preferences.includes('marsh') ? 'marsh' : 'plains';
-        } else if (noiseValue > -0.6) {
-          terrain = preferences.includes('water') ? 'water' : 'marsh';
+        // 根据五行偏好调整地形分布概率
+        if (noiseValue > 0.5) {
+          // 高噪声区域：主导地形
+          terrain = primaryTerrain;
+        } else if (noiseValue > 0.2) {
+          // 中噪声区域：次要地形或plains
+          terrain = secondaryTerrain;
+        } else if (noiseValue > -0.2) {
+          // 低噪声区域：plains或偏好的地形
+          terrain = preferences.includes('plains') ? 'plains' : secondaryTerrain;
+        } else if (noiseValue > -0.5) {
+          // 更低区域：根据五行选择特色地形
+          if (preferences.includes('marsh')) {
+            terrain = 'marsh';
+          } else if (preferences.includes('cave')) {
+            terrain = 'cave';
+          } else if (preferences.includes('cliff')) {
+            terrain = 'cliff';
+          } else {
+            terrain = secondaryTerrain;
+          }
         } else {
-          terrain = preferences.includes('cave') ? 'cave' : 'mountain';
+          // 最低区域：水域或特殊地形
+          terrain = preferences.includes('water') ? 'water' : primaryTerrain;
         }
 
         // 保护起始位置
@@ -185,6 +201,38 @@ export class MapGenerator {
 
         this.map.tiles[y][x].terrain = terrain;
         this.map.tiles[y][x].accessible = terrain !== 'water';
+      }
+    }
+
+    // 添加五行特征区域（增强主题感）
+    this.addWuxingFeatureZones();
+  }
+
+  /**
+   * 添加五行特征区域
+   * 在地图上添加明显的五行主题特征
+   */
+  private addWuxingFeatureZones(): void {
+    const preferences = WUXING_TERRAIN_PREFERENCE[this.config.wuxing];
+    const size = this.config.size;
+    const centerX = this.map.playerStart.x;
+    const centerY = this.map.playerStart.y;
+
+    // 在玩家周围创建特征区域
+    const featureRadius = 2;
+    for (let dy = -featureRadius; dy <= featureRadius; dy++) {
+      for (let dx = -featureRadius; dx <= featureRadius; dx++) {
+        const x = centerX + dx;
+        const y = centerY + dy;
+
+        if (x >= 0 && x < size && y >= 0 && y < size) {
+          // 随机设置为主导地形或次要地形
+          if (Math.random() > 0.3) {
+            this.map.tiles[y][x].terrain = preferences[0];
+          } else if (preferences[1]) {
+            this.map.tiles[y][x].terrain = preferences[1];
+          }
+        }
       }
     }
   }

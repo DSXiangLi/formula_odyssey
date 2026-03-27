@@ -117,6 +117,54 @@ npm run build
 - **Animations**: Framer Motion
 - **Styling**: Tailwind CSS + CSS Modules
 
+### 核心组件架构
+
+#### StageManager（v3.0 新增）
+
+阶段管理器，负责6阶段流程的状态管理和流转：
+
+```typescript
+// pages/StageManager.tsx
+interface StageManagerProps {
+  chapterId: string;
+}
+
+// 阶段配置
+const STAGES = [
+  { id: 'mentor-intro', component: MentorIntroStage, title: '师导入门' },
+  { id: 'gathering', component: GatheringStage, title: '山谷采药' },
+  { id: 'battle', component: BattleStage, title: '药灵守护' },
+  { id: 'formula', component: FormulaLearningStage, title: '方剂学习' },
+  { id: 'clinical', component: ClinicalStage, title: '临床考核' },
+  { id: 'open-world', component: OpenWorldStage, title: '开放世界' },
+];
+
+// 阶段流转
+const nextStage = () => {
+  if (currentStage < 5) {
+    setCurrentStage(currentStage + 1);
+    saveCheckpoint();
+  } else {
+    completeChapter();
+  }
+};
+```
+
+#### GatheringStage（改造后）
+
+作为阶段2组件，接收 onComplete 回调：
+
+```typescript
+interface GatheringStageProps {
+  chapterId: string;
+  onComplete: (result: {
+    medicines: CollectedMedicine[];
+    quality: Record<string, Quality>;
+  }) => void;
+  onExit: () => void; // 中途退出保存进度
+}
+```
+
 ### AI Services
 - **GLM-4**: 文本生成（导师对话、智能出题）
 - **Qwen-VL**: 图像理解（药材识别）
@@ -138,6 +186,37 @@ npm run build
    └──────────────── 下一章解锁 ← 技能获得 ← 声望提升 ←───────┘
 ```
 
+### 六阶段流程（v3.0 核心架构）
+
+每章学习由 **StageManager** 管理的6个线性阶段：
+
+| 阶段 | 名称 | 时长 | 功能 | 状态 |
+|------|------|------|------|------|
+| 1 | 师导入门 | 5min | AI导师讲解本章目标、介绍4味药材 | Phase 4 |
+| 2 | 山谷采药 | 15min | **等角地图探索+采集小游戏** ⭐ | **Phase 2** |
+| 3 | 药灵守护 | 5min | 打字战斗巩固知识 | Phase 3 |
+| 4 | 方剂学习 | 10min | AI讲解方剂君臣佐使 | Phase 4 |
+| 5 | 临床考核 | 10min | 2-3个病案辨证 | Phase 1 |
+| 6 | 开放世界 | 5min | 解锁新区域、获得技能 | Phase 5 |
+
+**流程图：**
+```
+章节选择 → 章节入口(ChapterEntry) → StageManager
+                                         ↓
+              ┌──────────────────────────────────────────┐
+              ↓                                          ↓
+        阶段1:师导入门 ──完成──→ 阶段2:山谷采药 ──完成──→ 阶段3:药灵守护
+         (MentorIntro)           (GatheringStage)          (BattleStage)
+              ↑                                                  ↓
+              └────────── 阶段6:开放世界 ←──阶段5:临床考核 ←──阶段4:方剂学习
+                (OpenWorldStage)       (ClinicalStage)      (FormulaLearning)
+```
+
+**关键设计原则：**
+- GatheringStage 不是独立页面，是阶段2的组件
+- 阶段流转由 StageManager 统一管理
+- 支持断点续玩（每个阶段完成后自动保存）
+
 ---
 
 ## 数据结构
@@ -149,6 +228,64 @@ npm run build
 - **ClinicalCase** - 病案（v2.0保留）
 - **AIMentor** - AI导师
 - **PlayerProgress** - 玩家进度
+
+### 章节进度数据结构
+
+```typescript
+// 章节进度 - 保存在 chapterStore
+interface ChapterProgress {
+  chapterId: string;
+  status: 'locked' | 'available' | 'in_progress' | 'completed';
+  currentStage: number; // 0-5，当前进行到的阶段
+  stageProgress: {
+    mentorIntro?: { completed: boolean; };
+    gathering?: {
+      medicinesCollected: string[];
+      medicineQuality: Record<string, Quality>;
+      exploredTiles: Position[];
+    };
+    battle?: { score: number; maxCombo: number; };
+    formula?: { completedFormulas: string[]; };
+    clinical?: { score: number; attempts: number; };
+  };
+  startTime?: number;
+  lastCheckpoint?: number;
+  completeTime?: number;
+}
+
+// 阶段状态
+interface StageState {
+  chapterId: string;
+  currentStageIndex: number; // 0-5
+  isCompleted: boolean;
+  checkpoint?: unknown; // 阶段特定的断点数据
+}
+```
+
+### 断点续玩机制
+
+```typescript
+// 自动保存点
+const CHECKPOINT_TRIGGERS = [
+  'stage_completed',     // 每个阶段完成时
+  'medicine_collected',  // 采集到药材时
+  'battle_end',          // 战斗胜利/失败时
+  'formula_learned',     // 学习完成时
+  'clinical_passed',     // 考核通过时
+  'manual_save',         // 玩家手动保存
+];
+
+// 恢复游戏
+function resumeChapter(chapterId: string): StageState {
+  const progress = getChapterProgress(chapterId);
+  return {
+    chapterId,
+    currentStageIndex: progress.currentStage,
+    isCompleted: false,
+    checkpoint: progress.stageProgress,
+  };
+}
+```
 
 ---
 
@@ -165,11 +302,24 @@ npm run build
 ### Phase 2: 山谷采药（2周）⭐
 **参考文档**: [05-map-system.md](design-output/v3.0-specs/tech/05-map-system.md), [01-gathering-adventure.md](design-output/v3.0-specs/gameplay/01-gathering-adventure.md), [02-visual-style.md](design-output/v3.0-specs/design/02-visual-style.md)
 
-- 五行山谷地图系统
-- 地块探索与移动
-- 药材发现与识别
-- 采集小游戏（挖掘/敲击/套索）
-- 采药工具系统
+**核心目标**: 将 GatheringStage 改造为阶段2组件，创建 StageManager
+
+**任务清单**:
+- ✅ 6x6 等角地图系统
+- ✅ 玩家移动与地块探索
+- ✅ 三种采集小游戏（挖掘/敲击/套索）
+- 🔄 **新增**: StageManager 阶段管理器
+- 🔄 **新增**: 章节入口页面重构（ChapterEntry）
+- 🔄 **新增**: GatheringStage 阶段接口改造
+- 🔄 **新增**: 其他阶段占位组件
+- 🔄 **新增**: 断点续玩机制
+- 🔄 **删除**: v2.0 ValleyScene 遗留系统
+
+**完成标准**:
+1. 从章节选择 → 章节入口 → StageManager 流程完整
+2. GatheringStage 作为阶段2可被 StageManager 渲染
+3. 采集完成可流转到阶段3（占位）
+4. 支持中途退出后恢复进度
 
 ### Phase 3: 药灵守护（2周）⭐
 **参考文档**: [04-battle-system.md](design-output/v3.0-specs/tech/04-battle-system.md), [02-typing-battle.md](design-output/v3.0-specs/gameplay/02-typing-battle.md), [03-animation-effects.md](design-output/v3.0-specs/design/03-animation-effects.md)
@@ -255,12 +405,17 @@ npm run build
 
 | Phase | 名称 | 实施计划 | 预计时间 | 状态 |
 |-------|------|----------|----------|------|
-| 1 | 核心框架 | [2026-03-23-phase1-core-framework.md](docs/superpowers/plans/2026-03-23-phase1-core-framework.md) | 2周 | 待开始 |
-| 2 | 山谷采药 | [2026-03-23-phase2-gathering-map.md](docs/superpowers/plans/2026-03-23-phase2-gathering-map.md) | 2周 | 待开始 |
+| 1 | 核心框架 | [2026-03-23-phase1-core-framework.md](docs/superpowers/plans/2026-03-23-phase1-core-framework.md) | 2周 | ✅ 已完成 |
+| 2 | **山谷采药（重构版）** | **[2026-03-24-phase2-refactor-chapter-flow.md](docs/superpowers/plans/2026-03-24-phase2-refactor-chapter-flow.md)** | **2-3天** | 🔄 **待开始** |
+| 2 | ~~山谷采药（旧版）~~ | ~~[2026-03-23-phase2-gathering-map.md](docs/superpowers/plans/2026-03-23-phase2-gathering-map.md)~~ | ~~2周~~ | ~~❌ 已废弃~~ |
 | 3 | 药灵守护 | [2026-03-23-phase3-battle-system.md](docs/superpowers/plans/2026-03-23-phase3-battle-system.md) | 2周 | 待开始 |
 | 4 | AI导师 | [2026-03-23-phase4-ai-mentor.md](docs/superpowers/plans/2026-03-23-phase4-ai-mentor.md) | 2周 | 待开始 |
 | 5 | 开放世界 | [2026-03-23-phase5-open-world.md](docs/superpowers/plans/2026-03-23-phase5-open-world.md) | 1周 | 待开始 |
 | 6 | Polish | [2026-03-23-phase6-polish-testing.md](docs/superpowers/plans/2026-03-23-phase6-polish-testing.md) | 1周 | 待开始 |
+
+**Phase 2 重构说明**:
+- **旧版计划** (`phase2-gathering-map.md`): 将 GatheringStage 作为独立页面实现，与 v3.0 架构不符
+- **新版计划** (`phase2-refactor-chapter-flow.md`): 按 v3.0 6阶段流程重构，GatheringStage 作为阶段2组件
 
 **执行方式**: 使用 `superpowers:subagent-driven-development` 或 `superpowers:executing-plans` skill 按Task逐步执行
 

@@ -58,25 +58,38 @@ export class AIVisionService {
   }
 
   private buildPrompt(requirement: DesignRequirement): string {
-    return `你是一位专业的游戏UI/UX验收专家。请分析这张游戏截图，并根据以下设计规范进行评估：
+    return `你是一位专业的游戏UI/UX验收专家。请严格分析这张游戏截图，并根据以下设计规范进行详细评估：
 
 **验收项目**: ${requirement.name}
 **规范要求**:
 ${requirement.criteria.map(c => `- ${c}`).join('\n')}
 
-**评估维度**:
-1. 视觉呈现是否符合中医药风格（古典、雅致、五行元素）
-2. 布局是否合理，元素是否对齐
-3. 色彩搭配是否和谐
-4. 文字是否清晰可读
-5. 交互元素是否明确可识别
+**评估维度**（请逐项检查并给出具体分数）：
+1. 视觉呈现是否符合中医药风格（古典、雅致、五行元素）- 25分
+2. 布局是否合理，元素是否对齐 - 20分
+3. 色彩搭配是否和谐且符合主题 - 25分
+4. 文字是否清晰可读 - 15分
+5. 交互元素是否明确可识别 - 15分
 
-请以JSON格式返回评估结果：
+**评分标准**（85分以上才算通过）：
+- 90-100分：优秀，完全符合设计规范
+- 85-89分：良好，基本符合但有轻微瑕疵
+- 70-84分：及格，有明显问题需要改进
+- 70分以下：不及格，需要重新设计
+
+请以JSON格式返回详细评估结果：
 {
-  "passed": boolean,      // 是否通过验收
+  "passed": boolean,      // 总分>=85才算通过
   "score": number,        // 0-100分
-  "issues": string[],     // 发现的问题列表
-  "suggestions": string[] // 改进建议
+  "dimensionScores": {    // 各维度得分
+    "themeStyle": number,
+    "layout": number,
+    "color": number,
+    "text": number,
+    "interaction": number
+  },
+  "issues": string[],     // 具体问题列表（必须详细）
+  "suggestions": string[] // 改进建议（必须可操作）
 }`;
   }
 

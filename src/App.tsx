@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ChapterSelect from './pages/ChapterSelect';
 import ChapterEntry from './pages/ChapterEntry';
 import StageManager from './pages/StageManager';
-import BattleStage from './pages/BattleStage';
+import BattleStage from './pages/stages/BattleStage';
 
 const App: React.FC = () => {
   return (

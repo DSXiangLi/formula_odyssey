@@ -275,52 +275,58 @@ const formulaData: Record<string, {
 };
 
 // 病案模板库（用于API不可用时生成病案）
-const caseTemplates: Record<string, Array<Partial<ClinicalCase>>> = {
+const caseTemplates: Record<string, Array<{
+  patientInfo: { name: string; age: number; gender: 'male' | 'female'; occupation?: string };
+  symptoms: string[];
+  tongue: { color: string; coating: string; shape?: string };
+  pulse: { type: string; description: string };
+  correctTreatment: string;
+}>> = {
   'formula_mahuang': [
     {
-      patientInfo: '李某，男，28岁',
+      patientInfo: { name: '李某', age: 28, gender: 'male' },
       symptoms: ['恶寒发热，无汗', '头痛身痛', '喘咳，咳痰清稀', '口不渴', '精神萎靡'],
-      tongue: '舌苔薄白',
-      pulse: '脉浮紧',
+      tongue: { color: '淡红', coating: '薄白' },
+      pulse: { type: '浮脉', description: '脉浮紧' },
       correctTreatment: '辛温解表',
     },
     {
-      patientInfo: '王某，女，35岁',
+      patientInfo: { name: '王某', age: 35, gender: 'female' },
       symptoms: ['恶寒重发热轻', '无汗', '咳嗽气喘', '鼻塞流涕', '全身酸痛'],
-      tongue: '舌淡红，苔薄白',
-      pulse: '脉浮紧有力',
+      tongue: { color: '淡红', coating: '薄白' },
+      pulse: { type: '浮脉', description: '脉浮紧有力' },
       correctTreatment: '辛温解表',
     },
   ],
   'formula_guizhi': [
     {
-      patientInfo: '陈某，女，26岁',
+      patientInfo: { name: '陈某', age: 26, gender: 'female' },
       symptoms: ['发热汗出', '恶风不恶寒', '头痛', '鼻鸣干呕', '四肢酸楚'],
-      tongue: '舌苔薄白',
-      pulse: '脉浮缓',
+      tongue: { color: '淡红', coating: '薄白' },
+      pulse: { type: '浮脉', description: '脉浮缓' },
       correctTreatment: '解肌发表',
     },
     {
-      patientInfo: '刘某，男，31岁',
+      patientInfo: { name: '刘某', age: 31, gender: 'male' },
       symptoms: ['汗出恶风', '发热不高', '鼻流清涕', '食欲不振', '体倦乏力'],
-      tongue: '舌淡苔白',
-      pulse: '脉浮弱',
+      tongue: { color: '淡', coating: '白' },
+      pulse: { type: '浮脉', description: '脉浮弱' },
       correctTreatment: '解肌发表',
     },
   ],
   'formula_sijunzi': [
     {
-      patientInfo: '赵某，男，45岁',
+      patientInfo: { name: '赵某', age: 45, gender: 'male' },
       symptoms: ['面色萎白', '语声低微', '四肢乏力', '食少便溏', '精神倦怠'],
-      tongue: '舌淡苔白',
-      pulse: '脉虚弱',
+      tongue: { color: '淡', coating: '白' },
+      pulse: { type: '虚脉', description: '脉虚弱' },
       correctTreatment: '益气健脾',
     },
     {
-      patientInfo: '孙某，女，38岁',
+      patientInfo: { name: '孙某', age: 38, gender: 'female' },
       symptoms: ['气短懒言', '食欲减退', '腹胀便溏', '面色少华', '动则汗出'],
-      tongue: '舌淡胖有齿痕，苔白',
-      pulse: '脉细弱',
+      tongue: { color: '淡胖', coating: '白', shape: '有齿痕' },
+      pulse: { type: '细脉', description: '脉细弱' },
       correctTreatment: '益气健脾',
     },
   ],
@@ -398,17 +404,33 @@ export async function generateClinicalCase(formulaId: string): Promise<ClinicalC
         const jsonMatch = content.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           const aiResult = JSON.parse(jsonMatch[0]);
+          // 解析AI返回的数据，将字符串转换为对象格式
+          const patientInfoStr = typeof aiResult.patientInfo === 'string' ? aiResult.patientInfo : '';
+          const nameMatch = patientInfoStr.match(/([^，,]+)/);
+          const genderMatch = patientInfoStr.match(/([男女])/);
+          const ageMatch = patientInfoStr.match(/(\d+)/);
+
           return {
             id: `case_${formulaId}_${Date.now()}`,
+            chapterId: 'chapter-1',
             formulaId,
-            patientInfo: aiResult.patientInfo,
-            symptoms: aiResult.symptoms,
-            tongue: aiResult.tongue,
-            pulse: aiResult.pulse,
+            patientInfo: {
+              name: nameMatch?.[1] || '患者',
+              age: parseInt(ageMatch?.[1] || '30'),
+              gender: (genderMatch?.[1] as 'male' | 'female') || 'male',
+            },
+            symptoms: Array.isArray(aiResult.symptoms) ? aiResult.symptoms : formula.indications.slice(0, 5),
+            tongue: typeof aiResult.tongue === 'string'
+              ? { color: '淡红', coating: '薄白' }
+              : aiResult.tongue || { color: '淡红', coating: '薄白' },
+            pulse: typeof aiResult.pulse === 'string'
+              ? { type: '浮脉', description: aiResult.pulse }
+              : aiResult.pulse || { type: '浮脉', description: '脉浮' },
             correctTreatment: formula.functions[0],
             correctFormula: formula.name,
             correctJun: formula.jun,
-            explanation: aiResult.explanation,
+            explanation: aiResult.explanation || `患者表现为${formula.indications.join('、')}，治宜${formula.functions.join('、')}。`,
+            difficulty: 'normal',
           };
         }
       } catch {
@@ -433,30 +455,34 @@ function generateLocalClinicalCase(formulaId: string): ClinicalCase | null {
     const template = templates[Math.floor(Math.random() * templates.length)];
     return {
       id: `case_${formulaId}_${Date.now()}`,
+      chapterId: 'chapter-1', // 默认章节
       formulaId,
-      patientInfo: template.patientInfo || '患者，男，30岁',
+      patientInfo: template.patientInfo || { name: '患者', age: 30, gender: 'male' },
       symptoms: template.symptoms || formula.indications.slice(0, 5),
-      tongue: template.tongue || '舌淡苔白',
-      pulse: template.pulse || '脉浮',
+      tongue: template.tongue || { color: '淡', coating: '白' },
+      pulse: template.pulse || { type: '浮脉', description: '脉浮' },
       correctTreatment: template.correctTreatment || formula.functions[0],
       correctFormula: formula.name,
       correctJun: formula.jun,
       explanation: `患者表现为${formula.indications.join('、')}，符合${formula.name}证。${formula.name}功效为${formula.functions.join('、')}，${formula.jun}为君药。`,
+      difficulty: 'normal',
     };
   }
 
   // 通用模板
   return {
     id: `case_${formulaId}_${Date.now()}`,
+    chapterId: 'chapter-1',
     formulaId,
-    patientInfo: '患者，男，35岁',
+    patientInfo: { name: '患者', age: 35, gender: 'male' },
     symptoms: formula.indications.slice(0, 5),
-    tongue: '舌淡苔白',
-    pulse: '脉浮',
+    tongue: { color: '淡', coating: '白' },
+    pulse: { type: '浮脉', description: '脉浮' },
     correctTreatment: formula.functions[0],
     correctFormula: formula.name,
     correctJun: formula.jun,
     explanation: `患者表现为${formula.indications.join('、')}，治宜${formula.functions.join('、')}，方用${formula.name}，${formula.jun}为君。`,
+    difficulty: 'normal',
   };
 }
 

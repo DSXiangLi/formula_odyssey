@@ -1,28 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useGameStore } from '../stores/gameStore';
-import { chapters } from '../data/chapters';
-import ValleyScene from '../components/scene/ValleyScene';
-import { WuxingType } from '../types';
-import { DialogueBox } from '../components/mentor/DialogueBox';
-import { MentorAvatar } from '../components/mentor/MentorAvatar';
-import { aiMentor, MentorMessage, MentorContext } from '../services/ai/AIMentorService';
+import { ArrowLeft, Play, RotateCcw, CheckCircle } from 'lucide-react';
+import { useChapterStore } from '../stores/chapterStore';
+import { getChapterById } from '../data/chapters';
+import { getMedicineByName } from '../data/medicines';
+import { getFormulaByName } from '../data/formulas';
+import type { WuxingType } from '../types';
 
 const wuxingColors: Record<WuxingType, { primary: string; light: string; gradient: string }> = {
-  wood: { primary: '#2E7D32', light: '#81C784', gradient: 'from-green-800 to-green-600' },
-  fire: { primary: '#C62828', light: '#EF5350', gradient: 'from-red-800 to-red-600' },
-  earth: { primary: '#F9A825', light: '#FFD54F', gradient: 'from-amber-700 to-amber-500' },
-  metal: { primary: '#78909C', light: '#B0BEC5', gradient: 'from-slate-600 to-slate-400' },
-  water: { primary: '#1565C0', light: '#42A5F5', gradient: 'from-blue-800 to-blue-600' },
-};
-
-const wuxingIcons: Record<WuxingType, string> = {
-  wood: '🌳',
-  fire: '🔥',
-  earth: '🏔️',
-  metal: '⛰️',
-  water: '💧',
+  wood: { primary: '#2E7D32', light: '#81C784', gradient: 'from-green-600 to-emerald-700' },
+  fire: { primary: '#C62828', light: '#EF5350', gradient: 'from-red-600 to-orange-700' },
+  earth: { primary: '#F9A825', light: '#FFD54F', gradient: 'from-yellow-600 to-amber-700' },
+  metal: { primary: '#78909C', light: '#B0BEC5', gradient: 'from-gray-500 to-gray-700' },
+  water: { primary: '#1565C0', light: '#42A5F5', gradient: 'from-blue-600 to-blue-800' },
 };
 
 const wuxingNames: Record<WuxingType, string> = {
@@ -33,378 +24,256 @@ const wuxingNames: Record<WuxingType, string> = {
   water: '水',
 };
 
-const wuxingTypeMap: Record<WuxingType, 'wood' | 'fire' | 'earth' | 'metal' | 'water'> = {
-  wood: 'wood',
-  fire: 'fire',
-  earth: 'earth',
-  metal: 'metal',
-  water: 'water',
+// 区域名称映射
+const wuxingRegionNames: Record<WuxingType, string> = {
+  wood: '青木林',
+  fire: '赤焰峰',
+  earth: '黄土丘',
+  metal: '白金原',
+  water: '黑水潭',
 };
-
-// 阶段配置
-const STAGES = [
-  { id: 'intro', type: 'intro', title: '师导入门', description: '青木先生讲解本章学习目标', icon: '👨‍⚕️' },
-  { id: 'gathering', type: 'gathering', title: '山谷采药', description: '探索山谷，采集4味药材', icon: '🌿' },
-  { id: 'battle', type: 'battle', title: '药灵守护', description: '通过战斗巩固药材知识', icon: '⚔️' },
-  { id: 'formula', type: 'formula', title: '方剂学习', description: '学习本章核心方剂', icon: '📜' },
-  { id: 'clinical', type: 'clinical', title: '临床考核', description: '辨证施治实战演练', icon: '🏥' },
-  { id: 'openworld', type: 'openworld', title: '开放世界', description: '自由探索已解锁区域', icon: '🌍' },
-];
 
 const ChapterEntry: React.FC = () => {
   const { chapterId } = useParams<{ chapterId: string }>();
   const navigate = useNavigate();
-  const { player, setCurrentRegion } = useGameStore();
-  const [activeTab, setActiveTab] = useState<'scene' | 'medicines' | 'formulas' | 'mentor'>('mentor');
-  const [isLoading, setIsLoading] = useState(true);
+  const chapterStore = useChapterStore();
 
-  // AI Mentor states
-  const [messages, setMessages] = useState<MentorMessage[]>([]);
-  const [currentStage] = useState(0);
-  const [isLoadingAI, setIsLoadingAI] = useState(false);
-  const [greeted, setGreeted] = useState(false);
+  if (!chapterId) {
+    navigate('/');
+    return null;
+  }
 
-  const chapter = chapters.find(c => c.id === chapterId);
-
-  useEffect(() => {
-    if (chapter) {
-      setCurrentRegion(chapter.wuxing);
-      const timer = setTimeout(() => setIsLoading(false), 500);
-      return () => clearTimeout(timer);
-    }
-  }, [chapter, setCurrentRegion]);
-
-  // Generate greeting when entering mentor tab
-  useEffect(() => {
-    if (chapter && activeTab === 'mentor' && !greeted) {
-      generateGreeting();
-      setGreeted(true);
-    }
-  }, [chapter, activeTab, greeted]);
-
-  const generateGreeting = async () => {
-    if (!chapter) return;
-
-    setIsLoadingAI(true);
-    const context: MentorContext = {
-      playerName: player.name || '弟子',
-      chapterId: chapter.id,
-      chapterTitle: chapter.title,
-      collectedMedicines: [],
-      knownMedicineInfo: {},
-      stage: 'intro',
-    };
-
-    try {
-      const response = await aiMentor.generateResponse(context, 'greeting');
-      setMessages([response]);
-    } catch (error) {
-      console.error('Failed to generate greeting:', error);
-    } finally {
-      setIsLoadingAI(false);
-    }
-  };
-
-  const handleSendMessage = async (content: string) => {
-    // Add student message
-    const studentMsg: MentorMessage = {
-      id: `student_${Date.now()}`,
-      role: 'student',
-      content,
-      timestamp: Date.now(),
-    };
-    setMessages(prev => [...prev, studentMsg]);
-
-    // Generate mentor response
-    if (!chapter) return;
-
-    setIsLoadingAI(true);
-    const context: MentorContext = {
-      playerName: player.name || '弟子',
-      chapterId: chapter.id,
-      chapterTitle: chapter.title,
-      collectedMedicines: [],
-      knownMedicineInfo: {},
-      stage: 'guiding',
-    };
-
-    try {
-      const response = await aiMentor.generateResponse(context, 'guide');
-      setMessages(prev => [...prev, response]);
-    } catch (error) {
-      console.error('Failed to generate response:', error);
-    } finally {
-      setIsLoadingAI(false);
-    }
-  };
-
-  const handleStartStage = (stageId: string) => {
-    switch (stageId) {
-      case 'gathering':
-        navigate(`/chapter/${chapterId}/gathering`);
-        break;
-      case 'battle':
-        navigate(`/chapter/${chapterId}/battle`);
-        break;
-      case 'formula':
-        navigate(`/chapter/${chapterId}/formula`);
-        break;
-      case 'clinical':
-        navigate(`/chapter/${chapterId}/clinical`);
-        break;
-      default:
-        break;
-    }
-  };
+  const chapter = getChapterById(chapterId);
+  const progress = chapterStore.getChapterProgress(chapterId);
 
   if (!chapter) {
     return (
-      <div className="min-h-screen bg-amber-50 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">章节未找到</h1>
-          <button
-            onClick={() => navigate('/')}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            返回章节选择
-          </button>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-white">章节不存在</p>
       </div>
     );
   }
 
   const colors = wuxingColors[chapter.wuxing];
-  const isLocked = !player.unlockedChapters.includes(chapter.id);
-  const wuxingType = wuxingTypeMap[chapter.wuxing];
+  const status = progress ? 'in_progress' : 'available';
+  const currentStage = progress?.currentStage || 0;
+
+  // 获取药材和方剂信息（chapter.medicines 和 chapter.formulas 是名称数组）
+  const medicines = chapter.medicines
+    .map(getMedicineByName)
+    .filter((m): m is NonNullable<typeof m> => m !== undefined);
+
+  const formulas = chapter.formulas
+    .map(getFormulaByName)
+    .filter((f): f is NonNullable<typeof f> => f !== undefined);
+
+  // 处理开始/继续
+  const handleStart = () => {
+    navigate(`/chapter/${chapterId}/stage`);
+  };
+
+  // 处理返回
+  const handleBack = () => {
+    navigate('/');
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       {/* 顶部导航 */}
-      <motion.header
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50"
-      >
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-sm">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <button
-            onClick={() => navigate('/')}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+            onClick={handleBack}
+            className="flex items-center gap-2 text-white/70 hover:text-white transition-colors"
           >
-            <span className="text-xl">←</span>
+            <ArrowLeft size={20} />
             <span>返回章节选择</span>
           </button>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">{wuxingIcons[chapter.wuxing]}</span>
-              <h1 className="text-xl font-bold">{chapter.title}</h1>
-            </div>
-            <div
-              className="px-3 py-1 rounded-full text-white text-sm font-medium"
-              style={{ background: `linear-gradient(to right, ${colors.primary}, ${colors.light})` }}
-            >
-              第{chapter.chapterNumber}章
-            </div>
-          </div>
-          <div className="flex items-center gap-2 text-amber-600">
-            <span>💎</span>
-            <span className="font-mono">{player.currency}</span>
-          </div>
-        </div>
-      </motion.header>
 
-      {/* 标签导航 */}
-      <div className="max-w-7xl mx-auto px-4 py-4">
-        <div className="flex gap-2 bg-white/60 backdrop-blur-sm rounded-xl p-2">
-          {[
-            { key: 'mentor', label: '青木导师', icon: '👨‍⚕️' },
-            { key: 'scene', label: '山谷场景', icon: '🌄' },
-            { key: 'medicines', label: '本章药材', icon: '🌿' },
-            { key: 'formulas', label: '本章方剂', icon: '📜' },
-          ].map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key as typeof activeTab)}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg transition-all ${
-                activeTab === tab.key
-                  ? 'bg-white shadow-md text-gray-900 font-medium'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              <span>{tab.icon}</span>
-              <span>{tab.label}</span>
-            </button>
-          ))}
+          {chapter.isCompleted && (
+            <div className="flex items-center gap-2 text-green-400">
+              <CheckCircle size={20} />
+              <span>已完成</span>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* 内容区域 */}
-      <main className="max-w-7xl mx-auto px-4 pb-8">
-        {activeTab === 'mentor' && (
+      {/* 主要内容 */}
+      <div className="pt-20 pb-8 px-4">
+        <div className="max-w-4xl mx-auto">
+          {/* 章节标题卡片 */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+            className={`bg-gradient-to-br ${colors.gradient} rounded-3xl p-8 mb-6 shadow-2xl`}
           >
-            {/* Left: Mentor Dialogue */}
-            <div>
-              <div className="flex items-center gap-4 mb-4">
-                <MentorAvatar expression="happy" wuxing={wuxingType} size="lg" />
-                <div>
-                  <h2 className="font-bold text-xl">青木先生</h2>
-                  <p className="text-sm text-gray-600">你的中医导师</p>
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="px-3 py-1 bg-white/20 rounded-full text-sm text-white">
+                    第{chapter.chapterNumber}章
+                  </span>
+                  <span className="px-3 py-1 bg-white/20 rounded-full text-sm text-white">
+                    {wuxingNames[chapter.wuxing]}行 · {wuxingRegionNames[chapter.wuxing]}
+                  </span>
                 </div>
+                <h1 className="text-4xl font-bold text-white mb-2">{chapter.title}</h1>
+                <p className="text-white/80 text-lg">{chapter.subtitle}</p>
               </div>
 
-              <DialogueBox
-                messages={messages}
-                wuxing={wuxingType}
-                onSendMessage={handleSendMessage}
-                isLoading={isLoadingAI}
-              />
+              {/* 五行图标 */}
+              <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center text-4xl">
+                {chapter.wuxing === 'wood' && '🌲'}
+                {chapter.wuxing === 'fire' && '🔥'}
+                {chapter.wuxing === 'earth' && '🏔️'}
+                {chapter.wuxing === 'metal' && '⚔️'}
+                {chapter.wuxing === 'water' && '💧'}
+              </div>
             </div>
 
-            {/* Right: Stage Navigation */}
-            <div className="space-y-4">
-              <h3 className="font-bold text-lg">本章流程</h3>
+            {/* 预计时长 */}
+            <div className="mt-6 flex items-center gap-6 text-white/70">
+              <span>⏱️ 预计用时：45分钟</span>
+              <span>📚 6个学习阶段</span>
+              {status === 'in_progress' && (
+                <span>📍 当前阶段：第{currentStage + 1}阶段</span>
+              )}
+            </div>
+          </motion.div>
 
-              {STAGES.map((stage, index) => (
-                <motion.div
-                  key={stage.id}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`p-4 rounded-lg border-2 ${
-                    index === currentStage
-                      ? 'border-blue-500 bg-blue-50'
-                      : index < currentStage
-                      ? 'border-green-500 bg-green-50'
-                      : 'border-gray-200 bg-white'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{stage.icon}</span>
-                      <div>
-                        <h4 className="font-medium">{stage.title}</h4>
-                        <p className="text-sm text-gray-600">{stage.description}</p>
-                      </div>
+          {/* 学习内容概览 */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6"
+          >
+            {/* 本章药材 */}
+            <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                <span>🌿</span> 本章药材（{medicines.length}味）
+              </h3>
+              <div className="grid grid-cols-2 gap-3">
+                {medicines.map((med) => (
+                  <div
+                    key={med.id}
+                    className="bg-white/5 rounded-lg p-3 flex items-center gap-3"
+                  >
+                    <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center text-lg">
+                      🌿
                     </div>
-                    {index === currentStage && (
-                      <button
-                        onClick={() => handleStartStage(stage.id)}
-                        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                      >
-                        开始
-                      </button>
-                    )}
-                    {index < currentStage && (
-                      <span className="text-green-600 font-medium">✓ 已完成</span>
-                    )}
+                    <div>
+                      <p className="text-white font-medium">{med.name}</p>
+                      <p className="text-white/50 text-sm">{med.category}</p>
+                    </div>
                   </div>
-                </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* 本章方剂 */}
+            <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+              <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                <span>📜</span> 本章方剂（{formulas.length}个）
+              </h3>
+              <div className="space-y-3">
+                {formulas.map((formula) => (
+                  <div
+                    key={formula.id}
+                    className="bg-white/5 rounded-lg p-3"
+                  >
+                    <p className="text-white font-medium">{formula.name}</p>
+                    <p className="text-white/50 text-sm">{formula.category}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* 学习流程 - 可点击选择阶段 */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 mb-6"
+          >
+            <h3 className="text-lg font-semibold text-white mb-4">📋 学习流程（点击任意阶段直接进入）</h3>
+            <div className="flex items-center justify-between">
+              {[
+                { icon: '👨‍⚕️', name: '师导入门', time: '5min' },
+                { icon: '🎮', name: '山谷采药', time: '15min' },
+                { icon: '⚔️', name: '药灵守护', time: '5min' },
+                { icon: '📚', name: '方剂学习', time: '10min' },
+                { icon: '🩺', name: '临床考核', time: '10min' },
+                { icon: '🌍', name: '开放世界', time: '5min' },
+              ].map((stage, idx) => (
+                <div key={stage.name} className="flex items-center">
+                  <button
+                    onClick={() => navigate(`/chapter/${chapterId}/stage?stage=${idx}`)}
+                    className="text-center group"
+                  >
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl mb-1 transition-all group-hover:scale-110 ${
+                      idx < currentStage
+                        ? 'bg-green-500/50 group-hover:bg-green-500/70'
+                        : idx === currentStage
+                          ? 'bg-blue-500/50 group-hover:bg-blue-500/70'
+                          : 'bg-white/10 group-hover:bg-white/20'
+                    }`}>
+                      {stage.icon}
+                    </div>
+                    <p className="text-white/60 text-xs group-hover:text-white/90">{stage.name}</p>
+                  </button>
+                  {idx < 5 && (
+                    <div className={`w-4 h-0.5 mx-1 ${
+                      idx < currentStage ? 'bg-green-500/50' : 'bg-white/20'
+                    }`} />
+                  )}
+                </div>
               ))}
             </div>
           </motion.div>
-        )}
 
-        {activeTab === 'scene' && (
+          {/* 操作按钮 */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-2xl shadow-lg overflow-hidden"
+            transition={{ delay: 0.3 }}
+            className="flex justify-center gap-4"
           >
-            {isLocked ? (
-              <div className="h-[500px] flex items-center justify-center bg-gray-100">
-                <div className="text-center">
-                  <span className="text-6xl mb-4">🔒</span>
-                  <h3 className="text-xl font-bold text-gray-700 mb-2">章节已锁定</h3>
-                  <p className="text-gray-500">完成前置章节以解锁</p>
-                </div>
+            {!chapter.isUnlocked ? (
+              <div className="px-8 py-4 bg-gray-700 rounded-full text-gray-400 flex items-center gap-2">
+                <span>🔒</span>
+                <span>章节未解锁</span>
               </div>
+            ) : chapter.isCompleted ? (
+              <button
+                onClick={handleStart}
+                className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full font-bold text-lg flex items-center gap-2 hover:shadow-xl transition-all"
+              >
+                <RotateCcw size={20} />
+                <span>重新学习</span>
+              </button>
+            ) : status === 'in_progress' ? (
+              <button
+                onClick={handleStart}
+                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-full font-bold text-lg flex items-center gap-2 hover:shadow-xl transition-all"
+              >
+                <RotateCcw size={20} />
+                <span>继续学习（可选择任意阶段）</span>
+              </button>
             ) : (
-              <div className="h-[600px] relative">
-                {isLoading ? (
-                  <div className="h-full flex items-center justify-center bg-gradient-to-b from-green-100 to-green-200">
-                    <div className="text-center">
-                      <div className="animate-spin text-4xl mb-4">🌳</div>
-                      <p className="text-gray-600">正在进入{wuxingNames[chapter.wuxing]}行山谷...</p>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <ValleyScene />
-                    {/* 探索提示 */}
-                    <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg">
-                      <h4 className="font-bold text-gray-800 mb-2">💡 探索提示</h4>
-                      <p className="text-sm text-gray-600">
-                        点击种子进行诊断和收集。使用上方五行导航切换不同区域。
-                      </p>
-                    </div>
-                  </>
-                )}
-              </div>
+              <button
+                onClick={handleStart}
+                className="px-8 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-full font-bold text-lg flex items-center gap-2 hover:shadow-xl transition-all"
+              >
+                <Play size={20} />
+                <span>开始本章（可选择任意阶段）</span>
+              </button>
             )}
           </motion.div>
-        )}
-
-        {activeTab === 'medicines' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4"
-          >
-            {chapter.medicines.map((medicineId, index) => (
-              <motion.div
-                key={medicineId}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow"
-              >
-                <div
-                  className="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center text-3xl"
-                  style={{ background: `linear-gradient(135deg, ${colors.light}40, ${colors.primary}20)` }}
-                >
-                  🌿
-                </div>
-                <h4 className="text-center font-medium text-gray-800">{medicineId}</h4>
-                <p className="text-center text-xs text-gray-500 mt-1">待收集</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-
-        {activeTab === 'formulas' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-4"
-          >
-            {chapter.formulas.map((formulaId, index) => (
-              <motion.div
-                key={formulaId}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-xl p-6 shadow-md"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-2xl">
-                    📜
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-bold text-gray-800">{formulaId}</h4>
-                    <p className="text-sm text-gray-500">本章待学习方剂</p>
-                  </div>
-                  <button className="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors">
-                    开始学习
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-      </main>
+        </div>
+      </div>
     </div>
   );
 };

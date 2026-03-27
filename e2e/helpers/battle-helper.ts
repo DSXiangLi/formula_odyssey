@@ -57,9 +57,20 @@ export class BattleHelper {
    * 输入答案
    */
   async typeAnswer(answer: string): Promise<void> {
-    const input = this.page.locator('[data-testid="battle-input"]');
-    await input.focus();
-    await input.fill(answer);
+    // 使用 evaluate 直接操作 input 元素
+    await this.page.evaluate((text) => {
+      const input = document.querySelector('[data-testid="battle-input"]') as HTMLInputElement;
+      if (!input) return;
+
+      // 设置值
+      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')!.set!;
+      nativeInputValueSetter.call(input, text);
+
+      // 触发 React 的 onChange 事件
+      const event = new Event('input', { bubbles: true });
+      input.dispatchEvent(event);
+    }, answer);
+    await this.page.waitForTimeout(500);
   }
 
   /**
@@ -82,7 +93,15 @@ export class BattleHelper {
    */
   async getFirstEnemyTarget(): Promise<string> {
     const targetText = await this.page.locator('[data-testid="enemy-target-text"]').first().textContent();
-    return targetText || '';
+    return targetText?.trim() || '';
+  }
+
+  /**
+   * 获取第一个敌人的拼音
+   */
+  async getFirstEnemyPinyin(): Promise<string> {
+    const pinyin = await this.page.locator('[data-testid="enemy-pinyin"]').first().textContent();
+    return pinyin?.trim() || '';
   }
 
   /**

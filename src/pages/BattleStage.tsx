@@ -32,17 +32,13 @@ const BattleStage: React.FC = () => {
 
   // Transform MedicineData to BattleMedicine
   const transformMedicine = (data: MedicineData): BattleMedicine => {
-    // Parse nature field (e.g., "辛、微温" -> fourQi "微温", fiveFlavors ["辛"])
-    const natureParts = data.nature.split('、');
-    const fiveFlavors = natureParts.filter(p => ['辛', '甘', '酸', '苦', '咸'].some(f => p.includes(f)));
-    const fourQi = natureParts.find(p => ['寒', '热', '温', '凉', '平'].some(q => p.includes(q))) || '平';
-
+    // JSON data has fourQi and fiveFlavors directly
     return {
       id: data.id,
       name: data.name,
       pinyin: data.pinyin,
-      fourQi,
-      fiveFlavors: fiveFlavors.length > 0 ? fiveFlavors : ['甘'],
+      fourQi: data.fourQi || '平',
+      fiveFlavors: data.fiveFlavors?.length > 0 ? data.fiveFlavors : ['甘'],
       functions: data.functions,
     };
   };

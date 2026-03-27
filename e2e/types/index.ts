@@ -1,6 +1,13 @@
 export interface AIVisionResult {
   passed: boolean;
   score: number;
+  dimensionScores?: {
+    themeStyle: number;
+    layout: number;
+    color: number;
+    text: number;
+    interaction: number;
+  };
   issues: string[];
   suggestions: string[];
 }
