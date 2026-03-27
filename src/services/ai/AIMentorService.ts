@@ -34,8 +34,21 @@ export class AIMentorService {
   private offlineMode: boolean = false;
 
   constructor() {
+    // 支持多种环境变量获取方式（Vite、Node.js、process.env）
+    const getEnv = (key: string): string => {
+      // Vite环境
+      if (typeof import.meta !== 'undefined' && import.meta.env) {
+        return import.meta.env[key] || '';
+      }
+      // Node.js环境
+      if (typeof process !== 'undefined' && process.env) {
+        return process.env[key] || '';
+      }
+      return '';
+    };
+
     this.config = {
-      apiKey: import.meta.env.VITE_GLM_API_KEY || '',
+      apiKey: getEnv('VITE_GLM_API_KEY') || getEnv('GLM_API_KEY') || '',
       baseURL: 'https://api.glm.cn/v1',
       model: 'glm-4',
     };

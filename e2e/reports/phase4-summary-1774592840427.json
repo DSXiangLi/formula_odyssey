@@ -1,0 +1,1390 @@
+{
+  "timestamp": 1774592840427,
+  "totalTests": 9,
+  "averageScore": 0,
+  "averageMaxScore": 75,
+  "passRate": 0,
+  "dimensionAverages": [
+    {
+      "code": "A1",
+      "average": 0,
+      "max": 10
+    },
+    {
+      "code": "A2",
+      "average": 0,
+      "max": 10
+    },
+    {
+      "code": "A3",
+      "average": 0,
+      "max": 10
+    },
+    {
+      "code": "A4",
+      "average": 0,
+      "max": 10
+    },
+    {
+      "code": "B1",
+      "average": 0,
+      "max": 15
+    },
+    {
+      "code": "B2",
+      "average": 0,
+      "max": 10
+    },
+    {
+      "code": "B3",
+      "average": 0,
+      "max": 10
+    }
+  ],
+  "evaluations": [
+    {
+      "conversationId": "conv_1774592820583",
+      "totalScore": 0,
+      "maxScore": 75,
+      "grade": "D",
+      "dimensions": [
+        {
+          "dimension": "A1",
+          "subDimension": "上下文连贯性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A2",
+          "subDimension": "教学逻辑性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A3",
+          "subDimension": "角色一致性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A4",
+          "subDimension": "表达生动性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B1",
+          "subDimension": "苏格拉底引导",
+          "score": 0,
+          "maxScore": 15,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B2",
+          "subDimension": "知识点准确性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B3",
+          "subDimension": "学习适应性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        }
+      ],
+      "summary": "总结生成失败",
+      "transcript": [
+        {
+          "round": 1,
+          "speaker": "mentor",
+          "content": "欢迎来到药灵山谷，我是青木先生。让我们开始今天的学习吧！",
+          "emotion": "happy"
+        },
+        {
+          "round": 2,
+          "speaker": "student",
+          "content": "这个我忘了"
+        },
+        {
+          "round": 2,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 3,
+          "speaker": "student",
+          "content": "这个我忘了"
+        },
+        {
+          "round": 3,
+          "speaker": "mentor",
+          "content": "没关系，再想想，从它的性味入手。",
+          "emotion": "concerned"
+        },
+        {
+          "round": 4,
+          "speaker": "student",
+          "content": "这个有点难，我不太明白"
+        },
+        {
+          "round": 4,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 5,
+          "speaker": "student",
+          "content": "我不太理解这个概念"
+        },
+        {
+          "round": 5,
+          "speaker": "mentor",
+          "content": "很好！继续保持。",
+          "emotion": "celebrating"
+        }
+      ],
+      "timestamp": 1774592820721
+    },
+    {
+      "conversationId": "conv_1774592821429",
+      "totalScore": 0,
+      "maxScore": 75,
+      "grade": "D",
+      "dimensions": [
+        {
+          "dimension": "A1",
+          "subDimension": "上下文连贯性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A2",
+          "subDimension": "教学逻辑性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A3",
+          "subDimension": "角色一致性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A4",
+          "subDimension": "表达生动性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B1",
+          "subDimension": "苏格拉底引导",
+          "score": 0,
+          "maxScore": 15,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B2",
+          "subDimension": "知识点准确性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B3",
+          "subDimension": "学习适应性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        }
+      ],
+      "summary": "总结生成失败",
+      "transcript": [
+        {
+          "round": 1,
+          "speaker": "mentor",
+          "content": "欢迎来到药灵山谷，我是青木先生。让我们开始今天的学习吧！",
+          "emotion": "happy"
+        },
+        {
+          "round": 2,
+          "speaker": "student",
+          "content": "我好像学过了但是记不清了"
+        },
+        {
+          "round": 2,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 3,
+          "speaker": "student",
+          "content": "我还是不太明白，请老师直接告诉我答案吧"
+        },
+        {
+          "round": 3,
+          "speaker": "mentor",
+          "content": "没关系，再想想，从它的性味入手。",
+          "emotion": "concerned"
+        },
+        {
+          "round": 4,
+          "speaker": "student",
+          "content": "老师，我还是不明白，请直接告诉我答案吧"
+        },
+        {
+          "round": 4,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        }
+      ],
+      "timestamp": 1774592821483
+    },
+    {
+      "conversationId": "conv_1774592821938",
+      "totalScore": 0,
+      "maxScore": 75,
+      "grade": "D",
+      "dimensions": [
+        {
+          "dimension": "A1",
+          "subDimension": "上下文连贯性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A2",
+          "subDimension": "教学逻辑性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A3",
+          "subDimension": "角色一致性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A4",
+          "subDimension": "表达生动性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B1",
+          "subDimension": "苏格拉底引导",
+          "score": 0,
+          "maxScore": 15,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B2",
+          "subDimension": "知识点准确性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B3",
+          "subDimension": "学习适应性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        }
+      ],
+      "summary": "总结生成失败",
+      "transcript": [
+        {
+          "round": 1,
+          "speaker": "mentor",
+          "content": "欢迎来到药灵山谷，我是青木先生。让我们开始今天的学习吧！",
+          "emotion": "happy"
+        },
+        {
+          "round": 2,
+          "speaker": "student",
+          "content": "老师，能再说一遍吗？"
+        },
+        {
+          "round": 2,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 3,
+          "speaker": "student",
+          "content": "我好像学过了但是记不清了"
+        },
+        {
+          "round": 3,
+          "speaker": "mentor",
+          "content": "没关系，再想想，从它的性味入手。",
+          "emotion": "concerned"
+        },
+        {
+          "round": 4,
+          "speaker": "student",
+          "content": "老师，能再说一遍吗？"
+        },
+        {
+          "round": 4,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 5,
+          "speaker": "student",
+          "content": "是不是麻黄？（猜的）"
+        },
+        {
+          "round": 5,
+          "speaker": "mentor",
+          "content": "很好！继续保持。",
+          "emotion": "celebrating"
+        }
+      ],
+      "timestamp": 1774592821999
+    },
+    {
+      "conversationId": "conv_1774592822476",
+      "totalScore": 0,
+      "maxScore": 75,
+      "grade": "D",
+      "dimensions": [
+        {
+          "dimension": "A1",
+          "subDimension": "上下文连贯性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A2",
+          "subDimension": "教学逻辑性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A3",
+          "subDimension": "角色一致性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A4",
+          "subDimension": "表达生动性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B1",
+          "subDimension": "苏格拉底引导",
+          "score": 0,
+          "maxScore": 15,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B2",
+          "subDimension": "知识点准确性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B3",
+          "subDimension": "学习适应性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        }
+      ],
+      "summary": "总结生成失败",
+      "transcript": [
+        {
+          "round": 1,
+          "speaker": "mentor",
+          "content": "欢迎来到药灵山谷，我是青木先生。让我们开始今天的学习吧！",
+          "emotion": "happy"
+        },
+        {
+          "round": 2,
+          "speaker": "student",
+          "content": "是不是可以治疗感冒？"
+        },
+        {
+          "round": 2,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 3,
+          "speaker": "student",
+          "content": "这味药味道有点辛？"
+        },
+        {
+          "round": 3,
+          "speaker": "mentor",
+          "content": "没关系，再想想，从它的性味入手。",
+          "emotion": "concerned"
+        },
+        {
+          "round": 4,
+          "speaker": "student",
+          "content": "我记得好像是温性的"
+        },
+        {
+          "round": 4,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 5,
+          "speaker": "student",
+          "content": "发汗...是不是能出汗的意思？"
+        },
+        {
+          "round": 5,
+          "speaker": "mentor",
+          "content": "很好！继续保持。",
+          "emotion": "celebrating"
+        }
+      ],
+      "timestamp": 1774592822536
+    },
+    {
+      "conversationId": "conv_1774592823219",
+      "totalScore": 0,
+      "maxScore": 75,
+      "grade": "D",
+      "dimensions": [
+        {
+          "dimension": "A1",
+          "subDimension": "上下文连贯性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A2",
+          "subDimension": "教学逻辑性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A3",
+          "subDimension": "角色一致性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A4",
+          "subDimension": "表达生动性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B1",
+          "subDimension": "苏格拉底引导",
+          "score": 0,
+          "maxScore": 15,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B2",
+          "subDimension": "知识点准确性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B3",
+          "subDimension": "学习适应性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        }
+      ],
+      "summary": "总结生成失败",
+      "transcript": [
+        {
+          "round": 1,
+          "speaker": "mentor",
+          "content": "欢迎来到药灵山谷，我是青木先生。让我们开始今天的学习吧！",
+          "emotion": "happy"
+        },
+        {
+          "round": 2,
+          "speaker": "student",
+          "content": "是不是可以治疗感冒？"
+        },
+        {
+          "round": 2,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 3,
+          "speaker": "student",
+          "content": "我还是不太确定，请老师再提示一下"
+        },
+        {
+          "round": 3,
+          "speaker": "mentor",
+          "content": "没关系，再想想，从它的性味入手。",
+          "emotion": "concerned"
+        },
+        {
+          "round": 4,
+          "speaker": "student",
+          "content": "老师，我还是不明白，请直接告诉我答案吧"
+        },
+        {
+          "round": 4,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        }
+      ],
+      "timestamp": 1774592823276
+    },
+    {
+      "conversationId": "conv_1774592823757",
+      "totalScore": 0,
+      "maxScore": 75,
+      "grade": "D",
+      "dimensions": [
+        {
+          "dimension": "A1",
+          "subDimension": "上下文连贯性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A2",
+          "subDimension": "教学逻辑性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A3",
+          "subDimension": "角色一致性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A4",
+          "subDimension": "表达生动性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B1",
+          "subDimension": "苏格拉底引导",
+          "score": 0,
+          "maxScore": 15,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B2",
+          "subDimension": "知识点准确性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B3",
+          "subDimension": "学习适应性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        }
+      ],
+      "summary": "总结生成失败",
+      "transcript": [
+        {
+          "round": 1,
+          "speaker": "mentor",
+          "content": "欢迎来到药灵山谷，我是青木先生。让我们开始今天的学习吧！",
+          "emotion": "happy"
+        },
+        {
+          "round": 2,
+          "speaker": "student",
+          "content": "我记得好像是温性的"
+        },
+        {
+          "round": 2,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 3,
+          "speaker": "student",
+          "content": "发汗...是不是能出汗的意思？"
+        },
+        {
+          "round": 3,
+          "speaker": "mentor",
+          "content": "没关系，再想想，从它的性味入手。",
+          "emotion": "concerned"
+        },
+        {
+          "round": 4,
+          "speaker": "student",
+          "content": "这味药味道有点辛？"
+        },
+        {
+          "round": 4,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 5,
+          "speaker": "student",
+          "content": "是不是归肺经？"
+        },
+        {
+          "round": 5,
+          "speaker": "mentor",
+          "content": "很好！继续保持。",
+          "emotion": "celebrating"
+        }
+      ],
+      "timestamp": 1774592823817
+    },
+    {
+      "conversationId": "conv_1774592826505",
+      "totalScore": 0,
+      "maxScore": 75,
+      "grade": "D",
+      "dimensions": [
+        {
+          "dimension": "A1",
+          "subDimension": "上下文连贯性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A2",
+          "subDimension": "教学逻辑性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A3",
+          "subDimension": "角色一致性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A4",
+          "subDimension": "表达生动性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B1",
+          "subDimension": "苏格拉底引导",
+          "score": 0,
+          "maxScore": 15,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B2",
+          "subDimension": "知识点准确性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B3",
+          "subDimension": "学习适应性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        }
+      ],
+      "summary": "总结生成失败",
+      "transcript": [
+        {
+          "round": 1,
+          "speaker": "mentor",
+          "content": "欢迎来到药灵山谷，我是青木先生。让我们开始今天的学习吧！",
+          "emotion": "happy"
+        },
+        {
+          "round": 2,
+          "speaker": "student",
+          "content": "这味药性味辛温，归肺、膀胱经"
+        },
+        {
+          "round": 2,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 3,
+          "speaker": "student",
+          "content": "四气是寒热温凉，麻黄应该是温性的"
+        },
+        {
+          "round": 3,
+          "speaker": "mentor",
+          "content": "没关系，再想想，从它的性味入手。",
+          "emotion": "concerned"
+        },
+        {
+          "round": 4,
+          "speaker": "student",
+          "content": "是不是因为它辛温发散的特性？"
+        },
+        {
+          "round": 4,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 5,
+          "speaker": "student",
+          "content": "这味药性味辛温，归肺、膀胱经"
+        },
+        {
+          "round": 5,
+          "speaker": "mentor",
+          "content": "很好！继续保持。",
+          "emotion": "celebrating"
+        }
+      ],
+      "timestamp": 1774592826578
+    },
+    {
+      "conversationId": "conv_1774592839630",
+      "totalScore": 0,
+      "maxScore": 75,
+      "grade": "D",
+      "dimensions": [
+        {
+          "dimension": "A1",
+          "subDimension": "上下文连贯性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A2",
+          "subDimension": "教学逻辑性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A3",
+          "subDimension": "角色一致性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A4",
+          "subDimension": "表达生动性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B1",
+          "subDimension": "苏格拉底引导",
+          "score": 0,
+          "maxScore": 15,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B2",
+          "subDimension": "知识点准确性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B3",
+          "subDimension": "学习适应性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        }
+      ],
+      "summary": "总结生成失败",
+      "transcript": [
+        {
+          "round": 1,
+          "speaker": "mentor",
+          "content": "欢迎来到药灵山谷，我是青木先生。让我们开始今天的学习吧！",
+          "emotion": "happy"
+        },
+        {
+          "round": 2,
+          "speaker": "student",
+          "content": "四气是寒热温凉，麻黄应该是温性的"
+        },
+        {
+          "round": 2,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 3,
+          "speaker": "student",
+          "content": "这味药性味辛温，归肺、膀胱经"
+        },
+        {
+          "round": 3,
+          "speaker": "mentor",
+          "content": "没关系，再想想，从它的性味入手。",
+          "emotion": "concerned"
+        },
+        {
+          "round": 4,
+          "speaker": "student",
+          "content": "老师，我还是不明白，请直接告诉我答案吧"
+        },
+        {
+          "round": 4,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        }
+      ],
+      "timestamp": 1774592839692
+    },
+    {
+      "conversationId": "conv_1774592840341",
+      "totalScore": 0,
+      "maxScore": 75,
+      "grade": "D",
+      "dimensions": [
+        {
+          "dimension": "A1",
+          "subDimension": "上下文连贯性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A2",
+          "subDimension": "教学逻辑性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A3",
+          "subDimension": "角色一致性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "A4",
+          "subDimension": "表达生动性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B1",
+          "subDimension": "苏格拉底引导",
+          "score": 0,
+          "maxScore": 15,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B2",
+          "subDimension": "知识点准确性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        },
+        {
+          "dimension": "B3",
+          "subDimension": "学习适应性",
+          "score": 0,
+          "maxScore": 10,
+          "feedback": "评估失败",
+          "issues": [
+            "fetch failed"
+          ],
+          "suggestions": [
+            "请检查API配置"
+          ]
+        }
+      ],
+      "summary": "总结生成失败",
+      "transcript": [
+        {
+          "round": 1,
+          "speaker": "mentor",
+          "content": "欢迎来到药灵山谷，我是青木先生。让我们开始今天的学习吧！",
+          "emotion": "happy"
+        },
+        {
+          "round": 2,
+          "speaker": "student",
+          "content": "麻黄辛温，入肺膀胱经，主要功效是发汗解表、宣肺平喘"
+        },
+        {
+          "round": 2,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 3,
+          "speaker": "student",
+          "content": "我记得《伤寒论》里说麻黄汤主之"
+        },
+        {
+          "round": 3,
+          "speaker": "mentor",
+          "content": "没关系，再想想，从它的性味入手。",
+          "emotion": "concerned"
+        },
+        {
+          "round": 4,
+          "speaker": "student",
+          "content": "我记得《伤寒论》里说麻黄汤主之"
+        },
+        {
+          "round": 4,
+          "speaker": "mentor",
+          "content": "这味药很有趣，你觉得它可能有什么功效呢？",
+          "emotion": "thinking"
+        },
+        {
+          "round": 5,
+          "speaker": "student",
+          "content": "我记得《伤寒论》里说麻黄汤主之"
+        },
+        {
+          "round": 5,
+          "speaker": "mentor",
+          "content": "很好！继续保持。",
+          "emotion": "celebrating"
+        }
+      ],
+      "timestamp": 1774592840416
+    }
+  ]
+}

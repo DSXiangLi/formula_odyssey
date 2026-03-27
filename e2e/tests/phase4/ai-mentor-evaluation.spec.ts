@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { AIMentorEvaluationService, ConversationEvaluation } from '../services/mentorEvaluation';
-import { AIStudentSimulator, StudentProfile } from '../services/studentSimulator';
+import fs from 'fs';
+import path from 'path';
+import { AIMentorEvaluationService, ConversationEvaluation } from '../../services/mentorEvaluation';
+import { AIStudentSimulator, StudentProfile } from '../../services/studentSimulator';
 
 /**
  * Phase 4: AI导师系统端到端测试
@@ -210,13 +212,14 @@ test.describe('Phase 4: AI导师系统端到端测试', () => {
   });
 
   test.describe('场景5：不同学生类型测试', () => {
-    test.each([
-      { personality: 'struggling', name: '学渣弟子' },
-      { personality: 'average', name: '普通弟子' },
-      { personality: 'excellent', name: '学霸弟子' },
-    ] as { personality: 'struggling' | 'average' | 'excellent'; name: string }[])(
-      '$name 类型学生对话测试',
-      async ({ personality, name }) => {
+    const studentTypes = [
+      { personality: 'struggling' as const, name: '学渣弟子' },
+      { personality: 'average' as const, name: '普通弟子' },
+      { personality: 'excellent' as const, name: '学霸弟子' },
+    ];
+
+    for (const { personality, name } of studentTypes) {
+      test(`${name} 类型学生对话测试`, async () => {
         const profile: StudentProfile = {
           personality,
           name,
@@ -242,8 +245,8 @@ test.describe('Phase 4: AI导师系统端到端测试', () => {
         transcript.forEach((turn) => {
           console.log(`${turn.speaker === 'mentor' ? '青木先生' : name}: ${turn.content}`);
         });
-      }
-    );
+      });
+    }
   });
 });
 
@@ -336,8 +339,6 @@ test.describe('Phase 4：评估报告汇总', () => {
       evaluations: allEvaluations,
     };
 
-    const fs = require('fs');
-    const path = require('path');
     const outputDir = './e2e/reports';
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
