@@ -41,6 +41,7 @@ export interface Enemy {
   attackDamage: number;
   attackInterval: number;  // ms
   lastAttackTime: number;
+  spawnTime: number;       // 敌人生成时间戳，用于安全期判断
 }
 
 export interface KnowledgeCard {
@@ -246,3 +247,96 @@ export const COMBO_MULTIPLIERS = [1, 1.1, 1.2, 1.3, 1.5, 2];
 
 // 连击超时时间（毫秒）
 export const COMBO_TIMEOUT = 3000;
+
+// ============================================
+// 药灵驯服游戏机制 - 新类型定义 (v3.0)
+// ============================================
+
+// 药灵实体
+export interface MedicineSpirit {
+  id: string;
+  medicineId: string;
+  name: string;
+  displayName: string;
+  imageUrl: string;
+  difficulty: 'normal' | 'elite' | 'boss';
+  personality: 'gentle' | 'lively' | 'dignified';
+  position: { x: number; y: number };
+  tameProgress: number;  // 0-100
+  state: 'floating' | 'asking' | 'tamed' | 'escaped';
+  isActive: boolean;
+  floatPhase: number;  // 漂浮相位
+  question: SpiritQuestion;
+}
+
+// 药灵问题
+export interface SpiritQuestion {
+  id: string;
+  type: 'recall' | 'judge' | 'choice' | 'free';
+  question: string;
+  options?: string[];
+  acceptableAnswers: string[];
+  hint: string;
+  knowledgeType: 'name' | 'properties' | 'effects' | 'formula';
+}
+
+// AI答案评判结果
+export interface AnswerEvaluation {
+  score: 1 | 2 | 3 | 4 | 5;
+  isCorrect: boolean;
+  feedback: string;
+  bonusInfo?: string;
+}
+
+// 驯服结果
+export interface TameResult {
+  spiritId: string;
+  evaluation: AnswerEvaluation;
+  newProgress: number;
+  isTamed: boolean;
+}
+
+// 技能
+export interface SpiritSkill {
+  id: 'hint_flash' | 'encyclopedia' | 'mentor_hint';
+  name: string;
+  description: string;
+  icon: string;
+  cooldown: number;
+  currentCooldown: number;
+  effect: SpiritSkillEffect;
+}
+
+export type SpiritSkillEffect =
+  | { type: 'show_hint'; hintType: 'first_char' | 'length' }
+  | { type: 'show_description' }
+  | { type: 'mentor_answer'; scorePenalty: number };
+
+// 重构BattleState
+export interface SpiritBattleState {
+  status: 'waiting' | 'playing' | 'paused' | 'victory' | 'defeat';
+  wave: number;
+  totalWaves: number;
+  spirits: MedicineSpirit[];
+  activeSpiritId: string | null;
+  score: number;
+  combo: number;
+  maxCombo: number;
+  timeElapsed: number;
+  tamedCount: number;
+  totalSpirits: number;
+  skills: SpiritSkill[];
+  inputText: string;
+  lastEvaluation: AnswerEvaluation | null;
+}
+
+// 战斗结果
+export interface SpiritBattleResult {
+  victory: boolean;
+  score: number;
+  maxCombo: number;
+  wavesCleared: number;
+  timeElapsed: number;
+  tamedSpirits: string[];
+  accuracy: number;
+}
