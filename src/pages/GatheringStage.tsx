@@ -7,15 +7,11 @@ import { useMapStore } from '../stores/mapStore';
 import { MapGenerator } from '../systems/map/MapGenerator';
 import { GameMap, Tile, Position } from '../systems/map/types';
 import { IsometricMap } from '../components/map/IsometricMap';
-import { DiggingMinigame } from '../components/minigames/DiggingMinigame';
-import TappingMinigame from '../components/minigames/TappingMinigame';
-import LassoMinigame from '../components/minigames/LassoMinigame';
+import { MemoryMinigame } from '../components/minigames/MemoryMinigame';
 import { getChapterById } from '../data/chapters';
-import { CollectionType, WuxingType } from '../types';
+import { WuxingType } from '../types';
 import { Medicine } from '../types/medicine';
-import { DiggingResult } from '../systems/minigames/DiggingGame';
-import { TappingResult } from '../systems/minigames/TappingGame';
-import { LassoResult } from '../systems/minigames/LassoGame';
+import { MemoryGameResult, MedicineForMemory } from '../systems/minigames/MemoryGame';
 import type { StageProps, GatheringResult } from '../types/stage';
 
 // Medicine data import
@@ -240,56 +236,48 @@ export const GatheringStage: React.FC<StageProps> = ({
     setTimeout(() => setNotification(null), 2000);
   };
 
-  // Get minigame component based on collection type
+  // Get minigame component - 统一使用记忆翻牌游戏
   const getMinigameComponent = () => {
-    if (!currentMedicine || !selectedTile?.medicine) return null;
+    if (!chapterMedicines.length) return null;
 
-    const collectionType = selectedTile.medicine.collectionType;
-    const rarity = currentMedicine.rarity;
+    // 准备药材数据用于记忆游戏
+    const medicinesForGame: MedicineForMemory[] = chapterMedicines.map(m => ({
+      id: m.id,
+      name: m.name,
+      pinyin: m.pinyin || '',
+      fourQi: (m as any).fourQi || '温',
+      fiveFlavors: (m as any).fiveFlavors || ['甘'],
+      functions: m.functions?.length ? m.functions : ['调和'],
+    }));
 
-    const handleMinigameComplete = (result: DiggingResult | TappingResult | LassoResult) => {
-      handleCollectionComplete(result.success, currentMedicine.medicine, rarity);
-    };
+    const handleMinigameComplete = (result: MemoryGameResult) => {
+      // 根据游戏结果决定采集哪些药材
+      // 至少采集1个，最多采集配对成功的数量
+      const collectCount = Math.max(1, Math.min(result.matchedMedicines.length, chapterMedicines.length));
+      const medicinesToCollect = chapterMedicines.slice(0, collectCount);
 
-    const handleMinigameCancel = () => {
+      medicinesToCollect.forEach(medicine => {
+        handleCollectionComplete(true, medicine, 'common');
+      });
+
       setShowMinigame(false);
       setSelectedTile(null);
       setCurrentMedicine(null);
     };
 
-    switch (collectionType) {
-      case CollectionType.Digging:
-        return (
-          <DiggingMinigame
-            rarity={rarity}
-            onComplete={handleMinigameComplete as (result: DiggingResult) => void}
-          />
-        );
-      case CollectionType.Tapping:
-        return (
-          <TappingMinigame
-            rarity={rarity}
-            onComplete={handleMinigameComplete as (result: TappingResult) => void}
-            onCancel={handleMinigameCancel}
-          />
-        );
-      case CollectionType.Lasso:
-        return (
-          <LassoMinigame
-            rarity={rarity}
-            onComplete={handleMinigameComplete as (result: LassoResult) => void}
-            onCancel={handleMinigameCancel}
-          />
-        );
-      default:
-        // Default to digging for searching type
-        return (
-          <DiggingMinigame
-            rarity={rarity}
-            onComplete={handleMinigameComplete as (result: DiggingResult) => void}
-          />
-        );
-    }
+    const handleMinigameExit = () => {
+      setShowMinigame(false);
+      setSelectedTile(null);
+      setCurrentMedicine(null);
+    };
+
+    return (
+      <MemoryMinigame
+        medicines={medicinesForGame}
+        onComplete={handleMinigameComplete}
+        onExit={handleMinigameExit}
+      />
+    );
   };
 
   // Handle collection complete
@@ -416,9 +404,9 @@ export const GatheringStage: React.FC<StageProps> = ({
   const themeColors = getWuxingColors(chapter.wuxing);
 
   return (
-    <div className={`min-h-screen ${themeColors.bg} p-4`}>
+    <div data-testid="gathering-stage" className={`min-h-screen ${themeColors.bg} p-4`}>
       {/* Header */}
-      <div className="max-w-6xl mx-auto mb-4">
+      <div data-testid="gathering-header" className="max-w-6xl mx-auto mb-4">
         <div className="bg-white rounded-xl shadow-lg p-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
@@ -519,7 +507,7 @@ export const GatheringStage: React.FC<StageProps> = ({
         </div>
 
         {/* Center - Map */}
-        <div className="lg:col-span-3">
+        <div data-testid="gathering-map" className="lg:col-span-3">
           <div
             className="rounded-xl shadow-lg p-4"
             style={{

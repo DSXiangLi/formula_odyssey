@@ -12,10 +12,10 @@ describe('SpiritImageService', () => {
     pinyin: 'dang gui',
     latinName: 'Angelica sinensis',
     category: '补血药',
-    wuxing: WuxingType.wood,
-    fourQi: FourQi.warm,
+    wuxing: WuxingType.Wood,
+    fourQi: FourQi.Warm,
     fiveFlavors: ['甘', '辛'],
-    movement: Movement.ascending,
+    movement: Movement.Ascending,
     meridians: ['肝', '心', '脾'],
     toxicity: '无毒',
     functions: ['补血活血', '调经止痛', '润肠通便'],
@@ -32,10 +32,10 @@ describe('SpiritImageService', () => {
     pinyin: 'shen mi cao yao',
     latinName: 'Mysterious Herba',
     category: '未知',
-    wuxing: WuxingType.water,
-    fourQi: FourQi.cool,
+    wuxing: WuxingType.Water,
+    fourQi: FourQi.Cool,
     fiveFlavors: ['甘'],
-    movement: Movement.floating,
+    movement: Movement.Floating,
     meridians: ['肺'],
     toxicity: '无毒',
     functions: ['清热解毒'],
@@ -260,15 +260,15 @@ describe('SpiritImageService', () => {
     it('should use different emojis for different difficulties', async () => {
       const noKeyService = new SpiritImageService({ apiKey: '' });
       const normalResult = await noKeyService.generateSpiritImage(
-        { ...mockMedicine, wuxing: WuxingType.wood },
+        { ...mockMedicine, wuxing: WuxingType.Wood },
         'normal'
       );
       const eliteResult = await noKeyService.generateSpiritImage(
-        { ...mockMedicine, wuxing: WuxingType.wood },
+        { ...mockMedicine, wuxing: WuxingType.Wood },
         'elite'
       );
       const bossResult = await noKeyService.generateSpiritImage(
-        { ...mockMedicine, wuxing: WuxingType.wood },
+        { ...mockMedicine, wuxing: WuxingType.Wood },
         'boss'
       );
 
@@ -285,10 +285,10 @@ describe('SpiritImageService', () => {
         pinyin: 'mu yao',
         latinName: 'Wood Herba',
         category: '测试',
-        wuxing: WuxingType.wood,
-        fourQi: FourQi.warm,
+        wuxing: WuxingType.Wood,
+        fourQi: FourQi.Warm,
         fiveFlavors: ['甘'],
-        movement: Movement.ascending,
+        movement: Movement.Ascending,
         meridians: ['肝'],
         toxicity: '无毒',
         functions: ['测试'],
@@ -303,10 +303,10 @@ describe('SpiritImageService', () => {
         pinyin: 'huo yao',
         latinName: 'Fire Herba',
         category: '测试',
-        wuxing: WuxingType.fire,
-        fourQi: FourQi.hot,
+        wuxing: WuxingType.Fire,
+        fourQi: FourQi.Hot,
         fiveFlavors: ['苦'],
-        movement: Movement.ascending,
+        movement: Movement.Ascending,
         meridians: ['心'],
         toxicity: '无毒',
         functions: ['测试'],
@@ -321,10 +321,10 @@ describe('SpiritImageService', () => {
         pinyin: 'shui yao',
         latinName: 'Water Herba',
         category: '测试',
-        wuxing: WuxingType.water,
-        fourQi: FourQi.cold,
+        wuxing: WuxingType.Water,
+        fourQi: FourQi.Cold,
         fiveFlavors: ['咸'],
-        movement: Movement.floating,
+        movement: Movement.Floating,
         meridians: ['肾'],
         toxicity: '无毒',
         functions: ['测试'],
@@ -374,7 +374,7 @@ describe('SpiritImageService', () => {
       const noKeyService = new SpiritImageService({ apiKey: '' });
       const waterMedicine: Medicine = {
         ...mockMedicineGeneric,
-        wuxing: WuxingType.water,
+        wuxing: WuxingType.Water,
       };
 
       const result = await noKeyService.generateSpiritImage(waterMedicine, 'normal');

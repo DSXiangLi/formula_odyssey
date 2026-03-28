@@ -44,7 +44,13 @@ const MEDICINE_CHARACTER_DESCRIPTIONS: Record<string, string> = {
 };
 
 // 难度对应的风格描述
-const DIFFICULTY_STYLE_DESCRIPTIONS: Record<string, Record<string, string>> = {
+interface DifficultyStyle {
+  prefix: string;
+  suffix: string;
+  size: { width: number; height: number };
+}
+
+const DIFFICULTY_STYLE_DESCRIPTIONS: Record<string, DifficultyStyle> = {
   normal: {
     prefix: 'Cute chibi style, adorable and friendly appearance, big sparkling eyes, soft pastel colors, kawaii aesthetic, rounded features',
     suffix: 'cute chibi character, game sprite, white background, 4K, highly detailed',

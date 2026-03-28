@@ -33,24 +33,28 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+    <div data-testid="dialogue-box" className="bg-white rounded-xl shadow-lg overflow-hidden">
       {/* Header */}
-      <div className="bg-gray-100 px-4 py-2 flex items-center gap-2">
-        <MentorAvatar expression={lastMessage?.emotion || 'happy'} wuxing={wuxing} size="sm" />
-        <span className="font-medium">青木先生</span>
-        {isLoading && <span className="text-xs text-gray-500">思考中...</span>}
+      <div data-testid="dialogue-header" className="bg-gray-100 px-4 py-2 flex items-center gap-2">
+        <div data-testid="dialogue-avatar">
+          <MentorAvatar expression={lastMessage?.emotion || 'happy'} wuxing={wuxing} size="sm" />
+        </div>
+        <span data-testid="mentor-name" className="font-medium">青木先生</span>
+        {isLoading && <span data-testid="loading-indicator" className="text-xs text-gray-500">思考中...</span>}
       </div>
 
       {/* Messages */}
-      <div className="h-64 overflow-y-auto p-4 space-y-4">
+      <div data-testid="messages-container" className="h-64 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 && (
-          <div className="text-center text-gray-400 py-8">
+          <div data-testid="empty-message" className="text-center text-gray-400 py-8">
             开始与青木先生的对话...
           </div>
         )}
         {messages.map((msg) => (
           <div
             key={msg.id}
+            data-testid={`message-${msg.role}`}
+            data-message-role={msg.role}
             className={`flex gap-3 ${msg.role === 'student' ? 'flex-row-reverse' : ''}`}
           >
             {msg.role === 'mentor' && (
@@ -71,9 +75,10 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
       </div>
 
       {/* Input */}
-      <form onSubmit={handleSubmit} className="p-4 border-t">
+      <form data-testid="dialogue-form" onSubmit={handleSubmit} className="p-4 border-t">
         <div className="flex gap-2">
           <input
+            data-testid="dialogue-input"
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -82,6 +87,7 @@ export const DialogueBox: React.FC<DialogueBoxProps> = ({
             disabled={isLoading}
           />
           <button
+            data-testid="dialogue-send"
             type="submit"
             disabled={isLoading || !input.trim()}
             className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50"

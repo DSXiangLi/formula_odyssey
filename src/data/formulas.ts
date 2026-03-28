@@ -188,11 +188,30 @@ export function searchFormulas(query: string): FormulaData[] {
   );
 }
 
+/**
+ * 通过章节ID获取方剂
+ * 每章返回2个相关方剂
+ */
+export function getFormulasByChapter(chapterId: string): FormulaData[] {
+  // 章节与方剂的映射关系
+  const chapterFormulaMap: Record<string, string[]> = {
+    'ch1': ['mahuang_tang', 'guizhi_tang'], // 解表剂
+    'ch2': ['sijunzi_tang', ' Lizhong_wan'], // 补益剂、温里剂
+    'ch3': ['baihu_tang', 'dachengqi_tang'], // 清热剂、泻下剂
+    'ch4': ['sini_tang', 'mahuang_tang'], // 温里剂、解表剂
+    'ch5': ['guizhi_tang', 'sijunzi_tang'], // 解表剂、补益剂
+  };
+
+  const formulaIds = chapterFormulaMap[chapterId] || ['mahuang_tang', 'guizhi_tang'];
+  return formulaIds.map(id => getFormulaById(id)).filter((f): f is FormulaData => f !== undefined);
+}
+
 export default {
   getAllFormulas,
   getFormulaById,
   getFormulaByName,
   getFormulasByCategory,
+  getFormulasByChapter,
   getUnlockedFormulas,
   searchFormulas,
 };

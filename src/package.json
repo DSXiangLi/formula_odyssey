@@ -18,7 +18,11 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:ui": "playwright test --ui",
     "test:ai": "playwright test e2e/tests/chapter-select.spec.ts e2e/tests/scene-visual.spec.ts",
-    "test:all": "npm run test:unit && npm run test:e2e"
+    "test:ai:e2e": "node src/tests/ai/cli.js",
+    "test:ai:full": "tsx src/tests/ai/run-tests.ts --all",
+    "test:ai:report": "tsx src/tests/ai/generate-report.ts",
+    "test:ai:category": "tsx src/tests/ai/run-tests.ts --category",
+    "test:all": "npm run test:unit && npm run test:e2e && npm run test:ai:report"
   },
   "dependencies": {
     "clsx": "^2.0.0",
