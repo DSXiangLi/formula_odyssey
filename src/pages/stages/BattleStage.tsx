@@ -6,8 +6,7 @@ import BattleScene from '../../components/battle/BattleScene';
 import { useChapterStore } from '../../stores/chapterStore';
 import { getAllMedicines, getMedicineByName } from '../../data/medicines';
 import { getChapterById } from '../../data/chapters';
-import { getAllFormulas } from '../../data/formulas';
-import { BattleMedicine, BattleFormula } from '../../systems/battle/types';
+import { Medicine } from '../../types';
 
 interface BattleStageProps extends Partial<StageProps> {}
 
@@ -33,15 +32,8 @@ const BattleStage: React.FC<BattleStageProps> = ({ chapterId: propChapterId, onC
       return collectedMedicineIds.map(id => {
         const med = getMedicineByName(id) || getAllMedicines().find(m => m.id === id);
         if (!med) return null;
-        return {
-          id: med.id,
-          name: med.name,
-          pinyin: med.pinyin,
-          fourQi: med.fourQi || '平',
-          fiveFlavors: med.fiveFlavors?.length > 0 ? med.fiveFlavors : ['甘'],
-          functions: med.functions,
-        };
-      }).filter(Boolean) as BattleMedicine[];
+        return med;
+      }).filter(Boolean) as Medicine[];
     }
 
     // 如果没有收集的药材，使用章节配置的药材
@@ -49,21 +41,19 @@ const BattleStage: React.FC<BattleStageProps> = ({ chapterId: propChapterId, onC
       return chapter.medicines.map(medName => {
         const med = getMedicineByName(medName);
         if (!med) return null;
-        return {
-          id: med.id,
-          name: med.name,
-          pinyin: med.pinyin,
-          fourQi: med.fourQi || '平',
-          fiveFlavors: med.fiveFlavors?.length > 0 ? med.fiveFlavors : ['甘'],
-          functions: med.functions,
-        };
-      }).filter(Boolean) as BattleMedicine[];
+        return med;
+      }).filter(Boolean) as Medicine[];
     }
 
     return [];
   }, [chapterId, getChapterProgress]);
 
-  const handleBattleComplete = (result: import('../../systems/battle/types').BattleResult) => {
+  const handleBattleComplete = (result: {
+    victory: boolean;
+    score: number;
+    maxCombo: number;
+    tamedSpirits: string[];
+  }) => {
     // Update chapter progress
     if (chapterId && result.victory) {
       completeStage(chapterId, 'battle');
@@ -81,23 +71,10 @@ const BattleStage: React.FC<BattleStageProps> = ({ chapterId: propChapterId, onC
     }
   };
 
-  // Transform MedicineData to BattleMedicine
-  const medicines: BattleMedicine[] = chapterMedicines.length > 0
+  // 如果没有收集的药材，使用默认的4个药材
+  const medicines = (chapterMedicines.length > 0
     ? chapterMedicines
-    : getAllMedicines().slice(0, 4).map(m => ({  // 降级：只取4个默认药材
-        id: m.id,
-        name: m.name,
-        pinyin: m.pinyin,
-        fourQi: m.fourQi || '平',
-        fiveFlavors: m.fiveFlavors?.length > 0 ? m.fiveFlavors : ['甘'],
-        functions: m.functions,
-      }));
-
-  const formulas: BattleFormula[] = getAllFormulas().slice(0, 5).map(f => ({
-    id: f.id,
-    name: f.name,
-    pinyin: f.pinyin || f.name,
-  }));
+    : getAllMedicines().slice(0, 4)) as Medicine[];
 
   return (
     <motion.div
@@ -107,10 +84,9 @@ const BattleStage: React.FC<BattleStageProps> = ({ chapterId: propChapterId, onC
       className="min-h-screen"
     >
       <BattleScene
-        chapterId={chapterId || 'default'}
         medicines={medicines}
-        formulas={formulas}
         onComplete={handleBattleComplete}
+        onExit={() => navigate(`/chapter/${chapterId}/stage`)}
       />
     </motion.div>
   );

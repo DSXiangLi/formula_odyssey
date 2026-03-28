@@ -63,7 +63,11 @@ export interface WaveConfig {
   specialRules?: string[];
 }
 
-export interface Skill {
+// ============================================
+// 旧版战斗系统类型 (v2.0 - 打字战斗)
+// ============================================
+
+export interface LegacySkill {
   id: string;
   name: string;
   description: string;
@@ -71,17 +75,17 @@ export interface Skill {
   cooldown: number;
   duration: number;
   currentCooldown: number;
-  effect: SkillEffect;
+  effect: LegacySkillEffect;
 }
 
-export type SkillEffect =
+export type LegacySkillEffect =
   | { type: 'slow_motion'; factor: number }      // 时间减缓
   | { type: 'instant_kill'; count: number }     // 秒杀N个敌人
   | { type: 'heal'; amount: number }            // 恢复生命
   | { type: 'shield'; duration: number }        // 护盾
   | { type: 'hint_reveal'; duration: number };  // 显示答案
 
-export interface BattleState {
+export interface LegacyBattleState {
   phase: BattlePhase;
   currentWave: number;
   totalWaves: number;
@@ -93,13 +97,15 @@ export interface BattleState {
   timeElapsed: number;
   enemies: Enemy[];
   currentKnowledge?: KnowledgeCard;
-  skills: Skill[];
+  skills: LegacySkill[];
   waveStartTime: number;
   timeScale: number;         // 时间缩放因子（用于技能效果）
   shieldTimeRemaining: number; // 护盾剩余时间
 }
 
-export interface BattleResult {
+export { LegacySkill as Skill, LegacySkillEffect as SkillEffect };
+
+export interface LegacyBattleResult {
   victory: boolean;
   score: number;
   maxCombo: number;
@@ -130,8 +136,8 @@ export interface BattleEngineConfig {
   chapterId: string;
   medicines: BattleMedicine[];
   formulas: BattleFormula[];
-  onStateChange?: (state: BattleState) => void;
-  onBattleEnd?: (result: BattleResult) => void;
+  onStateChange?: (state: LegacyBattleState) => void;
+  onBattleEnd?: (result: LegacyBattleResult) => void;
 }
 
 // 输入结果类型
