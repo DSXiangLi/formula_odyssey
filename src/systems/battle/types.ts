@@ -312,8 +312,8 @@ export type SpiritSkillEffect =
   | { type: 'show_description' }
   | { type: 'mentor_answer'; scorePenalty: number };
 
-// 重构BattleState
-export interface SpiritBattleState {
+// 药灵战斗状态
+export interface BattleState {
   status: 'waiting' | 'playing' | 'paused' | 'victory' | 'defeat';
   wave: number;
   totalWaves: number;
@@ -330,8 +330,8 @@ export interface SpiritBattleState {
   lastEvaluation: AnswerEvaluation | null;
 }
 
-// 战斗结果
-export interface SpiritBattleResult {
+// 药灵战斗结果
+export interface BattleResult {
   victory: boolean;
   score: number;
   maxCombo: number;
