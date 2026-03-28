@@ -1,566 +1,633 @@
 import {
   BattleState,
-  BattlePhase,
-  Enemy,
-  WaveConfig,
+  MedicineSpirit,
+  SpiritQuestion,
+  AnswerEvaluation,
+  TameResult,
+  SpiritSkill,
   BattleResult,
-  BattleEngineConfig,
-  Question,
-  TargetTextType,
-  Skill,
-  InputResult,
-  BattleMedicine,
-  BattleFormula,
 } from './types';
+import { Medicine } from '../../types';
+import { spiritQuestionService } from '../../services/ai/SpiritQuestionService';
+import { spiritImageService } from '../../services/ai/SpiritImageService';
 
+// 战斗事件监听器
+export interface BattleEventListener {
+  onStateChange?: (state: BattleState) => void;
+  onSpiritTamed?: (spirit: MedicineSpirit) => void;
+  onWaveComplete?: (wave: number) => void;
+  onBattleEnd?: (result: BattleResult) => void;
+  onAnswerEvaluated?: (evaluation: AnswerEvaluation) => void;
+}
+
+// 战斗引擎配置
+export interface BattleEngineConfig {
+  chapterId: string;
+  medicines: Medicine[];
+  onStateChange?: (state: BattleState) => void;
+  onBattleEnd?: (result: BattleResult) => void;
+}
+
+/**
+ * BattleEngine - 药灵战斗引擎 (v3.0)
+ *
+ * 核心功能：
+ * - 4波药灵系统，每波数量不同（4, 4, 3, 1）
+ * - 难度递增：normal → elite → boss
+ * - 驯服机制：回答得分 × 5 = 进度增量（5分=25%）
+ * - 连击系统：连续正确增加连击，错误打断
+ * - AI集成：调用SpiritQuestionService和SpiritImageService
+ */
 export class BattleEngine {
   private state: BattleState;
-  private config: BattleEngineConfig;
-  private waveConfigs: WaveConfig[];
-  private spawnQueue: Enemy[] = [];
-  private lastSpawnTime: number = 0;
-  private questions: Question[] = [];
-  private correctAnswers: number = 0;
-  private totalQuestions: number = 0;
+  private medicines: Medicine[] = [];
+  private eventListeners: BattleEventListener[] = [];
+  private timerInterval: number | null = null;
+  private spiritImages: Record<string, string> = {};
 
-  constructor(config: BattleEngineConfig) {
-    this.config = config;
-    this.waveConfigs = this.createWaveConfigs();
-    this.questions = this.generateQuestions();
+  // 波次配置：4波，数量分别为 4, 4, 3, 1
+  private readonly WAVE_CONFIGS = [
+    { wave: 1, count: 4, difficulty: 'normal' as const },
+    { wave: 2, count: 4, difficulty: 'normal' as const },
+    { wave: 3, count: 3, difficulty: 'elite' as const },
+    { wave: 4, count: 1, difficulty: 'boss' as const },
+  ];
 
+  // 技能配置
+  private readonly SKILL_CONFIGS: SpiritSkill[] = [
+    {
+      id: 'hint_flash',
+      name: '灵光一闪',
+      description: '显示答案的首字或长度提示',
+      icon: '💡',
+      cooldown: 30,
+      currentCooldown: 0,
+      effect: { type: 'show_hint', hintType: 'first_char' },
+    },
+    {
+      id: 'encyclopedia',
+      name: '本草百科',
+      description: '显示药材的详细描述',
+      icon: '📚',
+      cooldown: 60,
+      currentCooldown: 0,
+      effect: { type: 'show_description' },
+    },
+    {
+      id: 'mentor_hint',
+      name: '师尊指点',
+      description: 'AI导师直接给出答案，但会扣减得分',
+      icon: '👨‍⚕️',
+      cooldown: 120,
+      currentCooldown: 0,
+      effect: { type: 'mentor_answer', scorePenalty: 0.5 },
+    },
+  ];
+
+  /**
+   * 构造函数
+   * @param medicines - 本章节的药材列表
+   */
+  constructor(medicines: Medicine[]) {
+    this.medicines = medicines;
+
+    // 初始化状态
     this.state = {
-      phase: 'preparing',
-      currentWave: 0,
+      status: 'waiting',
+      wave: 0,
       totalWaves: 4,
-      playerHealth: 100,
-      maxHealth: 100,
+      spirits: [],
+      activeSpiritId: null,
+      score: 0,
       combo: 0,
       maxCombo: 0,
-      score: 0,
       timeElapsed: 0,
-      enemies: [],
-      skills: this.createInitialSkills(),
-      waveStartTime: 0,
-      timeScale: 1,
-      shieldTimeRemaining: 0,
+      tamedCount: 0,
+      totalSpirits: 12, // 4 + 4 + 3 + 1
+      skills: this.initializeSkills(),
+      inputText: '',
+      lastEvaluation: null,
     };
   }
 
-  private createWaveConfigs(): WaveConfig[] {
-    return [
-      {
-        waveNumber: 1,
-        name: '药名辨识',
-        description: '输入药材名称击退邪灵',
-        enemyType: 'normal',
-        enemyCount: 5,
-        spawnInterval: 3000,
-        targetTextType: 'name',
-        timeLimit: 60,
-      },
-      {
-        waveNumber: 2,
-        name: '性味归经',
-        description: '输入四气五味信息',
-        enemyType: 'normal',
-        enemyCount: 5,
-        spawnInterval: 2500,
-        targetTextType: 'properties',
-        timeLimit: 60,
-      },
-      {
-        waveNumber: 3,
-        name: '功效主治',
-        description: '输入功效关键词',
-        enemyType: 'elite',
-        enemyCount: 3,
-        spawnInterval: 4000,
-        targetTextType: 'effects',
-        timeLimit: 90,
-      },
-      {
-        waveNumber: 4,
-        name: '方剂对决',
-        description: '输入完整方剂组成',
-        enemyType: 'boss',
-        enemyCount: 1,
-        spawnInterval: 0,
-        targetTextType: 'formula',
-        timeLimit: 120,
-      },
-    ];
+  /**
+   * 添加事件监听器
+   */
+  addEventListener(listener: BattleEventListener): void {
+    this.eventListeners.push(listener);
   }
 
-  private generateQuestions(): Question[] {
-    const questions: Question[] = [];
+  /**
+   * 移除事件监听器
+   */
+  removeEventListener(listener: BattleEventListener): void {
+    this.eventListeners = this.eventListeners.filter((l) => l !== listener);
+  }
 
-    // Generate name questions from medicines
-    this.config.medicines.forEach((medicine, index) => {
-      questions.push({
-        id: `name_${index}`,
-        type: 'input',
-        question: `这是什么药材？`,
-        correctAnswer: medicine.name,
-        hint: `提示：${medicine.pinyin}`,
-        knowledgeType: 'name',
-      });
-    });
+  /**
+   * 启动战斗
+   * - 预生成药灵形象
+   * - 生成药灵问题
+   * - 开始第一波
+   */
+  async start(): Promise<void> {
+    if (this.medicines.length === 0) {
+      throw new Error('No medicines available for battle');
+    }
 
-    // Generate property questions
-    this.config.medicines.forEach((medicine, index) => {
-      const nature = (medicine as any).fourQi || (medicine as any).nature || '';
-      const flavors = (medicine as any).fiveFlavors || [];
-      questions.push({
-        id: `prop_${index}`,
-        type: 'input',
-        question: `${medicine.name}的四气五味是什么？`,
-        correctAnswer: `${nature}${flavors.join('')}`,
-        hint: `提示：${nature}、${flavors.join('、')}`,
-        knowledgeType: 'properties',
-      });
-    });
+    // 预生成药灵形象
+    await this.preloadSpiritImages();
 
-    // Generate effect questions
-    this.config.medicines.forEach((medicine, index) => {
-      if (medicine.functions.length > 0) {
-        questions.push({
-          id: `effect_${index}`,
-          type: 'input',
-          question: `${medicine.name}的主要功效是？`,
-          correctAnswer: medicine.functions[0],
-          hint: `提示：${medicine.functions[0].substring(0, 2)}...`,
-          knowledgeType: 'effects',
-        });
+    // 更新状态为进行中
+    this.state.status = 'playing';
+    this.notifyStateChange();
+
+    // 启动定时器（每秒更新）
+    this.startTimer();
+
+    // 开始第一波
+    await this.startWave(1);
+  }
+
+  /**
+   * 预加载药灵形象
+   */
+  private async preloadSpiritImages(): Promise<void> {
+    try {
+      // 为每种难度生成一个形象
+      for (const config of this.WAVE_CONFIGS) {
+        const medicine = this.getRandomMedicine();
+        const imageUrl = await spiritImageService.generateSpiritImage(
+          medicine,
+          config.difficulty
+        );
+        if (imageUrl) {
+          this.spiritImages[`${medicine.id}_${config.difficulty}`] = imageUrl;
+        }
       }
-    });
-
-    // Generate formula questions
-    this.config.formulas.forEach((formula, index) => {
-      questions.push({
-        id: `formula_${index}`,
-        type: 'input',
-        question: `这个方剂的名称是？`,
-        correctAnswer: formula.name,
-        hint: `提示：${formula.pinyin}`,
-        knowledgeType: 'formula',
-      });
-    });
-
-    return questions;
-  }
-
-  private createInitialSkills(): Skill[] {
-    return [
-      {
-        id: 'slow_motion',
-        name: '定身术',
-        description: '时间减缓50%，持续5秒',
-        icon: '❄️',
-        cooldown: 30000,
-        duration: 5000,
-        currentCooldown: 0,
-        effect: { type: 'slow_motion', factor: 0.5 },
-      },
-      {
-        id: 'instant_kill',
-        name: '群体净化',
-        description: '清除最前面的3个敌人',
-        icon: '✨',
-        cooldown: 45000,
-        duration: 0,
-        currentCooldown: 0,
-        effect: { type: 'instant_kill', count: 3 },
-      },
-      {
-        id: 'heal',
-        name: '回春术',
-        description: '恢复30点生命值',
-        icon: '🌿',
-        cooldown: 60000,
-        duration: 0,
-        currentCooldown: 0,
-        effect: { type: 'heal', amount: 30 },
-      },
-      {
-        id: 'shield',
-        name: '护盾术',
-        description: '获得5秒无敌护盾',
-        icon: '🛡️',
-        cooldown: 90000,
-        duration: 5000,
-        currentCooldown: 0,
-        effect: { type: 'shield', duration: 5000 },
-      },
-      {
-        id: 'hint_reveal',
-        name: '灵光一现',
-        description: '显示所有敌人答案3秒',
-        icon: '💡',
-        cooldown: 120000,
-        duration: 3000,
-        currentCooldown: 0,
-        effect: { type: 'hint_reveal', duration: 3000 },
-      },
-    ];
-  }
-
-  start(): void {
-    this.state.phase = 'wave_start';
-    this.notifyStateChange();
-
-    // Start first wave after delay
-    setTimeout(() => this.startWave(1), 2000);
-  }
-
-  private startWave(waveNumber: number): void {
-    this.state.currentWave = waveNumber;
-    this.state.phase = waveNumber === 4 ? 'boss_intro' : 'spawning';
-    this.state.waveStartTime = Date.now();
-    this.spawnQueue = this.generateEnemies(waveNumber);
-    this.lastSpawnTime = Date.now();
-    this.notifyStateChange();
-
-    if (waveNumber === 4) {
-      // Boss wave has intro animation
-      setTimeout(() => {
-        this.state.phase = 'spawning';
-        this.notifyStateChange();
-      }, 3000);
+    } catch (error) {
+      console.error('Failed to preload spirit images:', error);
+      // 继续战斗，使用fallback图片
     }
   }
 
-  private generateEnemies(waveNumber: number): Enemy[] {
-    const config = this.waveConfigs[waveNumber - 1];
-    const enemies: Enemy[] = [];
+  /**
+   * 开始指定波次
+   */
+  private async startWave(waveNumber: number): Promise<void> {
+    const config = this.WAVE_CONFIGS[waveNumber - 1];
+    if (!config) {
+      this.endBattle(true);
+      return;
+    }
 
-    for (let i = 0; i < config.enemyCount; i++) {
-      const { text, pinyin, question } = this.generateTargetText(config.targetTextType);
-      const isBoss = config.enemyType === 'boss';
-      const isElite = config.enemyType === 'elite';
+    this.state.wave = waveNumber;
+    this.state.spirits = [];
+    this.state.activeSpiritId = null;
 
-      enemies.push({
-        id: `enemy_${waveNumber}_${i}_${Date.now()}`,
-        type: config.enemyType,
-        name: isBoss ? '邪灵王' : isElite ? '大邪灵' : '小邪灵',
-        health: isBoss ? 10 : isElite ? 3 : 1,
-        maxHealth: isBoss ? 10 : isElite ? 3 : 1,
-        speed: isBoss ? 15 : isElite ? 20 : 40,
-        position: { x: 400 + (Math.random() - 0.5) * 100, y: 50 },
-        targetText: text,
-        targetPinyin: pinyin,
+    // 生成药灵
+    const spirits = await this.generateSpirits(config.count, config.difficulty);
+    this.state.spirits = spirits;
+    this.state.totalSpirits = this.WAVE_CONFIGS.reduce((sum, c) => sum + c.count, 0);
+
+    // 激活第一个药灵
+    if (spirits.length > 0) {
+      this.activateSpirit(spirits[0].id);
+    }
+
+    this.notifyStateChange();
+  }
+
+  /**
+   * 生成药灵
+   */
+  private async generateSpirits(
+    count: number,
+    difficulty: 'normal' | 'elite' | 'boss'
+  ): Promise<MedicineSpirit[]> {
+    const spirits: MedicineSpirit[] = [];
+
+    for (let i = 0; i < count; i++) {
+      const medicine = this.getRandomMedicine();
+      const imageUrl =
+        this.spiritImages[`${medicine.id}_${difficulty}`] ||
+        (await spiritImageService.generateSpiritImage(medicine, difficulty));
+
+      // 为药灵生成问题
+      const questions = await spiritQuestionService.generateQuestionsBatch(
+        [medicine],
+        [
+          { type: 'recall', weight: 40 },
+          { type: 'judge', weight: 30 },
+          { type: 'choice', weight: 20 },
+          { type: 'free', weight: 10 },
+        ]
+      );
+
+      const question = questions[0] || this.getFallbackQuestion(medicine);
+
+      const spirit: MedicineSpirit = {
+        id: `spirit_${difficulty}_${i}_${Date.now()}`,
+        medicineId: medicine.id,
+        name: medicine.name,
+        displayName: this.getSpiritDisplayName(medicine.name, difficulty),
+        imageUrl: imageUrl || '',
+        difficulty,
+        personality: this.getRandomPersonality(),
+        position: { x: 100 + i * 150, y: 200 },
+        tameProgress: 0,
+        state: 'floating',
+        isActive: i === 0,
+        floatPhase: Math.random() * Math.PI * 2,
         question,
-        status: 'approaching',
-        reward: isBoss ? 100 : isElite ? 30 : 10,
-        attackRange: isBoss ? 50 : isElite ? 60 : 70,
-        attackDamage: isBoss ? 30 : isElite ? 20 : 10,
-        attackInterval: isBoss ? 2000 : isElite ? 1500 : 1000,
-        lastAttackTime: 0,
-      });
+      };
+
+      spirits.push(spirit);
     }
 
-    return enemies;
+    return spirits;
   }
 
-  private generateTargetText(type: TargetTextType): { text: string; pinyin: string; question: Question } {
-    switch (type) {
-      case 'name': {
-        const medicine = this.getRandomMedicine();
-        const question: Question = {
-          id: `target_${Date.now()}`,
-          type: 'input',
-          question: `这是什么药材？`,
-          correctAnswer: medicine.name,
-          hint: medicine.pinyin,
-          knowledgeType: 'name',
-        };
-        return { text: medicine.name, pinyin: medicine.pinyin, question };
-      }
-      case 'properties': {
-        const medicine = this.getRandomMedicine();
-        const text = `${medicine.fourQi}${medicine.fiveFlavors.join('')}`;
-        const question: Question = {
-          id: `target_${Date.now()}`,
-          type: 'input',
-          question: `${medicine.name}的四气五味是什么？`,
-          correctAnswer: text,
-          hint: `${medicine.fourQi}、${medicine.fiveFlavors.join('、')}`,
-          knowledgeType: 'properties',
-        };
-        return { text, pinyin: text, question };
-      }
-      case 'effects': {
-        const medicine = this.getRandomMedicine();
-        const functionText = medicine.functions[0] || '解表';
-        const question: Question = {
-          id: `target_${Date.now()}`,
-          type: 'input',
-          question: `${medicine.name}的主要功效是？`,
-          correctAnswer: functionText,
-          hint: functionText.substring(0, 2),
-          knowledgeType: 'effects',
-        };
-        return { text: functionText, pinyin: functionText, question };
-      }
-      case 'formula': {
-        const formula = this.getRandomFormula();
-        const pinyin = formula.pinyin || formula.name;
-        const question: Question = {
-          id: `target_${Date.now()}`,
-          type: 'input',
-          question: `这个方剂的名称是？`,
-          correctAnswer: formula.name,
-          hint: pinyin,
-          knowledgeType: 'formula',
-        };
-        return { text: formula.name, pinyin, question };
-      }
-      default:
-        return { text: '测试', pinyin: 'ce shi', question: this.questions[0] };
-    }
-  }
-
-  private getRandomMedicine(): BattleMedicine {
-    return this.config.medicines[Math.floor(Math.random() * this.config.medicines.length)];
-  }
-
-  private getRandomFormula(): BattleFormula {
-    return this.config.formulas[Math.floor(Math.random() * this.config.formulas.length)];
-  }
-
-  update(deltaTime: number): void {
-    // Apply time scale
-    const scaledDeltaTime = deltaTime * this.state.timeScale;
-
-    if (this.state.phase !== 'spawning' && this.state.phase !== 'fighting' && this.state.phase !== 'boss_fight') return;
-
-    this.state.timeElapsed += scaledDeltaTime;
-
-    // Update shield time
-    if (this.state.shieldTimeRemaining > 0) {
-      this.state.shieldTimeRemaining -= scaledDeltaTime;
-      if (this.state.shieldTimeRemaining < 0) {
-        this.state.shieldTimeRemaining = 0;
-      }
+  /**
+   * 提交答案
+   * @param answer - 玩家输入的答案
+   * @returns 驯服结果，如果没有激活的药灵则返回null
+   */
+  async submitAnswer(answer: string): Promise<TameResult | null> {
+    const activeSpirit = this.getActiveSpirit();
+    if (!activeSpirit) {
+      return null;
     }
 
-    // Update skill cooldowns
-    this.state.skills.forEach(skill => {
-      if (skill.currentCooldown > 0) {
-        skill.currentCooldown = Math.max(0, skill.currentCooldown - scaledDeltaTime);
-      }
+    const medicine = this.medicines.find((m) => m.id === activeSpirit.medicineId);
+    if (!medicine) {
+      return null;
+    }
+
+    // 调用AI评判答案
+    const evaluation = await spiritQuestionService.evaluateAnswer({
+      question: activeSpirit.question,
+      userAnswer: answer,
+      medicine,
     });
 
-    // Spawn enemies
-    if (this.state.phase === 'spawning' && this.spawnQueue.length > 0) {
-      const now = Date.now();
-      const config = this.waveConfigs[this.state.currentWave - 1];
-      if (now - this.lastSpawnTime >= config.spawnInterval) {
-        const enemy = this.spawnQueue.shift()!;
-        this.state.enemies.push(enemy);
-        this.lastSpawnTime = now;
+    this.state.lastEvaluation = evaluation;
 
-        if (this.spawnQueue.length === 0) {
-          this.state.phase = this.state.currentWave === 4 ? 'boss_fight' : 'fighting';
-        }
-      }
-    }
+    // 计算驯服进度增量：得分 × 5（5分=25%）
+    const progressIncrement = evaluation.score * 5;
+    const newProgress = Math.min(100, activeSpirit.tameProgress + progressIncrement);
 
-    const now = Date.now();
+    // 更新药灵状态
+    activeSpirit.tameProgress = newProgress;
 
-    // Update enemies
-    this.state.enemies = this.state.enemies.filter(enemy => {
-      // Defeated enemies are filtered out
-
-      // Move enemy towards player
-      if (enemy.status === 'approaching') {
-        enemy.position.y += enemy.speed * (scaledDeltaTime / 1000);
-
-        // Check if reached attack range
-        if (enemy.position.y >= 500 - enemy.attackRange) {
-          // Check if can attack
-          if (now - enemy.lastAttackTime >= enemy.attackInterval) {
-            enemy.status = 'attacking';
-            enemy.lastAttackTime = now;
-
-            // Deal damage if no shield
-            if (this.state.shieldTimeRemaining <= 0) {
-              this.state.playerHealth = Math.max(0, this.state.playerHealth - enemy.attackDamage);
-              this.state.combo = 0;
-            }
-
-            // Return to approaching after attack
-            setTimeout(() => {
-              if (enemy.status === 'attacking') {
-                enemy.status = 'approaching';
-              }
-            }, 500);
-
-            if (this.state.playerHealth <= 0) {
-              this.endBattle(false);
-            }
-          }
-        }
-      }
-
-      // Keep this enemy
-      return true;
-    });
-
-    // Check wave clear
-    if (this.state.enemies.length === 0 && this.spawnQueue.length === 0 && this.state.phase !== 'spawning') {
-      this.onWaveClear();
-    }
-
-    // Check time limit
-    const config = this.waveConfigs[this.state.currentWave - 1];
-    if (config.timeLimit) {
-      const elapsed = (Date.now() - this.state.waveStartTime) / 1000;
-      if (elapsed >= config.timeLimit) {
-        this.endBattle(false);
-      }
-    }
-
-    this.notifyStateChange();
-  }
-
-  onInput(input: string): InputResult {
-    this.totalQuestions++;
-
-    // Find enemy with matching text
-    for (const enemy of this.state.enemies) {
-      if (enemy.status !== 'approaching') continue;
-
-      // Exact match
-      if (input === enemy.targetText) {
-        this.defeatEnemy(enemy, true);
-        this.correctAnswers++;
-        return { type: 'exact_match', score: 100, enemyId: enemy.id };
-      }
-
-      // Pinyin match
-      if (input === enemy.targetPinyin) {
-        this.defeatEnemy(enemy, true);
-        this.correctAnswers++;
-        return { type: 'pinyin_match', score: 95, enemyId: enemy.id };
-      }
-
-      // Prefix match for pinyin input
-      if (enemy.targetPinyin.indexOf(input) === 0) {
-        return { type: 'prefix_match', progress: input.length / enemy.targetPinyin.length };
-      }
-    }
-
-    // Wrong input breaks combo
-    this.state.combo = 0;
-    this.notifyStateChange();
-    return { type: 'no_match' };
-  }
-
-  private defeatEnemy(enemy: Enemy, byPlayer: boolean): void {
-    enemy.status = 'defeated';
-
-    if (byPlayer) {
+    // 更新连击
+    if (evaluation.isCorrect) {
       this.state.combo++;
       this.state.maxCombo = Math.max(this.state.maxCombo, this.state.combo);
+    } else {
+      this.state.combo = 0;
+    }
 
-      // Calculate score with combo multiplier
-      const comboMultiplier = 1 + Math.floor(this.state.combo / 10) * 0.1;
-      this.state.score += Math.floor(enemy.reward * comboMultiplier);
+    // 计算得分（考虑连击倍率）
+    const comboMultiplier = 1 + Math.floor(this.state.combo / 5) * 0.1;
+    const scoreGain = Math.floor(evaluation.score * 10 * comboMultiplier);
+    this.state.score += scoreGain;
+
+    // 检查是否驯服完成
+    const isTamed = newProgress >= 100;
+    if (isTamed) {
+      activeSpirit.state = 'tamed';
+      activeSpirit.isActive = false;
+      this.state.tamedCount++;
+
+      // 通知驯服完成
+      this.notifySpiritTamed(activeSpirit);
+
+      // 切换到下一个药灵
+      this.moveToNextSpirit();
+    }
+
+    // 通知答案评判完成
+    this.notifyAnswerEvaluated(evaluation);
+
+    const result: TameResult = {
+      spiritId: activeSpirit.id,
+      evaluation,
+      newProgress,
+      isTamed,
+    };
+
+    this.notifyStateChange();
+    return result;
+  }
+
+  /**
+   * 激活指定药灵
+   */
+  activateSpirit(spiritId: string): void {
+    // 停用当前激活的药灵
+    if (this.state.activeSpiritId) {
+      const current = this.state.spirits.find((s) => s.id === this.state.activeSpiritId);
+      if (current) {
+        current.isActive = false;
+        current.state = 'floating';
+      }
+    }
+
+    // 激活新药灵
+    const spirit = this.state.spirits.find((s) => s.id === spiritId);
+    if (spirit && spirit.state !== 'tamed' && spirit.state !== 'escaped') {
+      spirit.isActive = true;
+      spirit.state = 'asking';
+      this.state.activeSpiritId = spiritId;
     }
 
     this.notifyStateChange();
   }
 
+  /**
+   * 切换到下一个药灵
+   */
+  private moveToNextSpirit(): void {
+    const currentIndex = this.state.spirits.findIndex((s) => s.id === this.state.activeSpiritId);
+    const nextSpirit = this.state.spirits.slice(currentIndex + 1).find(
+      (s) => s.state !== 'tamed' && s.state !== 'escaped'
+    );
+
+    if (nextSpirit) {
+      this.activateSpirit(nextSpirit.id);
+    } else {
+      // 当前波次完成
+      this.onWaveComplete();
+    }
+  }
+
+  /**
+   * 波次完成处理
+   */
+  private onWaveComplete(): void {
+    this.notifyWaveComplete(this.state.wave);
+
+    // 检查是否还有下一波
+    if (this.state.wave < this.state.totalWaves) {
+      setTimeout(() => {
+        this.startWave(this.state.wave + 1);
+      }, 2000);
+    } else {
+      // 所有波次完成
+      this.endBattle(true);
+    }
+  }
+
+  /**
+   * 使用技能
+   * @param skillId - 技能ID
+   * @returns 是否成功使用
+   */
   useSkill(skillId: string): boolean {
-    const skill = this.state.skills.filter(s => s.id === skillId)[0];
+    const skill = this.state.skills.find((s) => s.id === skillId);
     if (!skill || skill.currentCooldown > 0) {
       return false;
     }
 
+    // 设置冷却
     skill.currentCooldown = skill.cooldown;
 
-    switch (skill.effect.type) {
-      case 'slow_motion':
-        // Slow time
-        this.state.timeScale = skill.effect.factor;
-        setTimeout(() => {
-          this.state.timeScale = 1;
-          this.notifyStateChange();
-        }, skill.duration);
-        break;
-
-      case 'instant_kill':
-        // Clear front enemies
-        const sortedEnemies = [...this.state.enemies]
-          .filter(e => e.status === 'approaching')
-          .sort((a, b) => b.position.y - a.position.y);
-        const toClear = sortedEnemies.slice(0, skill.effect.count);
-        toClear.forEach(enemy => this.defeatEnemy(enemy, true));
-        break;
-
-      case 'heal':
-        this.state.playerHealth = Math.min(this.state.maxHealth, this.state.playerHealth + skill.effect.amount);
-        break;
-
-      case 'shield':
-        this.state.shieldTimeRemaining = skill.effect.duration;
-        break;
-
-      case 'hint_reveal':
-        // This would be handled by the UI layer
-        // Just trigger the effect duration
-        setTimeout(() => {
-          this.notifyStateChange();
-        }, skill.duration);
-        break;
-    }
+    // 应用技能效果
+    this.applySkillEffect(skill);
 
     this.notifyStateChange();
     return true;
   }
 
-  private onWaveClear(): void {
-    if (this.state.currentWave >= this.state.totalWaves) {
-      this.endBattle(true);
-    } else {
-      this.state.phase = 'wave_clear';
-      this.state.combo = 0;
-      this.notifyStateChange();
-      setTimeout(() => this.startWave(this.state.currentWave + 1), 2000);
+  /**
+   * 应用技能效果
+   */
+  private applySkillEffect(skill: SpiritSkill): void {
+    const activeSpirit = this.getActiveSpirit();
+    if (!activeSpirit) return;
+
+    switch (skill.effect.type) {
+      case 'show_hint':
+        // 显示提示在UI层处理
+        break;
+      case 'show_description':
+        // 显示描述在UI层处理
+        break;
+      case 'mentor_answer':
+        // AI导师直接给出答案，扣减得分
+        const penalty = skill.effect.scorePenalty || 0.5;
+        this.state.score = Math.floor(this.state.score * penalty);
+        break;
     }
   }
 
-  private endBattle(victory: boolean): void {
-    this.state.phase = 'ending';
-    this.notifyStateChange();
-
-    setTimeout(() => {
-      const result: BattleResult = {
-        victory,
-        score: this.state.score,
-        maxCombo: this.state.maxCombo,
-        wavesCleared: victory ? this.state.totalWaves : this.state.currentWave - 1,
-        timeElapsed: this.state.timeElapsed,
-        correctAnswers: this.correctAnswers,
-        totalQuestions: this.totalQuestions,
-      };
-      this.config.onBattleEnd?.(result);
-    }, 2000);
-  }
-
-  private notifyStateChange(): void {
-    this.config.onStateChange?.({ ...this.state });
-  }
-
+  /**
+   * 获取当前状态
+   */
   getState(): BattleState {
     return { ...this.state };
   }
 
-  getWaveConfig(): WaveConfig | undefined {
-    return this.waveConfigs[this.state.currentWave - 1];
+  /**
+   * 暂停战斗
+   */
+  pause(): void {
+    if (this.state.status === 'playing') {
+      this.state.status = 'paused';
+      this.stopTimer();
+      this.notifyStateChange();
+    }
   }
 
-  getSkills(): Skill[] {
-    return [...this.state.skills];
+  /**
+   * 恢复战斗
+   */
+  resume(): void {
+    if (this.state.status === 'paused') {
+      this.state.status = 'playing';
+      this.startTimer();
+      this.notifyStateChange();
+    }
+  }
+
+  /**
+   * 销毁战斗引擎
+   */
+  destroy(): void {
+    this.stopTimer();
+    this.eventListeners = [];
+    this.state.status = 'defeat';
+  }
+
+  /**
+   * 启动定时器
+   */
+  private startTimer(): void {
+    if (this.timerInterval) return;
+
+    // 使用全局setInterval，兼容浏览器和Node.js测试环境
+    const setIntervalFn = typeof window !== 'undefined' ? window.setInterval : setInterval;
+    this.timerInterval = setIntervalFn(() => {
+      this.update();
+    }, 1000) as unknown as number;
+  }
+
+  /**
+   * 停止定时器
+   */
+  private stopTimer(): void {
+    if (this.timerInterval) {
+      const clearIntervalFn = typeof window !== 'undefined' ? window.clearInterval : clearInterval;
+      clearIntervalFn(this.timerInterval);
+      this.timerInterval = null;
+    }
+  }
+
+  /**
+   * 定时更新
+   */
+  private update(): void {
+    if (this.state.status !== 'playing') return;
+
+    // 更新时间
+    this.state.timeElapsed++;
+
+    // 更新技能冷却
+    this.state.skills.forEach((skill) => {
+      if (skill.currentCooldown > 0) {
+        skill.currentCooldown--;
+      }
+    });
+
+    this.notifyStateChange();
+  }
+
+  /**
+   * 结束战斗
+   */
+  private endBattle(victory: boolean): void {
+    this.stopTimer();
+    this.state.status = victory ? 'victory' : 'defeat';
+
+    const result: BattleResult = {
+      victory,
+      score: this.state.score,
+      maxCombo: this.state.maxCombo,
+      wavesCleared: victory ? this.state.totalWaves : this.state.wave - 1,
+      timeElapsed: this.state.timeElapsed,
+      tamedSpirits: this.state.spirits.filter((s) => s.state === 'tamed').map((s) => s.id),
+      accuracy: this.calculateAccuracy(),
+    };
+
+    this.notifyBattleEnd(result);
+    this.notifyStateChange();
+  }
+
+  /**
+   * 计算准确率
+   */
+  private calculateAccuracy(): number {
+    const tamedCount = this.state.spirits.filter((s) => s.state === 'tamed').length;
+    const totalCount = this.state.spirits.length;
+    return totalCount > 0 ? Math.round((tamedCount / totalCount) * 100) : 0;
+  }
+
+  /**
+   * 获取激活的药灵
+   */
+  private getActiveSpirit(): MedicineSpirit | undefined {
+    return this.state.spirits.find((s) => s.id === this.state.activeSpiritId);
+  }
+
+  /**
+   * 获取随机药材
+   */
+  private getRandomMedicine(): Medicine {
+    return this.medicines[Math.floor(Math.random() * this.medicines.length)];
+  }
+
+  /**
+   * 获取药灵显示名称
+   */
+  private getSpiritDisplayName(medicineName: string, difficulty: string): string {
+    const prefixes: Record<string, string> = {
+      normal: '小',
+      elite: '',
+      boss: '大',
+    };
+    const suffixes: Record<string, string> = {
+      normal: '灵',
+      elite: '精',
+      boss: '王',
+    };
+    return `${prefixes[difficulty] || ''}${medicineName}${suffixes[difficulty] || '灵'}`;
+  }
+
+  /**
+   * 获取随机性格
+   */
+  private getRandomPersonality(): 'gentle' | 'lively' | 'dignified' {
+    const personalities: ('gentle' | 'lively' | 'dignified')[] = ['gentle', 'lively', 'dignified'];
+    return personalities[Math.floor(Math.random() * personalities.length)];
+  }
+
+  /**
+   * 初始化技能
+   */
+  private initializeSkills(): SpiritSkill[] {
+    return this.SKILL_CONFIGS.map((skill) => ({
+      ...skill,
+      currentCooldown: 0,
+    }));
+  }
+
+  /**
+   * 获取fallback问题
+   */
+  private getFallbackQuestion(medicine: Medicine): SpiritQuestion {
+    return {
+      id: `fallback_${Date.now()}`,
+      type: 'recall',
+      question: `我忘记自己的名字了，你能告诉我吗？`,
+      acceptableAnswers: [medicine.name, medicine.pinyin],
+      hint: `我的名字是${medicine.name.length}个字哦~`,
+      knowledgeType: 'name',
+    };
+  }
+
+  // ========== 事件通知 ==========
+
+  private notifyStateChange(): void {
+    this.eventListeners.forEach((listener) => {
+      listener.onStateChange?.(this.getState());
+    });
+  }
+
+  private notifySpiritTamed(spirit: MedicineSpirit): void {
+    this.eventListeners.forEach((listener) => {
+      listener.onSpiritTamed?.(spirit);
+    });
+  }
+
+  private notifyWaveComplete(wave: number): void {
+    this.eventListeners.forEach((listener) => {
+      listener.onWaveComplete?.(wave);
+    });
+  }
+
+  private notifyBattleEnd(result: BattleResult): void {
+    this.eventListeners.forEach((listener) => {
+      listener.onBattleEnd?.(result);
+    });
+  }
+
+  private notifyAnswerEvaluated(evaluation: AnswerEvaluation): void {
+    this.eventListeners.forEach((listener) => {
+      listener.onAnswerEvaluated?.(evaluation);
+    });
   }
 }
+
+// 向后兼容：保留原有的BattleEngineConfig接口
+export type { BattleEngineConfig };
