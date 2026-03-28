@@ -39,8 +39,18 @@ export { AIService, aiService } from './aiService';
 
 // Phase 4新增服务
 export { AIMentorService, aiMentor, type MentorMessage, type MentorContext } from './AIMentorService';
-export { QuestionService, questionService, type Question } from './QuestionService';
+export { QuestionService, questionService, type Question as QuestionServiceQuestion } from './QuestionService';
 export { StreamingService, streamingService, useStreaming } from './StreamingService';
+
+// Spirit服务
+export {
+  SpiritQuestionService,
+  spiritQuestionService,
+  type GenerateQuestionParams,
+  type EvaluateAnswerParams,
+  type QuestionTypeConfig,
+} from './SpiritQuestionService';
+export { SpiritImageService, spiritImageService } from './SpiritImageService';
 
 // 默认导出
 export { AIService as default } from './aiService';
