@@ -289,6 +289,63 @@ function resumeChapter(chapterId: string): StageState {
 
 ---
 
+## 开发工作流（重要）
+
+### 分支管理策略
+
+**⚠️ 必须遵守以下流程，避免合并冲突：**
+
+```
+main 分支
+  │
+  ├── 开发 Phase X 前：
+  │   1. git checkout main
+  │   2. git pull origin main
+  │   3. git merge feature/v3.0-phase(X-1)  ← 合并上一轮开发
+  │   4. git push origin main
+  │
+  ├── 创建新开发分支：
+  │   git checkout -b feature/v3.0-phaseX
+  │
+  └── 开发 Phase X
+      │
+      └── 完成后：
+          1. git checkout main
+          2. git pull origin main
+          3. git merge feature/v3.0-phaseX
+          4. git push origin main
+```
+
+### 关键规则
+
+1. **永远从 main 创建新分支** - 确保基于最新代码
+2. **开发前先合并上一轮** - 避免长期分支导致的冲突
+3. **定期同步 main** - 如果开发周期长，中途同步 main 分支
+4. **合并后删除旧分支** - 保持仓库整洁
+
+### 命令示例
+
+```bash
+# 开始 Phase 5 开发前
+git checkout main
+git pull origin main
+git merge feature/v3.0-phase4  # 合并上一轮
+git push origin main
+
+# 创建新分支
+git checkout -b feature/v3.0-phase5
+
+# ... 开发工作 ...
+
+# 完成后合并回 main
+git checkout main
+git merge feature/v3.0-phase5
+git push origin main
+git branch -d feature/v3.0-phase5  # 删除已合并分支
+```
+
+---
+
 ## 开发阶段
 
 ### Phase 1: 核心框架（2周）
